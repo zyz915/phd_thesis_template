@@ -29,7 +29,7 @@
 
 \usepackage{amsmath}
 \usepackage{latexsym}
-\usepackage{ascmac}
+%\usepackage{ascmac}
 \usepackage{graphicx}
 
 % Pseudo codes
@@ -156,7 +156,7 @@
 %  Clickable PDF
 % =====================================================
 
-\usepackage{color}
+\usepackage{xcolor}
 \definecolor{redorange}{cmyk}{ 0, 0.77, 0.87, 0}
 \definecolor{forest}{cmyk}{ 0.91, 0, 0.88, 0.12}
 \definecolor{steelblue}{cmyk}{ 0.61, 0.28, 0, 0.29}
@@ -201,7 +201,7 @@
 \hypersetup{
   pdftitle={\@title},
   pdfauthor={\@author},
-  pdfsubject={PhD Thesis},
+  pdfsubject={Master Dissertation},
   pdfkeywords={\@keywords}
 }
 
@@ -229,7 +229,7 @@ in partial fulfillment of the requirements for the degree of
 \vskip 2em
 
 \begin{center}
-{\Large \bfseries \textit{Doctor of Philosophy}}
+{\Large \bfseries \textit{Master of Science}}
 \par
 \end{center}
 

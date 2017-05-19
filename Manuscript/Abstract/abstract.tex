@@ -1,17 +1,11 @@
 \chapter*{Abstract}
 
-This is a PhD thesis template for Sokendai students.
-Use \textit{pdflatex} to build latex files.
-This file specifies the following:
-\begin{itemize}
-	\item Font,
-	\item Appearance of Text (Hyphenation and Letter-spacing),
-	\item Page Layout,
-	\item Theorem Environments,
-	\item Header and Footer,
-	\item Chapter Header,
-	\item Table of Contents,
-	\item Clickable PDF,
-	\item Title Page and PDF-title.
-\end{itemize}
+Pregel is a popular parallel computing model for dealing with large-scale graphs.
+However, it can be tricky to implement graph algorithms correctly and efficiently in Pregel's vertex-centric model, as programmers need to carefully restructure an algorithm in terms of supersteps and message passing, which are low-level and detached from the algorithm descriptions.
+Some domain-specific languages (DSLs) have been proposed to provide more intuitive ways to implement graph algorithms, but none of them can flexibly describe remote access (reading or writing attributes of other vertices through references), causing a still wide range of algorithms hard to implement.
 
+To address this problem, we design and implement Palgol, a more declarative and powerful DSL which supports remote access.
+In particular, programmers can use a more declarative syntax called \emph{global field access} to directly read data on remote vertices.
+By structuring supersteps in a high-level vertex-centric computation model and analyzing the logic patterns of global field access, we provide a novel algorithm for compiling Palgol programs to efficient Pregel code.
+We demonstrate the power of Palgol by using it to implement a bunch of practical Pregel algorithms and compare them with hand-written code.
+The evaluation result shows that the efficiency of Palgol is comparable with that of hand-written code.
