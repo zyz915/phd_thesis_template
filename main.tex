@@ -910,6 +910,9 @@ Finally, we will explain the relation of Palgol and the customized Pregel framew
 
 \section{System Design \& Implementation}
 
+In this part, we describe the details of our system design and implementation of different types of the message channels.
+
+\subsection{Interface}
 
 
 \section{Programming Interface}
@@ -919,11 +922,15 @@ First, users can only define the computation on every vertex in Pregel.
 In contrast, our customized Pregel framework let users implement the computation (the \emph{compute()} function) on each worker, and by exposing the vertices stored on each worker to the users, they can finally implement the computation in vertex-centric paradigm.
 Second, in Pregel systems, message passing and aggregator are two hard-coded mechanisms, and more importantly, they are shared by the whole program, so that users need to find a proper message type for all the communications, or implement an aggregator that encodes all the global communications.
 However, in our customized Pregel system, message passing and aggregator are just two communication channels with different implementation, and users can define any number of instances of communication channels, and specify them differently in a single program.
-Third, Pregel uses the well known ``voting to halt'' mechanism for termination (and sometimes for program optimization), but we design a completely different way for program termination which allow.
-In particular, the user-defined 
+Third, Pregel introduce the ``voting to halt'' mechanism for termination (and sometimes for program optimization), but we use a completely different way for program termination which allow.
+In particular, the user-defined \emph{compute()} function returns a boolean value indicating the current worker's local decision of termination, and the whole computation terminates when all workers decide to stop.
 
-As a running example, let's see how we implement the Shiloach-Vishkin connectivity algorithm~\cite{connectivity} in our customized Pregel system.
+\subsection{A Running Example}
+
+As a running example, let's see how the Shiloach-Vishkin connectivity algorithm~\cite{connectivity} is implemented in our customized Pregel system.
 The Palgol's high-level description is shown in \autoref{fig:svppa-code}.
+
+\subsection{The Termination Interface}
 
 \section{Related Work}
 
