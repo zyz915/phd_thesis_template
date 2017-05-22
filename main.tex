@@ -141,12 +141,29 @@ We therefore design a domain-specific language to provide a high-level abstracti
 
 \section{Pregel: Graph Processing in Vertex-Centric Paradigm}
 
-Google's Pregel~\cite{pregel} is one of the most popular framework for processing large-scale graphs, which is based on the bulk-synchronous
-parallel (BSP) model~\cite{bsp}.
+Google's Pregel~\cite{pregel} is one of the most popular framework for processing large-scale graphs, which is based on the bulk-synchronous parallel (BSP) model~\cite{bsp}.
 It adopts the \emph{vertex-centric} computing paradigm to achieve high parallelism and scalability.
-Following the BSP model, computation is split into \emph{supersteps} mediated by \emph{message passing.}
-Within each superstep, all the vertices execute the same user-defined function \emph{compute()} in parallel, where each vertex can read the messages sent to it in the previous superstep, modify its own state, and send messages to other vertices.
+In Pregel, the input is in general a directed graph, and each vertex is associated with a mutable user-defined state.
+Following the Bulk-Synchronous Parallel (BSP) model~\cite{bsp}, computation is split into \emph{supersteps} mediated by \emph{message passing.}
+Within each superstep, all the vertices execute the same user-defined function in parallel, and each vertex can read the messages sent to it in the previous superstep, modify its own state, and send messages to other vertices.
 Global barrier synchronization happens at the end of each superstep, delivering messages to their designated receivers before the next superstep.
+In general, a vertex can send any number of messages to any other vertices, but there is no guaranteed order among the messages.
+%Also, in Pregel, only a single message type is allowed, so programmers should encode different types in one if they need to pass multiple types of messages.
+A vertex is active at the beginning of execution, and can deactivate itself by ``voting to halt.''
+When inactive, it can only be activated by receiving messages.
+(Figure \ref{fig:voteToHalt} illustrate this mechanism with a state transition diagram.)
+Computation terminates when all vertices become inactive. %in a particular superstep.
+\begin{figure}[ht]
+ \centering
+ \includegraphics[width=0.35\textwidth]{figures/active.pdf}
+ \caption{Vertex State Machine}
+ \label{fig:voteToHalt}
+\end{figure}
+
+Besides vertex-to-vertex message passing, Pregel provides \emph{aggregators}, a mechanism for global communication.
+Every vertex can provide a value to an aggregator in a superstep; the system then combines these values by a reduction operator and makes the result available at the beginning of the next superstep.
+Pregel has a bunch of predefined aggregators for various types, like $\mathit{max}$ and $\mathit{min}$ for numeric values, but programmers may also define their own aggregators by providing a reduction operator and an appropriate default value.
+Whether built-in or user-defined, an aggregation operator should be commutative and associative \todo{define this as ``accumulative''?}, with the default value being an identity.
 Being simple, Pregel has demonstrated its usefulness in implementing many interesting graph algorithms \cite{pregel,QuWH12,connectivity,optimizing,XiYZ14}.
 
 Google's Pregel \cite{pregel} proposed the vertex-centric computing paradigm, which allows programmers to think naturally like a vertex when designing distributed graph algorithms.
@@ -157,7 +174,7 @@ There are a bunch of open-source alternatives to the official and proprietary Pr
 Despite the power of Pregel, it is a big challenge to implement a graph algorithm correctly and efficiently in Pregel \cite{connectivity}, especially when the algorithm consists of multiple stages and complicated data dependencies.
 The main reason for this is the big gap between graph algorithms and their actual implementations:
 
-\begin{itemize}
+\begin{itemize}\setlength\itemsep{0em}
 \item
  \textit{Exceedingly complicated loop body}.
  A Pregel program is essentially a loop with a possibly big and complicated loop body defined by the \emph{compute()} function.
@@ -169,9 +186,9 @@ The main reason for this is the big gap between graph algorithms and their actua
  In contrast, it is more natural to describe computation with \emph{remote data access} --- reading or writing attributes of other vertices through references --- instead of lower-level message passing.
 \end{itemize}
 
-In addition to the difficulties in mapping the graph algorithms to Pregel, the Pregel's interface is actually not suitable for implementing the algorithms containing various stages or requiring data communication for different purposes, and may potentially decrease the performance.
+In addition to the difficulties in mapping the graph algorithms to Pregel, the Pregel's interface is unsuitable for implementing the algorithms containing various stages or requiring data communication for different purposes, and may potentially decrease the performance.
 This is due to the single message type throughout the whole computation, and the complex side effects of vertex-inactivation interface:
-\begin{itemize}
+\begin{itemize}\setlength\itemsep{0em}
 \item
  \textit{Single message type}.
  In Pregel, programmers need to specify a message type in advance, and the implement the \emph{compute()} function that handles or emits the messages in this type only.
@@ -216,7 +233,7 @@ The system with all implementation codes and test examples is available at \url{
 %\emph{global field access}, to directly read data on remote vertices.
 By structuring supersteps in a high-level vertex-centric computation model and analyzing the logic patterns of global field access, we provide a novel algorithm for compiling Palgol programs to efficient Pregel code. 
 In detail, our main technical contributions are as follows:
-\begin{itemize}
+\begin{itemize}\setlength\itemsep{0em}
 \item
  We propose a new high-level model for compositional vertex-centric computation, where the concept of \emph{algorithmic supersteps} is introduced as the basic computation unit for constructing vertex-centric computation in such a way that remote reads and writes are ordered in a safe way.
  Using algorithmic supersteps along with \emph{sequence} and \emph{iteration}, graph algorithms can be expressed clearly and concisely.
@@ -274,7 +291,7 @@ Here, a remote write consists of a remote field, a value and an ``accumulative''
 We choose to support only accumulative assignments so that the order of performing remote writes does not matter.
 
 More precisely, an algorithmic superstep is divided into the following two phases:
-\begin{itemize}
+\begin{itemize}\setlength\itemsep{0em}
  \item a \emph{local computation} (LC) phase, in which a copy of the input graph is created as the intermediate graph, and then each vertex can read the state of any vertex in the input graph, perform local computation, and modify its own state in the intermediate graph, and
  \item a \emph{remote updating} (RU) phase, in which each vertex can modify the states of any vertices in the intermediate graph by sending remote writes.
 After processing all remote writes are processed, the intermediate graph is returned as the output graph.
@@ -315,8 +332,8 @@ The semantics of fixed-point iteration is iteratively running the program enclos
  & | & \mathbf{local}\mathit{_{opt}}~\mathit{field}~[~\mathit{var}~]~\mathit{op_{local}}~\mathit{exp} & \hsp{-- local write} \\
  & | & \mathbf{remote}~\mathit{field}~[~\mathit{exp}~]~\mathit{op_{remote}}~\mathit{exp} & \hsp{-- remote write} \\
 \mathit{exp}   & \Coloneqq & \mathit{int}~|~\mathit{float}~|~\mathit{var}~|~\mathbf{true}~|~\mathbf{false}~|~\mathbf{inf} \\
- & | & \mathit{exp}.\mathbf{ref}~|~\mathit{exp}.\mathbf{val}~|~\{\mathit{exp},\mathit{exp}\} \\
- & | & \mathbf{fst}~\mathit{exp}~|~\mathbf{snd}~\mathit{exp}~|~(\mathit{exp},~\mathit{exp}) \\
+ & | & \mathbf{fst}~\mathit{exp}~|~\mathbf{snd}~\mathit{exp}~|~(\mathit{exp},\mathit{exp}) & \hsp{-- pair type} \\
+ & | & \mathit{exp}.\mathbf{ref}~|~\mathit{exp}.\mathbf{val}~|~\{\mathit{exp},\mathit{exp}\} & \hsp{-- record type} \\
  & | & \mathit{exp}~?~\mathit{exp}:\mathit{exp}~|~(~\mathit{exp}~) \\
  & | & \mathit{exp}~\mathit{op_{binary}}~\mathit{exp}~|~\mathit{op_{unary}}~\mathit{exp} \\
  & | & \mathit{field}~[~\mathit{exp}~] & \hsp{-- field access} \\
@@ -325,18 +342,18 @@ The semantics of fixed-point iteration is iteratively running the program enclos
  & | & \mathbf{sum}~|~\mathbf{and}~|~\mathbf{or}~|~\ldots \\
  \end{array}
 \]
-\caption{Essential part of Palgol syntax. Palgol is indentation-based, and two special tokens `$\langle$' and `$\rangle$' are introduced to represent the increase and decrease of indentation level.}
+\caption{Essential part of Palgol syntax. Palgol is indentation-based, and two special tokens `$\langle$' and `$\rangle$' are introduced to represent the change of indentation level.}
 \label{fig:syntax-simplified}
 \vspace{-2ex}
 \end{figure}
 
 %As mentioned before, an algorithmic superstep has two phases, local computation (LC) and remote updating (RU).
 Corresponding to an algorithmic superstep's remote access capabilities, in Palgol we can read a remote field using a field access expression of the form $\mathit{field}~[\,\mathit{exp}\,]$, and update a remote field using an accumulative assignment statement prefixed with the keyword $\mathbf{remote}$.
-\begin{itemize}
+\begin{itemize}\setlength\itemsep{0em}
 \item A field access expression $\mathit{field}~[\,\mathit{exp}\,]$, where $\mathit{exp}$ should evaluate to a vertex id, looks similar to an array access, and indeed, one can regard a field as a global array, so that when a vertex id is given, the value of the field on that vertex is returned.
 \item Remote updating statements take effect only in the RU phase (after the LC phase), regardless of where they occur in the program.
 Remote updating statements can only be accumulative, whereas local updating statements can be normal or accumulative assignments to the current vertex's fields.
-To better distinguish the two kinds of updating statements, local updating statements can be prefixed with the \textbf{local} keyword.
+To better distinguish the two kinds of updating statements, local updating statements can be prefixed with an optional \textbf{local} keyword.
 \end{itemize}
 
 There are some predefined fields that have special meaning in our language.
@@ -344,9 +361,10 @@ $\mathbf{Id}$ is an immutable field that stores the value of the vertex id for e
 $\mathbf{Nbr}$, $\mathbf{In}$, $\mathbf{Out}$ are by default the edge lists, where $\mathbf{Nbr}$ is intended to be used in undirected graphs, and $\mathbf{In}$ and $\mathbf{Out}$ respectively store incoming and outgoing edges for directed graphs.
 Essentially, these are normal fields of a predefined type for representing edges, and most importantly, the compiler assumes a form of symmetry on these fields (namely that every edge is stored consistently on both of its end vertices), and uses the symmetry to produce more efficient code.
 
-The rest of the syntax for Palgol steps is in principle similar to an ordinary programming language, but without mutable variables to make the compilation easy.
+The rest of the syntax for Palgol steps is in principle similar to an ordinary programming language.
 Some functional programming constructs are also used here, like let-binding and list comprehension.
 To express more complicated computation, there is also a foreign function interface that allows programmers to invoke functions written in a general-purpose language.
+For more details, please refer to the tutorial in our repository.
 
 \section{A Taste of Palgol}
 \label{sec:taste}
@@ -361,7 +379,7 @@ The single-source shortest path problem is among the best known in graph theory 
 To understand this algorithm, we first have a look at how it is implemented in Google's Pregel system~\cite{pregel} in Figure~\ref{fig:sssp-pregel}.
 \begin{figure}[thp]
 \vspace{-2ex}
-\begin{lstlisting}[basicstyle=\footnotesize,numbers=none,xleftmargin=0em,language=c++]
+\begin{lstlisting}[basicstyle=\small,numbers=none,xleftmargin=0em,language=c++]
 class ShortestPathVertex
     : public Vertex<int, int, int> {
   void Compute(MessageIterator* msgs) {
@@ -444,9 +462,25 @@ Readers interested in the correctness of this algorithm are referred to the orig
 
 \begin{comment}
 \begin{algorithm}
- \KwInput{an undirected graph}
- \KwOutput{CCs represented as disjoint sets}
- \BlankLine
+\caption{Euclid's algorithm}
+\label{alg:euclid}
+\begin{algorithmic}[1]
+\Procedure{Euclid}{$a,b$}\Comment{The g.c.d. of $a$ and $b$}
+   \State $r\gets a\bmod b$
+   \While{$r\not=0$}\Comment{We have the answer if $r$ is 0}
+      \State $a\gets b$
+      \State $b\gets r$
+      \State $r\gets a\bmod b$
+   \EndWhile\label{euclidendwhile}
+   \State \textbf{return} $b$\Comment{The gcd is $b$}
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}2
+ %\KwInput{an undirected graph}
+ %\KwOutput{CCs represented as disjoint sets}
+ %\BlankLine
  \emph{set all vertices as root nodes, i.e., every vertex initializes a pointer pointing to itself}\;
  \Repeat{the disjoint-set structure does not change}{
   \For{each vertex $u$}{
@@ -476,7 +510,7 @@ We can see that, despite the simplicity of the description at algorithm level, i
 \begin{lstlisting}[basicstyle=\footnotesize]
 for u in V
   D[u] := u
-  D[u] <?= minimum [ e.ref | e <- Nbr[u]]
+  D[u] <?= minimum [ e.ref | e <- Nbr[u] ]
 end
 do
   for u in V
@@ -495,9 +529,9 @@ until fix[D]
 \end{figure}
 
 In contrast, the Palgol program in Figure \ref{fig:svppa-code} looks very similar to the algorithm description.
-This piece of code contains two steps, where the first one (lines 1--3) just performs a simple initialization, and the other (lines 5--13) is inside an iteration as the main computation.
+This piece of code contains two steps, where the first one (lines 1--4) just performs a simple initialization, and the other (lines 6--13) is inside an iteration as the main computation.
 We use the field~$D$ to store the pointer to the parent vertex.
-Let us focus on line~6, which corresponds to the $\mathbf{if}$ statement in the algorithm description that checks whether $u$'s parent is a root.
+Let us focus on line~7, which corresponds to the $\mathbf{if}$ statement in the algorithm description that checks whether $u$'s parent is a root.
 Here we simply check $D[D[u]] \shorteqq D[u]$, i.e., whether the pointer of the parent vertex $D[D[u]]$ is equal to the parent's id $D[u]$.
 This expression is completely declarative, in the sense that we only specify what data is needed and what computation we want to perform, instead of explicitly implementing the message passing scheme.
 All the magic happens in our compilation algorithm, which analyzes the expression and generates the message passing code.
@@ -734,7 +768,7 @@ In general, a generated STM may be depicted as:
 \end{figure}\\
 where there are a start state and an end state, between which there can be more states and transitions, not necessarily having the linear structure.
 
-\subsection{Sequence}
+\subsection{Compiling Sequences with STM Merging}
 
 A sequence of two Palgol programs uses the first program to transform an initial graph to an intermediate one, which is then transformed to a final graph using the second program.
 To compile the sequence, we first compile the two component programs into STMs; a composite STM is then built from these two STMs, implementing the sequence semantics.
@@ -753,7 +787,7 @@ every Palgol program describes an independent vertex-centric computation that do
 We call this the \emph{message-independence} property.
 Since $S_{n+1}$ is the beginning of the second Palgol program, it ignores the incoming messages, and therefore the barrier synchronization between $S_n$ and $S_{n+1}$ can be omitted.
 
-\subsection{Iteration}
+\subsection{Compiling Iterations with STM Fusion}
 
 Fixed-point iteration repeatedly runs a program enclosed by `\textbf{do}' and `\textbf{until} \ldots' until the specified fields stabilize.
 To compile an iteration, we first compile its body into an STM, then we extend this STM to implement the fixed-point semantics.
@@ -806,7 +840,7 @@ Let us start from a comparison between Palgol and Fregel.
 A remarkable similarity of Palgol and Fregel is that both of them use a compositional way to construct programs:
 a Palgol or a Fregel program always consists of several basic units of vertex-centric computation (e.g., Palgol step, or \emph{step function} in Fregel), and put them together using combinators (e.g., sequence and iteration in Palgol, and higher-order functions in Fregel).
 However, a Palgol step is more expressive than a step function, due to the following two reasons:
-\begin{itemize}
+\begin{itemize}\setlength\itemsep{0em}
  \item a Palgol step consists of local computation and remote updating phases, whereas a step function can be thought of as only describing local computation, lacking the ability to modify other vertices' states;
  \item even when considering local computation, Palgol has highly declarative \textit{field access expressions} to express remote reads from an arbitrary vertex, but Fregel can only perform neighborhood communication (see \autoref{sec:neighboring-access}).
 \end{itemize}
@@ -875,8 +909,8 @@ One typical example is the algorithm for calculating bi-connected components (BC
 We further compare the expressiveness of Palgol, Green-Marl and Fregel by real-world graph algorithms.
 We choose a list of representative Pregel algorithms as follows:
 
-\begin{itemize}
- \item PageRank (PR)~\cite{pregel}
+\begin{itemize}\setlength\itemsep{0em}
+ \item PageRank~\cite{pregel}
  \item Single-Source Shortest Path (SSSP)~\cite{pregel}
  \item Randomized Bipartite Matching (BM)~\cite{pregel}
  \item Shiloach-Vishkin Pregel Pregel Algorithm (S-V)~\cite{connectivity}
@@ -904,33 +938,55 @@ For example, an important optimization in SCC and GC is that one can remove unne
 \chapter{Customizing Pregel with Message Channel Interface}
 \label{sec:customized}
 
-In this section, we present our optimized Pregel framework with the message channel interface, which brings more opportunities for reducing the messages during computation.
-\todo{brief introduction}.
-Finally, we will explain the relation of Palgol and the customized Pregel framework.
+In this section, we present our optimized Pregel framework with the message channel interface, which brings more opportunities of reducing messages in computation.
+The customized Pregel framework is designed to be a more efficient backend for Palgol to fully take advantage of Palgol's high-level semantics in program optimization, but it can also serve as an extended programming model for programmers to implement graph algorithms.
+By introducing the message channels, our customized Pregel framework is more convenient and efficient to handle complex communication patterns in a graph algorithm.
+
+\section{The Message Channel Interface}
+
+Let us first consider a 
 
 \section{System Design \& Implementation}
 
 In this part, we describe the details of our system design and implementation of different types of the message channels.
 
-\subsection{Interface}
+%\subsection{} implemenation?
 
+\subsection{Direct Message Passing and Aggregator}
 
-\section{Programming Interface}
+\subsection{Request-Respond Paradigm}
+
+\section{Example: The S-V Connectivity Algorithm}
 
 Programs written for our customized Pregel are quite different from those written in Pregel.
-First, users can only define the computation on every vertex in Pregel.
-In contrast, our customized Pregel framework let users implement the computation (the \emph{compute()} function) on each worker, and by exposing the vertices stored on each worker to the users, they can finally implement the computation in vertex-centric paradigm.
-Second, in Pregel systems, message passing and aggregator are two hard-coded mechanisms, and more importantly, they are shared by the whole program, so that users need to find a proper message type for all the communications, or implement an aggregator that encodes all the global communications.
-However, in our customized Pregel system, message passing and aggregator are just two communication channels with different implementation, and users can define any number of instances of communication channels, and specify them differently in a single program.
-Third, Pregel introduce the ``voting to halt'' mechanism for termination (and sometimes for program optimization), but we use a completely different way for program termination which allow.
-In particular, the user-defined \emph{compute()} function returns a boolean value indicating the current worker's local decision of termination, and the whole computation terminates when all workers decide to stop.
-
-\subsection{A Running Example}
+We summarize the differences as follows:
+\begin{itemize}\setlength\itemsep{0em}
+\item
+ First, programmers can only define the computation on every vertex in Pregel.
+In contrast, our customized Pregel framework let programmers implement the computation (the \emph{compute()} function) on each worker, and by exposing the vertices stored on each worker to the programmers, they are actually programming in the vertex-centric paradigm.
+\item
+ Second, in Pregel systems, message passing and aggregator are two hard-coded mechanisms, and more importantly, they are shared by the whole program, so that programmers need to find a proper message type for all the communications, or implement an aggregator that encodes all the global communications.
+ However, in our customized Pregel system, message passing and aggregator are just two communication channels with different implementation, so programmers can define various instances of different types of communication channels, and specify them individually in the same program.
+\item
+ Third, Pregel introduce the ``voting to halt'' mechanism for termination (and sometimes for program optimization), but we provide a completely different way for program termination which has a more clear semantics.
+ In particular, the user-defined \emph{compute()} function returns a boolean value indicating the current worker's local decision of termination, and the whole computation terminates when all workers decide to stop.
+\end{itemize}
 
 As a running example, let's see how the Shiloach-Vishkin connectivity algorithm~\cite{connectivity} is implemented in our customized Pregel system.
-The Palgol's high-level description is shown in \autoref{fig:svppa-code}.
+The Palgol's high-level description is shown in \autoref{fig:svppa-code}, and the according to the compilation algorithm shown in \autoref{sec:compilation}, the compilation is shown in figure \autoref{fig:full}
 
-\subsection{The Termination Interface}
+\begin{figure}[th]
+ \centering
+ \includegraphics[width=0.8\textwidth]{figures/full.pdf}
+ \caption{The compilation result of S-V algorithm}
+ \label{fig:full}
+\end{figure}
+
+\subsection{Implementing Individual Superteps}
+
+\subsection{Management of Message Channels}
+
+\subsection{Input/Output and Preprocessings}
 
 \section{Related Work}
 
@@ -938,6 +994,10 @@ The Palgol's high-level description is shown in \autoref{fig:svppa-code}.
 
 \chapter{Experimental Evaluation}
 \label{sec:evaluation}
+
+In this chapter, we are going to answer two questions: whether the programs written in Palgol is comparable to the ones written by human, and whether our customized Pregel system can compete with the original Pregel system.
+
+\section{Evaluation of Palgol's Generated Code}
 
 We evaluate and compare the performance of the Pregel programs generated by our Palgol compiler and manually coded Pregel programs over large real-world graphs.
 The experiment is conducted on an Amazon EC2 cluster with 16 nodes (instance type is m4.large), each containing 2 vCPUs and 8G memory.
@@ -949,10 +1009,12 @@ For SCC, since the manually coded Pregel program does not completely implement t
 Consequently, the rest three algorithms are used in the evaluation, and the experiment is conducted in Pregel+'s ordinary mode.
 
 We use 4 real-world graph datasets in our performance evaluation, which are listed in Table~\ref{tab:datasets}:
-(1) LJ-UG\footnote{http://konect.uni-koblenz.de/networks/livejournal-groupmemberships}: a network of LiveJournal users and their group memberships;
-(2) Facebook\footnote{http://konect.uni-koblenz.de/networks/facebook-sg}: a friendship network of the Facebook social network;
-(3) LJ-DG\footnote{http://konect.uni-koblenz.de/networks/soc-LiveJournal1}: a friendship network of the LiveJournal blogging community;
-(4) Wikipedia\footnote{http://konect.uni-koblenz.de/networks/dbpedia-link}: the extracted hyperlink network of Wikipedia;
+\begin{enumerate}
+\item LJ-UG\footnote{http://konect.uni-koblenz.de/networks/livejournal-groupmemberships}: a network of LiveJournal users and their group memberships;
+\item Facebook\footnote{http://konect.uni-koblenz.de/networks/facebook-sg}: a friendship network of the Facebook social network;
+\item LJ-DG\footnote{http://konect.uni-koblenz.de/networks/soc-LiveJournal1}: a friendship network of the LiveJournal blogging community;
+\item Wikipedia\footnote{http://konect.uni-koblenz.de/networks/dbpedia-link}: the extracted hyperlink network of Wikipedia
+\end{enumerate}
 To evaluate those manually coded programs on these datasets, we slightly modify the code for graph loading (and data types if necessary), while the computation kernel remains the same.
 For SSSP, we use a version closer to \autoref{fig:sssp-pregel}, which performs better than the one shipped with Pregel+.
 
@@ -975,7 +1037,7 @@ For SSSP, we use a version closer to \autoref{fig:sssp-pregel}, which performs b
  \end{tabular}
 \vspace{-2ex}\end{table}
 
-\section{Performance Comparison}
+\subsection{Execution Time}
 
 For each experiment, we measure the execution time (which consists of the computation time and communication time) and the number of supersteps of the entire execution.
 All the results are averaged over 3 repeated experiments.
@@ -1017,7 +1079,7 @@ Second, due to the simplicity of SSSP, the manually coded program can dispense w
  \end{tabular}
 \end{table*}
 
-\section{Number of Supersteps}
+\subsection{Number of Supersteps}
 
 The number of supersteps used by the compiler-generated programs and manually coded programs are presented in \autoref{tab:steps}.
 For PageRank, Palgol takes exactly the same number of supersteps as the manually coded Pregel program, and for SSSP, Palgol needs one additional superstep to terminate the program.
@@ -1051,6 +1113,8 @@ In other words, compact programs are usually harder to maintain for humans.
   \hline
  \end{tabular}
 \vspace{-2ex}\end{table}
+
+\section{Evaluation of The Customized Pregel Framework}
 
 \chapter{Conclusions}
 \label{sec:conclusions}
