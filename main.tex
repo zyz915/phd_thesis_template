@@ -244,8 +244,8 @@ In detail, our main technical contributions are as follows:
  We demonstrate the power of Palgol by working on a set of representative examples.
  Palgol is much more powerful than the existing DSLs (such as Green-Marl and Fregel); it covers all what the existing DSLs can do, and can deal with algorithms with more advanced communication patterns such as the Shiloach-Vishkin connectivity algorithm~\cite{connectivity}, where an internal tree structure needs to be maintained, and data communication is needed between parent and children.
 \item
- Based on the Palgol's high-level model, we further study the efficient implementation of graph algorithms in distrubuted environment.
- We propose an extention of Pregel framework with message channel interfaces, which allows programmers to use different message types and separetedly manage or optimize each communication channel, to reduce the message size in computation.
+ Based on the Palgol's high-level model, we further study the efficient implementation of graph algorithms in distributed environment.
+ We propose an extension of Pregel framework with message channel interfaces, which allows programmers to use different message types and separately manage or optimize each communication channel, to reduce the message size in computation.
 \item
  The result of our evaluation is encouraging.
  The efficiency of Palgol is comparable with hand-written code for many representative graph algorithms on practical big graphs, where the execution time varies from $25.9\%$ speedup to $32.4\%$ slowdown and the number of supersteps can be dramatically reduced up to $51.7\%$ for complicated algorithms.
@@ -261,7 +261,7 @@ Finally we use two examples to demonstrate how Palgol can concisely describe som
 \section{The High-Level Model}
 
 The essence of Pregel is its vertex-centric paradigm on top of the BSP model, where programmers basically describe the local computation handling the local vertex states and incoming and outgoing messages, as described in the beginning of \autoref{sec:introduction}.
-This computation model requires low-level desciption of message passing for implementing data commmunication.
+This computation model requires low-level description of message passing for implementing data communication.
 %\todo{what? in most cases message passing implements data communication?}
 
 The high-level model we will propose is to provide a bridge between an algorithm and a Pregel implementation.
@@ -830,7 +830,9 @@ Since the algorithm only cares about the minimum of the messages, and the compil
 \chapter{Expressiveness Analysis}
 \label{sec:expressiveness}
 
-In this section, we give a comprehensive comparison on the expressiveness of Palgol, Green-Marl and Fregel.
+In this chapter, we give a comprehensive comparison on the expressiveness of Palgol, Green-Marl and Fregel.
+In particular, we focus on two important dimensions, the ability of representing remote access, and the ability of performing graph mutations, to give a quantitative comparison.
+Finally, we review a bunch of real-world algorithms to see whether these DSLs are capable for giving an efficient implementation.
 
 \section{Remote Access Patterns}
 
@@ -939,7 +941,7 @@ For example, an important optimization in SCC and GC is that one can remove unne
 \label{sec:customized}
 
 In this section, we present our optimized Pregel framework with the message channel interface, which brings more opportunities of reducing messages in computation.
-The customized Pregel framework is designed to be a more efficient backend for Palgol to fully take advantage of Palgol's high-level semantics in program optimization, but it can also serve as an extended programming model for programmers to implement graph algorithms.
+The customized Pregel framework is designed to be a more efficient back-end for Palgol to fully take advantage of Palgol's high-level semantics in program optimization, but it can also serve as an extended programming model for programmers to implement graph algorithms.
 By introducing the message channels, our customized Pregel framework is more convenient and efficient to handle complex communication patterns in a graph algorithm.
 
 \section{The Message Channel Interface}
@@ -973,7 +975,7 @@ In contrast, our customized Pregel framework let programmers implement the compu
 \end{itemize}
 
 As a running example, let's see how the Shiloach-Vishkin connectivity algorithm~\cite{connectivity} is implemented in our customized Pregel system.
-The Palgol's high-level description is shown in \autoref{fig:svppa-code}, and the according to the compilation algorithm shown in \autoref{sec:compilation}, the compilation is shown in figure \autoref{fig:full}
+The Palgol's high-level description is shown in \autoref{fig:svppa-code}, and according to the compilation algorithm presented in \autoref{sec:compilation}, the compilation result is shown in figure \autoref{fig:full}, which contains 4 supersteps.
 
 \begin{figure}[th]
  \centering
@@ -982,11 +984,57 @@ The Palgol's high-level description is shown in \autoref{fig:svppa-code}, and th
  \label{fig:full}
 \end{figure}
 
-\subsection{Implementing Individual Superteps}
-
 \subsection{Management of Message Channels}
 
-\subsection{Input/Output and Preprocessings}
+Let us first consider what kind of message channels are needed for implementing the S-V algorithm.
+From the compilation result of Palgol compiler, we can find three message channels, which are:
+\begin{itemize}
+\item
+ The request-respond message channel to calculate $D[D[u]]$ in the main step.
+ The request phase happens in both step 1 and step 4, while the response phase only appears in step 2.
+ By following the state transition machine, we can easily verify that vertices always send the requests in the previous step of the response phase.
+\item
+ The direct message passing channel to collect all the neighbors' pointers to their parent, which happens between step 2 and step 3.
+ The message type is the same as the type of vertex identifier.
+ Note that, this message passing channel can be optimized by a combiner that calculating the minimum of the messages, since each vertex only cares about the minimum of neighbors' parent id.
+\item
+ The direct message passing channel to implement the remote writes in line 10 of the Palgol program shown in \autoref{fig:svppa-code}, which happens between step 3 and step 4.
+ The message type is the same as the type of vertex identifier, and it can be optimized by a combiner as well, since the vertex receiving the remote writes just cares about the minimum value of the messages.
+\end{itemize}
+
+In the program, we use the variable \textit{grandpa} to represent the pointer jumping channel for calculating the grandfather of every vertex, and use the variables \textit{neighbor} and \textit{remote} to represent the direct message channels for collecting all neighbors' pointer and remote writes.
+The code shown in \autoref{fig:sv-declaration} declares and initializes these message channels, and in the next section we will show how to use these channels in the compute function.
+
+\begin{figure}[ht]
+\centering
+\vspace{-2ex}
+\begin{lstlisting}[basicstyle=\small,numbers=none,xleftmargin=0em,language=c++]
+typedef Vertex<int, vector<int> > VertexT;
+class SVWorker : public Worker<VertexT> {
+private:
+   // declaration of message channels
+   V2V<VertexT, int> neighbor, remote;
+   ReqRes<VertexT, int> grandpa;
+public:
+   SVWorker():  // initialization
+      grandpa(this, "Pointer Jumping"),
+      neighbor(this, "Neighborhood", c_min),
+      remote(this, "Remote Write", c_min) {}
+};
+\end{lstlisting}
+\vspace{-2ex}
+\caption{Declaration of message channels for S-V}
+\label{fig:sv-declaration}
+\end{figure}
+
+In this example, we declare
+
+\subsection{Implementing Individual Supersteps}
+
+Second, let us consider how to implement each superstep in the worker's compute function.
+
+
+\subsection{Input/Output and Preprocessing}
 
 \section{Related Work}
 
@@ -1121,9 +1169,10 @@ In other words, compact programs are usually harder to maintain for humans.
 
 \section{Contributions}
 
-This thesis proposes Palgol, a high-level domain-specific language for Pregel systems with flexible remote data access, which allows people to describe vertex-centric graph algorithms in a more natural way.
+This thesis proposes Palgol, a high-level domain-specific language for Pregel systems with flexible remote data access, which allows people to design and implement vertex-centric graph algorithms in a more natural way.
 In particular, we tackle the problem of translating remote data read to Pregel's message passing, and by recognizing and compiling two useful remote reading patterns, chain access and neighborhood communication, Palgol can express a wider range of practical Pregel algorithms than existing languages.
-Moreover, experiment results show that graph algorithms written in Palgol can be compiled to efficient Pregel programs comparable to the human written ones.
+Furthermore, we extend the existing Pregel system with a novel message channel interface, which
+Experiment results show that graph algorithms written in Palgol can be compiled to efficient Pregel programs comparable to the human written ones.
 
 \section{Future Directions}
 
