@@ -23,6 +23,8 @@
 \usepackage{listings}
 %\usepackage{enumitem}
 %\usepackage{inconsolata}
+%\usepackage{subfigure}
+\usepackage{subcaption}
 %\usepackage[charter]{mathdesign}
 % \def\rmdefault{bch} % not scaled
 % \def\ttdefault{blg}
@@ -52,7 +54,7 @@
  morecomment=[l]{//},
 }
 \lstset{
- basicstyle=\footnotesize\ttfamily,
+ basicstyle=\footnotesize\ttdefault,
  language=pregel,
  numbers=left,
  xleftmargin=2em,
@@ -192,7 +194,7 @@ This is due to the single message type throughout the whole computation, and the
 \item
  \textit{Single message type}.
  In Pregel, programmers need to specify a message type in advance, and the implement the \emph{compute()} function that handles or emits the messages in this type only.
- However, some graph algorithms actually need different message types for different purposes, so it may consume more space and bring the overhead of data encoding/decoding.
+ However, some graph algorithms actually need different message types for different purposes, in which case it may consume more space and bring the overhead of data encoding/decoding.
 \item
  \textit{Side effects in vertex-inactivation}.
  Many graph algorithms can be optimized by the vertex-inactivation interface, for example to skip the vertices that are already converged.
@@ -547,7 +549,7 @@ Here, the statement \texttt{a <?= b} is an accumulative assignment, whose meanin
 Finally, for the $\mathbf{else}$ branch, we locally assign $u$'s grandparent's id to $u$'s $D$ field.
 
 The S-V program demonstrates how programmers can naturally describe a complex Pregel algorithm in Palgol, in particular using the field access syntax and the remote updating syntax.
-Below we will see how such a Palgol program can be efficiently compiled into an efficient Pregel program.
+Later we will see how such a Palgol program can be efficiently compiled into an efficient Pregel program.
 
 \section{Vertex Inactivation}
 
@@ -940,23 +942,81 @@ For example, an important optimization in SCC and GC is that one can remove unne
 \chapter{Customizing Pregel with Message Channel Interface}
 \label{sec:customized}
 
-In this section, we present our optimized Pregel framework with the message channel interface, which brings more opportunities of reducing messages in computation.
-The customized Pregel framework is designed to be a more efficient back-end for Palgol to fully take advantage of Palgol's high-level semantics in program optimization, but it can also serve as an extended programming model for programmers to implement graph algorithms.
+In this chapter, we present our customized Pregel framework with the message channel interface, which brings more opportunities of reducing messages in computation.
+The customized Pregel framework is designed to be a more efficient back-end for Palgol to fully take the advantages of Palgol's high-level semantics in program optimization, but it can also serve as an extended programming model for programmers to implement graph algorithms.
 By introducing the message channels, our customized Pregel framework is more convenient and efficient to handle complex communication patterns in a graph algorithm.
 
 \section{The Message Channel Interface}
 
-Let us first consider a 
+In complex graph algorithms (like S-V connectivity algorithm), communication with different vertices may happen in the same superstep, so that the messages for different purposes are mixed in the same message list.
+Although programmers can tag the messages to distinguish them, it is not an efficient solution.
+Let us consider the scenario shown in \autoref{fig:multi-msg-example}.
+
+\begin{figure}[th]
+\centering
+\begin{subfigure}[b]{0.45\textwidth}
+ \includegraphics[width=\textwidth]{figures/multi-msg.pdf}
+ \caption{space wasting when tagging and encoding messages into the same type}
+ \label{fig:multi-msg}
+\end{subfigure}
+\hspace{5pt}
+\begin{subfigure}[b]{0.45\textwidth}
+ \includegraphics[width=\textwidth]{figures/comb-err.pdf}
+ \caption{combiner optimization is not always applicable when different messages exist}
+ \label{fig:comb-err}
+\end{subfigure}
+\caption{Two major problems when different messages are used in the same superstep}
+\label{fig:multi-msg-example}
+\end{figure}
+
+There are two types of messages send in the same superstep, as shown in \autoref{fig:multi-msg}.
+One is int type indicated by the solid arrow, and the other is a pair of int and double indicated by the dashed arrow.
+In the original Pregel system, the single message type should be carefully chosen to be able to carry all types of messages used in the program.
+Then, in this case, it must be at least a pair of int and double to envelope the largest message, which however causes two-third of the space wasted for the messages with int type.
+Moreover, the combiner optimization is not always applicable when different messages exist.
+As mentioned in \autoref{sec:combiner}, the combiner is applicable when the messages are only meant to be consumed by a reduce-operator,
+but when having different messages in a superstep, it is usually the case that only the messages for the same purpose can be combined.
+In other words, the Pregel's combiner interface always combines \emph{all} the messages sent to the same destination vertex, but what we want is to combine a portion of the messages having the same tag, while leaving the other messages unchanged or optimized by other combiners.
+
+The idea to solve these problem is to think communication as different channels, instead of a unified message passing interface, so that the message type or the combiner for each communication channel can be individually specified.
+Furthermore, by separating the messages for different purposes and studying the communication patterns individually, more efficient implementation for each communication pattern can be derived and easily integrated into the system.
+For example, the aggregator and the request-respond paradigm \cite{effective} can be regarded as specialized classes of message channels and easily integrated into our system.
+
+The remaining problem is the system design to expose a reasonably simple interface for programmers to specify and use the message channels, which will be discussed in the next section.
 
 \section{System Design \& Implementation}
 
 In this part, we describe the details of our system design and implementation of different types of the message channels.
 
-%\subsection{} implemenation?
+\todo{worker (processor) and vertices}
 
-\subsection{Direct Message Passing and Aggregator}
+
+
+
+\subsection{Direct Message Passing \& Combiner}
+
+Direct message passing is 
+
+\subsection{Aggregator}
+
+Aggregator is also a standard interface for all Pregel-like frameworks, although its interface slightly differs in different frameworks.
+Aggregator is to represent global communications with a specified commutative and associative operator: it collects value from every active vertex, and the combine them with the operator to a final value.
+Such communication pattern is especially important for making a consensus or maintaining a same global state.
+
+The aggregator has the following interfaces:
 
 \subsection{Request-Respond Paradigm}
+
+Request-Respond Paradigm \cite{effective} is a two-phase communication pattern that represents the communication pattern of fetching a remote vertex's attributes.
+Since Pregel is a system build on ``message pushing'', such communication pattern has to be decomposed to a request and response phase:
+in the request phase, each vertex sends a request to a remote vertex, then in the next superstep, the response phase, vertices will receive the requests from other vertices, and they respond to them with the save value.
+In this communication pattern, the number of vertices that receive requests is usually much less than the number of active vertices in the graph, which gives room for reducing the messages.
+The solution is to let the worker merge the requests to the same destination in the sending phase, and send only 1 message to any destination.
+Consequently, any vertex will receive at most 1 request from each worker, and it just respond to the workers, instead of individual vertex.
+Finally, when the workers receive the responses (tagged with the responser's id), they dispatch the values to the requesting vertices.
+Due to the extra information kept on the worker, this optimization cannot be implement by the direct message passing interface, thus is implemented as a special message channel.
+
+Request-respond paradigm has the following interfaces:
 
 \section{Example: The S-V Connectivity Algorithm}
 
@@ -965,7 +1025,7 @@ We summarize the differences as follows:
 \begin{itemize}\setlength\itemsep{0em}
 \item
  First, programmers can only define the computation on every vertex in Pregel.
-In contrast, our customized Pregel framework let programmers implement the computation (the \emph{compute()} function) on each worker, and by exposing the vertices stored on each worker to the programmers, they are actually programming in the vertex-centric paradigm.
+ In contrast, our customized Pregel framework let programmers implement the computation (the \emph{compute()} function) on each worker, and by exposing the vertices stored on each worker to the programmers, they are actually programming in the vertex-centric paradigm.
 \item
  Second, in Pregel systems, message passing and aggregator are two hard-coded mechanisms, and more importantly, they are shared by the whole program, so that programmers need to find a proper message type for all the communications, or implement an aggregator that encodes all the global communications.
  However, in our customized Pregel system, message passing and aggregator are just two communication channels with different implementation, so programmers can define various instances of different types of communication channels, and specify them individually in the same program.
@@ -979,7 +1039,7 @@ The Palgol's high-level description is shown in \autoref{fig:svppa-code}, and ac
 
 \begin{figure}[th]
  \centering
- \includegraphics[width=0.8\textwidth]{figures/full.pdf}
+ \includegraphics[width=0.8\textwidth]{figures/svppa.pdf}
  \caption{The compilation result of S-V algorithm}
  \label{fig:full}
 \end{figure}
@@ -1002,7 +1062,7 @@ From the compilation result of Palgol compiler, we can find three message channe
  The message type is the same as the type of vertex identifier, and it can be optimized by a combiner as well, since the vertex receiving the remote writes just cares about the minimum value of the messages.
 \end{itemize}
 
-In the program, we use the variable \textit{grandpa} to represent the pointer jumping channel for calculating the grandfather of every vertex, and use the variables \textit{neighbor} and \textit{remote} to represent the direct message channels for collecting all neighbors' pointer and remote writes.
+In the program, we use the variable \textit{grandpa} to represent the pointer jumping channel for calculating the grandparent (parent's parent) of every vertex, and use the variables \textit{neighbor} and \textit{remote} to represent the direct message channels for collecting all neighbors' pointer and remote writes.
 The code shown in \autoref{fig:sv-declaration} declares and initializes these message channels, and in the next section we will show how to use these channels in the compute function.
 
 \begin{figure}[ht]
@@ -1027,14 +1087,57 @@ public:
 \label{fig:sv-declaration}
 \end{figure}
 
-In this example, we declare
+In this example, we declare three message channels:
+two direct message channels with messages of integer message type, and one request-respond channel with integer response value.
 
-\subsection{Implementing Individual Supersteps}
+\subsection{Implementation of Individual Supersteps}
 
 Second, let us consider how to implement each superstep in the worker's compute function.
+The \emph{compute()} function is a member function of \texttt{class Worker}, and it executes different code in different superstep according to a local variable \texttt{step}, whose value is however guaranteed to be the same on all workers.
+
+\begin{figure}[ht]
+\centering
+\vspace{-2ex}
+\begin{lstlisting}[basicstyle=\small,numbers=none,xleftmargin=0em,language=c++]
+  bool compute() {
+    .. // code for other supersteps
+    if (step == 3) {
+      // collect messages from previous superstep
+      auto &msgs = neighbor.collect();
+      // collect responses from parent vertices
+      grandpa.collect(D2);
+      // enter vertex-centric computation
+      for (int u = 0; u < numv(); u++) {
+        if (D2[u] == D[u]) {
+          int t = (msgs[u].empty() ? inf : 
+            *min_element(msgs[u].begin(), msgs[u].end()));
+          if (t < D[u])  // send an update to parent
+            remote.add_message(D[u], t);
+        } else
+          D[u] = D2[u];
+      }
+      remote.send(); // deliver messages after this step
+      step = 4;      // state transition
+      return false;  // don't terminate
+    }
+    .. // code for other supersteps
+  }
+\end{lstlisting}
+\vspace{-2ex}
+\caption{The implementation of step 3 for the S-V algorithm}
+\label{fig:sv-step3}
+\end{figure}
+
+\autoref{fig:sv-step3} shows the implementation of step 3 for the S-V algorithm.
+Before the vertex-centric computation, programmers should explicitly collect the messages form the previous superstep.
 
 
-\subsection{Input/Output and Preprocessing}
+\begin{comment}
+\subsection{Input/Output and Preprocessing} % not important in paper!!
+
+Finally, we should pay a little bit more attention on the input/output and the preprocessing.
+There is one more difference between this program and a typical Pregel program: in our program, we expose the index of each vertex to programmers, so programmers can use arrays to store the attributes of the vertices, which makes the code more clean.
+\end{comment}
 
 \section{Related Work}
 
