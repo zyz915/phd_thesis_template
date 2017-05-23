@@ -972,15 +972,16 @@ Let us consider the scenario shown in \autoref{fig:multi-msg-example}.
 There are two types of messages send in the same superstep, as shown in \autoref{fig:multi-msg}.
 One is int type indicated by the solid arrow, and the other is a pair of int and double indicated by the dashed arrow.
 In the original Pregel system, the single message type should be carefully chosen to be able to carry all types of messages used in the program.
-Then, in this case, it must be at least a pair of int and double to envelope the largest message, which however causes two-third of the space wasted for the messages with int type.
+Then, in this case, it must be at least a pair of int and double to envelope the largest possible message, which however causes a double word wasted for the messages using only int.
 Moreover, the combiner optimization is not always applicable when different messages exist.
 As mentioned in \autoref{sec:combiner}, the combiner is applicable when the messages are only meant to be consumed by a reduce-operator,
 but when having different messages in a superstep, it is usually the case that only the messages for the same purpose can be combined.
 In other words, the Pregel's combiner interface always combines \emph{all} the messages sent to the same destination vertex, but what we want is to combine a portion of the messages having the same tag, while leaving the other messages unchanged or optimized by other combiners.
 
 The idea to solve these problem is to think communication as different channels, instead of a unified message passing interface, so that the message type or the combiner for each communication channel can be individually specified.
-Furthermore, by separating the messages for different purposes and studying the communication patterns individually, more efficient implementation for each communication pattern can be derived and easily integrated into the system.
-For example, the aggregator and the request-respond paradigm \cite{effective} can be regarded as specialized classes of message channels and easily integrated into our system.
+Furthermore, with the separation of message channels, more communication patterns in graph algorithms can be easily integrated into our system, and specialized optimization can further improve the efficiency.
+%Furthermore, by separating the messages for different purposes and studying the communication patterns individually, more efficient implementation of communication patterns can be easily integrated into our system.
+To illustrate this, we show that the aggregator and the request-respond paradigm \cite{effective} can be regarded as special classes of message channels, and the S-V connectivity algorithm can thus benefit from such design, and be implemented concisely and efficiently in our framework.
 
 The remaining problem is the system design to expose a reasonably simple interface for programmers to specify and use the message channels, which will be discussed in the next section.
 
@@ -990,33 +991,116 @@ In this part, we describe the details of our system design and implementation of
 
 \todo{worker (processor) and vertices}
 
-
-
+First of all, we use the term ``worker'' to represent a basic computing unit, which can be a machine or a thread/process in a machine.
+Conceptually, workers share no memory with each other, but can communication with each other directly.
+We implement our system in C++, and 
 
 \subsection{Direct Message Passing \& Combiner}
 
 Direct message passing is 
 
+The direct message passing has the following interfaces:
+\begin{figure}[ht]
+\centering
+\vspace{-2ex}
+\begin{lstlisting}[basicstyle=\small,numbers=none,xleftmargin=0em,language=c++]
+template<typename VertexT, typename MsgT>
+class V2V : public Serializable {
+public:
+   typedef typename VertexT::KeyType KeyT;
+   typedef typename VertexT::HashType HashT;
+   typedef void (*CombinerT)(MsgT &, const MsgT &);
+
+   V2V(Worker<VertexT> *worker, const char *name,
+   CombinerT comb = nullptr);
+
+   void add_message(KeyT dst, const MsgT &msg);
+   void send();
+   bool empty();
+   void reset();
+   vector<vector<MsgT> >& collect();
+};
+\end{lstlisting}
+\vspace{-2ex}
+\caption{The message passing APIs}
+\label{fig:api-msg}
+\end{figure}
+
 \subsection{Aggregator}
 
-Aggregator is also a standard interface for all Pregel-like frameworks, although its interface slightly differs in different frameworks.
+Aggregator is also a standard mechanism for all Pregel-like frameworks, although its interface slightly differs in different frameworks.
 Aggregator is to represent global communications with a specified commutative and associative operator: it collects value from every active vertex, and the combine them with the operator to a final value.
 Such communication pattern is especially important for making a consensus or maintaining a same global state.
 
 The aggregator has the following interfaces:
+\begin{figure}[ht]
+\centering
+\vspace{-2ex}
+\begin{lstlisting}[basicstyle=\small,numbers=none,xleftmargin=0em,language=c++]
+template<typename FinalT, typename LocalT, typename InputT>
+class Aggregator : public Serializable {
+public:
+   typedef void (*LCombinerT)(LocalT &, const InputT &);
+   typedef void (*FCombinerT)(FinalT &, const LocalT &);
+
+   Aggregator(Sync *sync, LCombinerT lc, FCombinerT fc);
+
+   inline void add_value(const InputT &v);
+   inline void aggregate();
+   inline const FinalT &result() const;
+
+protected:
+   inline LocalT& local();
+   inline FinalT& final();
+
+private:
+   virtual void init_local() = 0;
+   virtual void init_final() = 0;
+};
+\end{lstlisting}
+\vspace{-2ex}
+\caption{The aggregator APIs}
+\label{fig:api-aggregator}
+\end{figure}
 
 \subsection{Request-Respond Paradigm}
 
 Request-Respond Paradigm \cite{effective} is a two-phase communication pattern that represents the communication pattern of fetching a remote vertex's attributes.
 Since Pregel is a system build on ``message pushing'', such communication pattern has to be decomposed to a request and response phase:
-in the request phase, each vertex sends a request to a remote vertex, then in the next superstep, the response phase, vertices will receive the requests from other vertices, and they respond to them with the save value.
-In this communication pattern, the number of vertices that receive requests is usually much less than the number of active vertices in the graph, which gives room for reducing the messages.
-The solution is to let the worker merge the requests to the same destination in the sending phase, and send only 1 message to any destination.
-Consequently, any vertex will receive at most 1 request from each worker, and it just respond to the workers, instead of individual vertex.
+in the request phase, each vertex sends a request to a remote vertex, then in the consequent response phase, vertices will receive the requests from other vertices, and they implicitly respond a value to them.
+In this communication pattern, the number of vertices that receive requests is usually much less than the number of active vertices in the graph, which gives a chance for reducing the messages.
+The solution is to let the worker merge the requests to the same destination in the sending phase, and send only 1 merged request to any destination.
+Consequently, any vertex will receive at most 1 request from each worker, so that it just respond to the workers instead of to individual vertices.
 Finally, when the workers receive the responses (tagged with the responser's id), they dispatch the values to the requesting vertices.
-Due to the extra information kept on the worker, this optimization cannot be implement by the direct message passing interface, thus is implemented as a special message channel.
 
-Request-respond paradigm has the following interfaces:
+Due to the extra information kept on the sending worker, this optimization cannot be implement by the direct message passing with combiner, thus is regarded as a special communication pattern and implemented as a set of extended interfaces in Pregel+~\cite{pregelplus}.
+Similar to the message passing and aggregator interface, this interfaces is shared by the whole program and the type of response value provided by the programmer at the beginning. %, therefore it potentially has the same disadvantages as the message passing and aggregator interface, including message encoding and XXX.
+In our customized Pregel framework, we implement as another type of message channels, and programmers can specify each request-respond channel individually.
+
+The request-respond paradigm has the following interfaces:
+\begin{figure}[ht]
+\centering
+\vspace{-2ex}
+\begin{lstlisting}[basicstyle=\small,numbers=none,xleftmargin=0em,language=c++]
+template<typename VertexT, typename ValT>
+class ReqRes : public Serializable {
+public:
+   typedef typename VertexT::KeyType KeyT;
+   typedef typename VertexT::HashType HashT;
+
+   ReqRes(Worker<VertexT> *worker, const char *name);
+
+   inline void add_request(int index, KeyT dst);
+   void request();
+   void respond(const vector<ValT> &val);
+   void collect(vector<ValT> &val);
+   void reset();
+};
+\end{lstlisting}
+\vspace{-2ex}
+\caption{The request-respond APIs}
+\label{fig:api-reqresp}
+\end{figure}
 
 \section{Example: The S-V Connectivity Algorithm}
 
@@ -1265,7 +1349,7 @@ In other words, compact programs are usually harder to maintain for humans.
  \end{tabular}
 \vspace{-2ex}\end{table}
 
-\section{Evaluation of The Customized Pregel Framework}
+\section{Evaluation of the Customized Pregel Framework}
 
 \chapter{Conclusions}
 \label{sec:conclusions}
