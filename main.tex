@@ -1072,8 +1072,8 @@ public:
    const FinalT &result() const;
 
 protected:
-   LocalT& local();
-   FinalT& final();
+   LocalT& local();  // access the local value
+   FinalT& final();  // access the final result
 
 private:
    virtual void init_local() = 0;
@@ -1107,8 +1107,8 @@ Consequently, any vertex will receive at most 1 request from each worker, so tha
 Finally, when the workers receive the responses (tagged with the responser's id), they dispatch the values to the requesting vertices.
 
 Due to the extra information kept on the sending worker, this optimization cannot be implement by the direct message passing with combiner, thus is regarded as a special communication pattern and implemented as a set of extended interfaces in Pregel+~\cite{pregelplus}.
-Similar to the message passing and aggregator interface, Pregel+'s request-respond interface is shared by the whole program and the type of response value provided by the programmer at the beginning, therefore when multiple request-respond communications are required in the program, programmers should carefully arrange them in different supersteps, and encode them to a same type.
-In our customized Pregel framework, we just implement it as another type of message channels, so programmers can specify each request-respond channel individually, which makes the implementation extremely simple.
+Similar to the message passing and aggregator interface, Pregel+'s request-respond interface is shared by the whole program and the type of response value is provided by the programmer at the beginning, therefore when multiple request-respond communications are required in the program, programmers should carefully arrange them in different supersteps, and encode them to a same type.
+In contrast, in our customized Pregel framework, we just implement it as another type of message channels, so programmers can specify the request-respond channels individually, which makes the implementation very easy.
 %Another remarkable difference is that, Pregel+ uses an additional communication channel for request-respond paradigm, while our system implement the request-respond channel on top of the raw char buffer, which potentially reduce the number of message exchanges among workers.
 The APIs of request-respond channel are presented in \autoref{fig:api-reqresp}.
 
@@ -1117,7 +1117,7 @@ The APIs of request-respond channel are presented in \autoref{fig:api-reqresp}.
 \vspace{-2ex}
 \begin{lstlisting}[basicstyle=\small\ttfamily,numbers=none,language=c++]
 template<typename VertexT, typename ValT>
-class ReqRes : public Serializable {
+class ReqResp : public Serializable {
 public:
    typedef typename VertexT::KeyT KeyT;
    typedef typename VertexT::HashT HashT;
@@ -1136,18 +1136,27 @@ public:
 \label{fig:api-reqresp}
 \end{figure}
 
-The class \texttt{ReqRes} takes two type arguments: the vertex class (which includes the type of vertex identifier and a hash function), and the message type.
-In the request phase, programmers can add request to buffer, and invoke \emph{request()} to let the system deliver the requests after the current superstep.
-The responses are then can be collected in the consequent superstep, and it is done in an implicit way: suppose the field to respond is stored in an array, we just need to pass this array to the function \emph{respond(val)}, and the channel will only read the values to respond from the vertices that have requests to them.
-Finally, we collect the results using the \emph{collect(val)} function, which returns an array containing the requested value for each vertex.
+The class \texttt{ReqResp} takes two type arguments: the vertex class (which includes the type of vertex identifier and a hash function), and the message type.
+In the request phase, programmers can add requests to buffer by invoking the function \emph{add\_request(index, dst)}, where \emph{index} is the index of the vertex that sending the request, and \emph{dst} is the destination vertex.
+Here, using the index of the requester (which is exposed to programmers) can significantly improve the performance, since we can feed the responses to corresponding vertices directly through the index, which avoids the costly table lookup in the response phase.
+Next, \emph{request()} should be invoked after all requests are added, to let the system deliver the buffered requests after the current superstep.
+The respond function \emph{respond(val)} is then invoked in the next superstep where \emph{val} stores the values to respond.
+Note that this mechanism is implemented in a passive way like in Pregel+: although every vertex need to prepare a value for responding the requests, the system will only access the values from the vertices that receive requests.
+Finally, after the responses are exchanged, we collect the results using the \emph{collect(val)} function, which returns an array containing the requested value for each vertex.
 
-
+Here we explain the implementation of request-respond message channel in detail.
+First, on each worker, we buffer all the requests, which can be seen as a list of $\langle dst,index\rangle$ where $index$ is the requester's index on this worker.
+In the \emph{request()} function, we sort all the requests and extract the distinct destinations from the requests, and furthermore, for each distinct destination vertex id, we record the index of its first occurrence in the request list, so we obtain the $\langle dst_{unique},index_{req}\rangle$ pairs.
+It is further split into $M$ sending lists depending on where the destination vertex locates (vertex $dst$ locates on worker $w$ where $w=hash(dst)$).
+The exchange of the requests and responses are straightforward.
+After the response values are received after the response phase, we can get the tuples containing $\langle dst_{unique},index_{req},value\rangle$ by merging the responses with the sending lists.
+Finally, using $dst_{unique}$ and $index_{req}$, we can efficiently find all the requests in the request buffer that has destination $dst_{unique}$, then using the index information, we efficiently feed the $value$ to all requesting vertices.
 
 \begin{comment}
 Our implementation slightly differs from the implementation of Pregel+ in two aspects.
 First, when programmers send requests in a certain superstep, Pregel+ actually performs the request and response phase consecutively, so that the programmers can get the response in the next superstep.
 The reason is that, Pregel+ assumes that the requesters always want to fetch a remote vertex's attribute, so by providing a \emph{respond()} interface in class \texttt{Vertex}, vertices can respond that attributes to the requesters and Pregel+ can automate the response phase.
-Instead, in our system, the request phase and respond phase happen in individual supersteps, and the respond value can be generated by any user-specified computation.
+Instead, in our system, the request phase and respond phase happen in individual supersteps, and the response value can be generated by any user-specified computation.
 \end{comment}
 
 \section{Example: The S-V Algorithm}
@@ -1195,12 +1204,14 @@ From the compilation result of Palgol compiler, we can find three message channe
 \end{itemize}
 
 In the program, we use the variable \textit{grandpa} to represent the pointer jumping channel for calculating the grandparent (parent's parent) of every vertex, and use the variables \textit{neighbor} and \textit{remote} to represent the direct message channels for collecting all neighbors' pointer and remote writes.
-The code shown in \autoref{fig:sv-declaration} declares and initializes these message channels, and in the next section we will show how to use these channels in the compute function.
+The code shown in \autoref{fig:sv-declaration} defines the class \texttt{SVWorker} for implementing the S-V algorithm, declares the message channels in this class, and initializes them in the constructor.
+There are three message channels defined here: two direct message channels with messages of integer message type, and one request-respond channel with integer response value.
 
 \begin{figure}[ht]
 \centering
 \vspace{-2ex}
-\begin{lstlisting}[basicstyle=\small\ttfamily,numbers=none,language=c++]
+\begin{lstlisting}[basicstyle=\small\ttfamily,numbers=none,language=c++,
+xleftmargin=0.1\textwidth]
 typedef Vertex<int, vector<int> > VertexT;
 class SVWorker : public Worker<VertexT> {
 private:
@@ -1212,6 +1223,8 @@ public:
       grandpa(this, "Pointer Jumping"),
       neighbor(this, "Neighborhood", c_min),
       remote(this, "Remote Write", c_min) {}
+   // the user-specified compute function
+   bool compute() { .. }
 };
 \end{lstlisting}
 \vspace{-2ex}
@@ -1219,8 +1232,7 @@ public:
 \label{fig:sv-declaration}
 \end{figure}
 
-In this example, we declare three message channels:
-two direct message channels with messages of integer message type, and one request-respond channel with integer response value.
+The interfaces of these message channels are already introduced, and in the next section, we will show how to use these message channels in the \emph{compute()} function for data communication.
 
 \subsection{Implementation of Individual Supersteps}
 
@@ -1230,7 +1242,7 @@ The \emph{compute()} function is a member function of class \texttt{Worker}, and
 \begin{figure}[ht]
 \centering
 \vspace{-2ex}
-\begin{lstlisting}[basicstyle=\small\ttfamily,numbers=none,language=c++]
+\begin{lstlisting}[basicstyle=\small\ttfamily,language=c++]
 bool compute() {
    .. // code for other supersteps
    if (step == 3) {
@@ -1260,9 +1272,15 @@ bool compute() {
 \label{fig:sv-step3}
 \end{figure}
 
-\autoref{fig:sv-step3} shows the implementation of step 3 for the S-V algorithm.
+\autoref{fig:sv-step3} shows the implementation of the main step (step 3) for the S-V algorithm.
 Before the vertex-centric computation, programmers should explicitly collect the messages form the previous superstep.
-
+So in lines 4--7, we collect the messages from the neighbors in $msgs$ (which stores each vertex's message list) and collect the ids of grandparents in $D2$ (a list storing each vertex's grandparent).
+After the messages are collected, we enter the vertex-centric computation by writing the for loop in line 9--17, in which $numv()$ is the number of vertices on the worker, $D$ is an array storing the parent vertex identifier for each vertex on this worker, and we just use the raw index to access the attributes of the vertices.
+Then, since $D2$ stores the grandparent's id and $D$ stores the parent's id, the if expression in line 10 checks whether a vertex's parent is a root value.
+If it is the case, we calculate the minimum parent id of neighbors' as $t$, and modify $u$'s parent's pointer with $t$, which is achieved by adding a message $t$ to the remote updating channel $remote$.
+We can observe in line 18 that the messages buffered by the \emph{remote} channel are delivered, so that the messages are expected to reach the destinations in step 4, according to the state transition in line 19.
+If $u$'s parent is not a root node, then current vertex $u$ change its pointer $D$ to $u$'s grandparent $D2[u]$.
+Finally, in line 20, we return \texttt{false} indicating that the whole program should continue after current superstep ends.
 
 \begin{comment}
 \subsection{Input/Output and Preprocessing} % not important in paper!!
