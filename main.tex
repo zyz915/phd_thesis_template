@@ -23,7 +23,7 @@
 \usepackage{listings}
 %\usepackage{enumitem}
 %\usepackage{inconsolata}
-%\usepackage{subfigure}
+\usepackage{courier}
 \usepackage{subcaption}
 %\usepackage[charter]{mathdesign}
 % \def\rmdefault{bch} % not scaled
@@ -54,10 +54,10 @@
  morecomment=[l]{//},
 }
 \lstset{
- basicstyle=\footnotesize\ttdefault,
+ basicstyle=\small\ttfamily,
  language=pregel,
  numbers=left,
- xleftmargin=2em,
+ xleftmargin=0.05\textwidth,
  stepnumber=1,
  numberfirstline=false
 }
@@ -72,7 +72,7 @@
 \makeatother
 \newcommand{\shorteqq}{\mathop{\shorteq\shorteq}}
 \newcommand{\knows}[2]{\mathrm K_{#1}\,{#2}}
-\def\ttdefault{txtt}
+%\def\ttdefault{txtt}
 
 \newcommand{\hsp}[1]{\hspace{-3em}\hbox{#1}}
 
@@ -381,23 +381,22 @@ The single-source shortest path problem is among the best known in graph theory 
 To understand this algorithm, we first have a look at how it is implemented in Google's Pregel system~\cite{pregel} in Figure~\ref{fig:sssp-pregel}.
 \begin{figure}[thp]
 \vspace{-2ex}
-\begin{lstlisting}[basicstyle=\small,numbers=none,xleftmargin=0em,language=c++]
-class ShortestPathVertex
-    : public Vertex<int, int, int> {
-  void Compute(MessageIterator* msgs) {
-    int minDist = vertex_id() == 0 ? 0 : INF;
-    for (; !msgs->Done(); msgs->Next())
-      minDist = min(minDist, msgs->Value());
-    if (minDist < GetValue()) {
-      *MutableValue() = minDist;
-      OutEdgeIterator iter = 
-            GetOutEdgeIterator();
-      for (; !iter.Done(); iter.Next())
-        SendMessageTo(iter.Target(),
-              minDist + iter.GetValue());
-    }
-    VoteToHalt();
-  }
+\begin{lstlisting}[basicstyle=\small\ttfamily,
+numbers=none,language=c++,xleftmargin=0.1\textwidth]
+class ShortestPathVertex : public Vertex<int, int, int> {
+   void Compute(MessageIterator* msgs) {
+      int minDist = vertex_id() == 0 ? 0 : INF;
+      for (; !msgs->Done(); msgs->Next())
+         minDist = min(minDist, msgs->Value());
+      if (minDist < GetValue()) {
+         *MutableValue() = minDist;
+         OutEdgeIterator iter = GetOutEdgeIterator();
+         for (; !iter.Done(); iter.Next())
+            SendMessageTo(iter.Target(),
+               minDist + iter.GetValue());
+      }
+      VoteToHalt();
+   }
 };
 \end{lstlisting}
 \vspace{-2ex}
@@ -424,7 +423,7 @@ More specifically, the list comprehension goes through every edge~$e$ in the inc
 Finally, we pick the minimum value from the generated list as \textit{minDist}, and update the local fields.
 
 \begin{figure}[thp]
-\begin{lstlisting}[basicstyle=\footnotesize]
+\begin{lstlisting}[basicstyle=\small\ttfamily]
 for v in V
   Dist[v] := (Id[v] == 0 ? 0 : inf)
   Active[v] := (Id[v] == 0)
@@ -432,7 +431,7 @@ end
 do
   for v in V
     let minDist = minimum [ Dist[e.ref] + e.val
-        | e <- In[v], Active[e.ref] ]
+                | e <- In[v], Active[e.ref] ]
     Active[v] := false
     if (minDist < Dist[v])
       Active[v] := true
@@ -509,7 +508,7 @@ Moreover, since $p$~does not maintain a list of its children, $u$~must send its 
 We can see that, despite the simplicity of the description at algorithm level, it has to be translated into three supersteps containing a query-reply conversation between each vertex and its parent.
 
 \begin{figure}[thp]
-\begin{lstlisting}[basicstyle=\footnotesize]
+\begin{lstlisting}[basicstyle=\small\ttfamily]
 for u in V
   D[u] := u
   D[u] <?= minimum [ e.ref | e <- Nbr[u] ]
@@ -703,7 +702,7 @@ Second, by extending the memoization technique, we can ensure that a chain acces
 Neighborhood communication is another important communication pattern widely used in Pregel algorithms.
 Precisely speaking, neighborhood communication refers to those chain access expressions inside a non-nested loop traversing an edge list (\textbf{Nbr}, \textbf{In} or \textbf{Out}), where the chain access expressions start from the neighboring vertex.
 The following code is a typical example of neighborhood communication, which is a list comprehension used in the S-V algorithm program (Figure~\ref{fig:svppa-code}):
-\begin{lstlisting}[basicstyle=\footnotesize,firstnumber=7]
+\begin{lstlisting}[basicstyle=\small\ttfamily,firstnumber=7]
     let t = minimum [ D[e.ref] | e <- Nbr[v] ]
 \end{lstlisting}
 Syntactically, a field access expression $D[e.\mathbf{ref}]$ can be easily identified as a neighborhood communication.
@@ -948,7 +947,7 @@ By introducing the message channels, our customized Pregel framework is more con
 
 \section{The Message Channel Interface}
 
-In complex graph algorithms (like S-V connectivity algorithm), communication with different vertices may happen in the same superstep, so that the messages for different purposes are mixed in the same message list.
+In complex graph algorithms (like S-V algorithm), communication with different vertices may happen in the same superstep, so that the messages for different purposes are mixed in the same message list.
 Although programmers can tag the messages to distinguish them, it is not an efficient solution.
 Let us consider the scenario shown in \autoref{fig:multi-msg-example}.
 
@@ -981,7 +980,7 @@ In other words, the Pregel's combiner interface always combines \emph{all} the m
 The idea to solve these problem is to think communication as different channels, instead of a unified message passing interface, so that the message type or the combiner for each communication channel can be individually specified.
 Furthermore, with the separation of message channels, more communication patterns in graph algorithms can be easily integrated into our system, and specialized optimization can further improve the efficiency.
 %Furthermore, by separating the messages for different purposes and studying the communication patterns individually, more efficient implementation of communication patterns can be easily integrated into our system.
-To illustrate this, we show that the aggregator and the request-respond paradigm \cite{effective} can be regarded as special classes of message channels, and the S-V connectivity algorithm can thus benefit from such design, and be implemented concisely and efficiently in our framework.
+To illustrate this, we show that the aggregator and the request-respond paradigm \cite{effective} can be regarded as special classes of message channels, and the S-V algorithm can thus benefit from such design, and be implemented concisely and efficiently in our framework.
 
 The remaining problem is the system design to expose a reasonably simple interface for programmers to specify and use the message channels, which will be discussed in the next section.
 
@@ -989,21 +988,36 @@ The remaining problem is the system design to expose a reasonably simple interfa
 
 In this part, we describe the details of our system design and implementation of different types of the message channels.
 
-\todo{worker (processor) and vertices}
+\subsection{System Design}
 
-First of all, we use the term ``worker'' to represent a basic computing unit, which can be a machine or a thread/process in a machine.
-Conceptually, workers share no memory with each other, but can communication with each other directly.
-We implement our system in C++, and 
+First of all, we use the term ``worker'' to represent a basic computing unit, which in general can be a machine or a thread/process in a machine, but in our system it just refers to a process.
+When launching a graph processing task, multiple instances of workers are created, and each of them holds a disjoint portion of the graph (a subset of vertices along with their attributes and edge lists).
+They corporate with each other to finish the task in a distributed manner.
+
+Workers share no memory with each other, but can exchange messages with other workers in batch through the underlying communication layer, which is implemented using the Message Passing Interface (MPI).
+In particular, a worker maintains $M$ outgoing buffers (where $M$ is the number of workers), one for each worker in the cluster.
+When a worker sends some data to another worker, it simply appends the data in the buffer, and it is until the end of a superstep that all the contents (not just this piece of data) in the buffer are finally delivered to their designated workers.
+We accomplish it by the buffer exchange, which is implemented by $M$ rounds of pairwise communication among workers, while in each round every worker carefully selects a partner and sends the contents in the corresponding buffer through MPI's message passing primitives.
+After the buffer exchange, the contents are further processed by the designated worker.
+
+In the original Pregel system, the outgoing buffers can be seen as a single message channel which only stores the data that has the user-specified message type.
+To support multiple message channels with different message types, our outgoing buffers are just raw char buffers which store serialized data only, so that data with different types can be treated equally.
+Besides, the message channels buffer the messages first, and in the end if each superstep, they serialize and dump their buffers to the outgoing buffers in batch to avoid the overhead of tagging the individual messages with type information in serialization.
+After the buffer exchange, the contents in the buffer are deserialized by the message channels in exactly the same order as they are serialized, to correctly restore the data.
+
+Next, we discuss the implementation of three types of message channels: direct message passing channel, aggregator channel, and request-respond channel.
 
 \subsection{Direct Message Passing \& Combiner}
 
-Direct message passing is 
+Direct message passing is a standard mechanism provided by all Pregel framework.
+In some Pregel frameworks, vertices can only send direct messages to their neighbors in the input graph, but allowing message passing between any pair of vertices is critical to make several graph algorithms~\cite{connectivity, effective} converge fast.
+In our framework, the interfaces of direct message passing are shown in \autoref{ig:api-msg}.
 
-The direct message passing has the following interfaces:
 \begin{figure}[ht]
 \centering
 \vspace{-2ex}
-\begin{lstlisting}[basicstyle=\small,numbers=none,xleftmargin=0em,language=c++]
+\begin{lstlisting}[basicstyle=\small\ttfamily,
+numbers=none,language=c++,xleftmargin=0.1\textwidth]
 template<typename VertexT, typename MsgT>
 class V2V : public Serializable {
 public:
@@ -1012,7 +1026,7 @@ public:
    typedef void (*CombinerT)(MsgT &, const MsgT &);
 
    V2V(Worker<VertexT> *worker, const char *name,
-   CombinerT comb = nullptr);
+       CombinerT comb = nullptr);
 
    void add_message(KeyT dst, const MsgT &msg);
    void send();
@@ -1026,17 +1040,25 @@ public:
 \label{fig:api-msg}
 \end{figure}
 
+The class \texttt{V2V} represents the vertex-to-vertex communication, and it takes two type arguments: the vertex class (which includes the type of vertex identifier and a hash function), and the message type.
+Any instance of class \texttt{V2V} further takes a worker, a string (for printing runtime information) and an optional combiner as arguments.
+Programmers can add messages to the buffer, deliver the message after a superstep, check whether message buffer is empty, reset the class, and collect the messages sent in the previous superstep.
+
+The implementation of the direct message passing is straightforward.
+Messages are tagged with the destination vertex identifier, and added to the buffer.
+If the combiner is specified, the combiner optimization is performed before serialization, by sorting and grouping the messages by the destination, and combining the messages for the same destination by a binary function.
+
 \subsection{Aggregator}
 
 Aggregator is also a standard mechanism for all Pregel-like frameworks, although its interface slightly differs in different frameworks.
 Aggregator is to represent global communications with a specified commutative and associative operator: it collects value from every active vertex, and the combine them with the operator to a final value.
 Such communication pattern is especially important for making a consensus or maintaining a same global state.
+The aggregator APIs are present in \autoref{fig:api-aggregator}.
 
-The aggregator has the following interfaces:
 \begin{figure}[ht]
 \centering
 \vspace{-2ex}
-\begin{lstlisting}[basicstyle=\small,numbers=none,xleftmargin=0em,language=c++]
+\begin{lstlisting}[basicstyle=\small\ttfamily,numbers=none,language=c++]
 template<typename FinalT, typename LocalT, typename InputT>
 class Aggregator : public Serializable {
 public:
@@ -1063,6 +1085,16 @@ private:
 \label{fig:api-aggregator}
 \end{figure}
 
+The class \texttt{Aggregator} takes three type arguments: the type of input value, the type of the partial value stored on each worker, and the type of the final result.
+Two combiners need to be specified by user: one local combiner is to update the local value with an input value, and a global combiner is to update the final value by the partial values from other workers.
+Meanwhile, programmers should also tell the aggregator how to initialize the local partial value and the final result before aggregation.
+The APIs are shown in \autoref{fig:api-aggregator} where programmers can feed values, perform aggregation after a superstep, and read the result of the aggregator.
+Finally, unlike some Pregel frameworks where the aggregator automatically collects the value from all active vertices, in our system, programmers need to explicitly feed the values to the aggregator, making aggregator an independent mechanism to the vertex inactivation mechanism.
+
+The implementation of the aggregator is also straightforward.
+Every worker just sends its partial value to all other workers using the outgoing buffer interface, so that after the buffer exchange, it will receive the partial values from all other workers.
+Then, every worker uses the global combiner to reduce them to a final value, and the order of reduction is guaranteed to be the same on all workers.
+
 \subsection{Request-Respond Paradigm}
 
 Request-Respond Paradigm \cite{effective} is a two-phase communication pattern that represents the communication pattern of fetching a remote vertex's attributes.
@@ -1075,13 +1107,13 @@ Finally, when the workers receive the responses (tagged with the responser's id)
 
 Due to the extra information kept on the sending worker, this optimization cannot be implement by the direct message passing with combiner, thus is regarded as a special communication pattern and implemented as a set of extended interfaces in Pregel+~\cite{pregelplus}.
 Similar to the message passing and aggregator interface, this interfaces is shared by the whole program and the type of response value provided by the programmer at the beginning. %, therefore it potentially has the same disadvantages as the message passing and aggregator interface, including message encoding and XXX.
-In our customized Pregel framework, we implement as another type of message channels, and programmers can specify each request-respond channel individually.
+In our customized Pregel framework, we implement as another type of message channels, and similar to the message passing channels, programmers can specify each request-respond channel individually.
+The APIs of request-respond channel are presented in \autoref{fig:api-reqresp}.
 
-The request-respond paradigm has the following interfaces:
 \begin{figure}[ht]
 \centering
 \vspace{-2ex}
-\begin{lstlisting}[basicstyle=\small,numbers=none,xleftmargin=0em,language=c++]
+\begin{lstlisting}[basicstyle=\small\ttfamily,numbers=none,language=c++]
 template<typename VertexT, typename ValT>
 class ReqRes : public Serializable {
 public:
@@ -1102,7 +1134,7 @@ public:
 \label{fig:api-reqresp}
 \end{figure}
 
-\section{Example: The S-V Connectivity Algorithm}
+\section{Example: The S-V Algorithm}
 
 Programs written for our customized Pregel are quite different from those written in Pregel.
 We summarize the differences as follows:
@@ -1118,7 +1150,7 @@ We summarize the differences as follows:
  In particular, the user-defined \emph{compute()} function returns a boolean value indicating the current worker's local decision of termination, and the whole computation terminates when all workers decide to stop.
 \end{itemize}
 
-As a running example, let's see how the Shiloach-Vishkin connectivity algorithm~\cite{connectivity} is implemented in our customized Pregel system.
+As a running example, let's see how the S-V algorithm~\cite{connectivity} is implemented in our customized Pregel system.
 The Palgol's high-level description is shown in \autoref{fig:svppa-code}, and according to the compilation algorithm presented in \autoref{sec:compilation}, the compilation result is shown in figure \autoref{fig:full}, which contains 4 supersteps.
 
 \begin{figure}[th]
@@ -1152,7 +1184,7 @@ The code shown in \autoref{fig:sv-declaration} declares and initializes these me
 \begin{figure}[ht]
 \centering
 \vspace{-2ex}
-\begin{lstlisting}[basicstyle=\small,numbers=none,xleftmargin=0em,language=c++]
+\begin{lstlisting}[basicstyle=\small\ttfamily,numbers=none,language=c++]
 typedef Vertex<int, vector<int> > VertexT;
 class SVWorker : public Worker<VertexT> {
 private:
@@ -1177,35 +1209,35 @@ two direct message channels with messages of integer message type, and one reque
 \subsection{Implementation of Individual Supersteps}
 
 Second, let us consider how to implement each superstep in the worker's compute function.
-The \emph{compute()} function is a member function of \texttt{class Worker}, and it executes different code in different superstep according to a local variable \texttt{step}, whose value is however guaranteed to be the same on all workers.
+The \emph{compute()} function is a member function of class \texttt{Worker}, and it executes different code in different superstep according to a local variable \texttt{step}, whose value is however guaranteed to be the same on all workers.
 
 \begin{figure}[ht]
 \centering
 \vspace{-2ex}
-\begin{lstlisting}[basicstyle=\small,numbers=none,xleftmargin=0em,language=c++]
-  bool compute() {
-    .. // code for other supersteps
-    if (step == 3) {
+\begin{lstlisting}[basicstyle=\small\ttfamily,numbers=none,language=c++]
+bool compute() {
+   .. // code for other supersteps
+   if (step == 3) {
       // collect messages from previous superstep
       auto &msgs = neighbor.collect();
       // collect responses from parent vertices
       grandpa.collect(D2);
       // enter vertex-centric computation
       for (int u = 0; u < numv(); u++) {
-        if (D2[u] == D[u]) {
-          int t = (msgs[u].empty() ? inf : 
-            *min_element(msgs[u].begin(), msgs[u].end()));
-          if (t < D[u])  // send an update to parent
-            remote.add_message(D[u], t);
-        } else
-          D[u] = D2[u];
+         if (D2[u] == D[u]) {
+            int t = (msgs[u].empty() ? INF : 
+               *min_element(msgs[u].begin(), msgs[u].end()));
+            if (t < D[u])  // send an update to parent
+               remote.add_message(D[u], t);
+         } else
+            D[u] = D2[u];
       }
       remote.send(); // deliver messages after this step
       step = 4;      // state transition
       return false;  // don't terminate
-    }
-    .. // code for other supersteps
-  }
+   }
+   .. // code for other supersteps
+}
 \end{lstlisting}
 \vspace{-2ex}
 \caption{The implementation of step 3 for the S-V algorithm}
