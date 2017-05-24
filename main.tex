@@ -947,7 +947,7 @@ By introducing the message channels, our customized Pregel framework is more con
 
 \section{The Message Channel Interface}
 
-In complex graph algorithms (like S-V algorithm), communication with different vertices may happen in the same superstep, so that the messages for different purposes are mixed in the same message list.
+In complex graph algorithms (like S-V algorithm), a vertex may communication with different vertices in the same superstep, so that the messages for different purposes are mixed in the message list.
 Although programmers can tag the messages to distinguish them, it is not an efficient solution.
 Let us consider the scenario shown in \autoref{fig:multi-msg-example}.
 
@@ -955,7 +955,7 @@ Let us consider the scenario shown in \autoref{fig:multi-msg-example}.
 \centering
 \begin{subfigure}[b]{0.45\textwidth}
  \includegraphics[width=\textwidth]{figures/multi-msg.pdf}
- \caption{space wasting when tagging and encoding messages into the same type}
+ \caption{space is wasted when tagging and encoding messages into the same type}
  \label{fig:multi-msg}
 \end{subfigure}
 \hspace{5pt}
@@ -1011,7 +1011,7 @@ Next, we discuss the implementation of three types of message channels: direct m
 
 Direct message passing is a standard mechanism provided by all Pregel framework.
 In some Pregel frameworks, vertices can only send direct messages to their neighbors in the input graph, but allowing message passing between any pair of vertices is critical to make several graph algorithms~\cite{connectivity, effective} converge fast.
-In our framework, the interfaces of direct message passing are shown in \autoref{ig:api-msg}.
+In our framework, the interfaces of direct message passing are shown in \autoref{fig:api-msg}.
 
 \begin{figure}[ht]
 \centering
@@ -1021,8 +1021,8 @@ numbers=none,language=c++,xleftmargin=0.1\textwidth]
 template<typename VertexT, typename MsgT>
 class V2V : public Serializable {
 public:
-   typedef typename VertexT::KeyType KeyT;
-   typedef typename VertexT::HashType HashT;
+   typedef typename VertexT::KeyT KeyT;
+   typedef typename VertexT::HashT HashT;
    typedef void (*CombinerT)(MsgT &, const MsgT &);
 
    V2V(Worker<VertexT> *worker, const char *name,
@@ -1041,7 +1041,7 @@ public:
 \end{figure}
 
 The class \texttt{V2V} represents the vertex-to-vertex communication, and it takes two type arguments: the vertex class (which includes the type of vertex identifier and a hash function), and the message type.
-Any instance of class \texttt{V2V} further takes a worker, a string (for printing runtime information) and an optional combiner as arguments.
+The constructor of class \texttt{V2V} further takes a worker, a string (for printing runtime information) and an optional combiner as arguments.
 Programmers can add messages to the buffer, deliver the message after a superstep, check whether message buffer is empty, reset the class, and collect the messages sent in the previous superstep.
 
 The implementation of the direct message passing is straightforward.
@@ -1067,13 +1067,13 @@ public:
 
    Aggregator(Sync *sync, LCombinerT lc, FCombinerT fc);
 
-   inline void add_value(const InputT &v);
-   inline void aggregate();
-   inline const FinalT &result() const;
+   void add_value(const InputT &v);
+   void aggregate();
+   const FinalT &result() const;
 
 protected:
-   inline LocalT& local();
-   inline FinalT& final();
+   LocalT& local();
+   FinalT& final();
 
 private:
    virtual void init_local() = 0;
@@ -1088,11 +1088,12 @@ private:
 The class \texttt{Aggregator} takes three type arguments: the type of input value, the type of the partial value stored on each worker, and the type of the final result.
 Two combiners need to be specified by user: one local combiner is to update the local value with an input value, and a global combiner is to update the final value by the partial values from other workers.
 Meanwhile, programmers should also tell the aggregator how to initialize the local partial value and the final result before aggregation.
-The APIs are shown in \autoref{fig:api-aggregator} where programmers can feed values, perform aggregation after a superstep, and read the result of the aggregator.
-Finally, unlike some Pregel frameworks where the aggregator automatically collects the value from all active vertices, in our system, programmers need to explicitly feed the values to the aggregator, making aggregator an independent mechanism to the vertex inactivation mechanism.
+Programmers can feed values, perform aggregation after a superstep, and read the result of the aggregator.
+The last thing to mention is that, unlike some Pregel frameworks where the aggregator automatically collects the value from all active vertices, in our system, programmers need to explicitly feed the values to the aggregator, making aggregator an independent mechanism to the vertex inactivation mechanism.
 
 The implementation of the aggregator is also straightforward.
-Every worker just sends its partial value to all other workers using the outgoing buffer interface, so that after the buffer exchange, it will receive the partial values from all other workers.
+On each worker, a local partial value is generated from the initial value, and updated by every input value using the local combiner.
+Then, each worker just sends its partial value to all other workers using the outgoing buffer interface, so that after the buffer exchange, every worker will receive the partial values from all other workers.
 Then, every worker uses the global combiner to reduce them to a final value, and the order of reduction is guaranteed to be the same on all workers.
 
 \subsection{Request-Respond Paradigm}
@@ -1106,8 +1107,9 @@ Consequently, any vertex will receive at most 1 request from each worker, so tha
 Finally, when the workers receive the responses (tagged with the responser's id), they dispatch the values to the requesting vertices.
 
 Due to the extra information kept on the sending worker, this optimization cannot be implement by the direct message passing with combiner, thus is regarded as a special communication pattern and implemented as a set of extended interfaces in Pregel+~\cite{pregelplus}.
-Similar to the message passing and aggregator interface, this interfaces is shared by the whole program and the type of response value provided by the programmer at the beginning. %, therefore it potentially has the same disadvantages as the message passing and aggregator interface, including message encoding and XXX.
-In our customized Pregel framework, we implement as another type of message channels, and similar to the message passing channels, programmers can specify each request-respond channel individually.
+Similar to the message passing and aggregator interface, Pregel+'s request-respond interface is shared by the whole program and the type of response value provided by the programmer at the beginning, therefore when multiple request-respond communications are required in the program, programmers should carefully arrange them in different supersteps, and encode them to a same type.
+In our customized Pregel framework, we just implement it as another type of message channels, so programmers can specify each request-respond channel individually, which makes the implementation extremely simple.
+%Another remarkable difference is that, Pregel+ uses an additional communication channel for request-respond paradigm, while our system implement the request-respond channel on top of the raw char buffer, which potentially reduce the number of message exchanges among workers.
 The APIs of request-respond channel are presented in \autoref{fig:api-reqresp}.
 
 \begin{figure}[ht]
@@ -1117,12 +1119,12 @@ The APIs of request-respond channel are presented in \autoref{fig:api-reqresp}.
 template<typename VertexT, typename ValT>
 class ReqRes : public Serializable {
 public:
-   typedef typename VertexT::KeyType KeyT;
-   typedef typename VertexT::HashType HashT;
+   typedef typename VertexT::KeyT KeyT;
+   typedef typename VertexT::HashT HashT;
 
    ReqRes(Worker<VertexT> *worker, const char *name);
 
-   inline void add_request(int index, KeyT dst);
+   void add_request(int index, KeyT dst);
    void request();
    void respond(const vector<ValT> &val);
    void collect(vector<ValT> &val);
@@ -1133,6 +1135,20 @@ public:
 \caption{The request-respond APIs}
 \label{fig:api-reqresp}
 \end{figure}
+
+The class \texttt{ReqRes} takes two type arguments: the vertex class (which includes the type of vertex identifier and a hash function), and the message type.
+In the request phase, programmers can add request to buffer, and invoke \emph{request()} to let the system deliver the requests after the current superstep.
+The responses are then can be collected in the consequent superstep, and it is done in an implicit way: suppose the field to respond is stored in an array, we just need to pass this array to the function \emph{respond(val)}, and the channel will only read the values to respond from the vertices that have requests to them.
+Finally, we collect the results using the \emph{collect(val)} function, which returns an array containing the requested value for each vertex.
+
+
+
+\begin{comment}
+Our implementation slightly differs from the implementation of Pregel+ in two aspects.
+First, when programmers send requests in a certain superstep, Pregel+ actually performs the request and response phase consecutively, so that the programmers can get the response in the next superstep.
+The reason is that, Pregel+ assumes that the requesters always want to fetch a remote vertex's attribute, so by providing a \emph{respond()} interface in class \texttt{Vertex}, vertices can respond that attributes to the requesters and Pregel+ can automate the response phase.
+Instead, in our system, the request phase and respond phase happen in individual supersteps, and the respond value can be generated by any user-specified computation.
+\end{comment}
 
 \section{Example: The S-V Algorithm}
 
