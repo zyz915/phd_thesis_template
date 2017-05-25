@@ -48,7 +48,7 @@
  morekeywords={for,in,do,until,fix,repeat,exists,forall,end,if,else,
   let,true,false,fst,snd,to_int,to_float,ref,val,inf,local,remote,V,
   input,output,field,extern,maximum,minimum,sum,and,or,random,
-  Nbr,In,Out,Id},
+  Nbr,In,Out,Id,int,float,bool,this},
  %keywordstyle=\color{red},
  sensitive=true,
  morecomment=[l]{//},
@@ -169,7 +169,7 @@ Whether built-in or user-defined, an aggregation operator should be commutative 
 Being simple, Pregel has demonstrated its usefulness in implementing many interesting graph algorithms \cite{pregel,QuWH12,connectivity,optimizing,XiYZ14}.
 
 Google's Pregel \cite{pregel} proposed the vertex-centric computing paradigm, which allows programmers to think naturally like a vertex when designing distributed graph algorithms.
-There are a bunch of open-source alternatives to the official and proprietary Pregel system, such as Apache Hama~\cite{hama}, Apache Giraph~\cite{giraph}, Catch the Wind~\cite{catchw}, GPS~\cite{gps}, GraphLab~\cite{graphlab}, PowerGraph~\cite{powergraph}, Mizan~\cite{mizan} and Pregel+\cite{pregelplus}.
+There are a bunch of open-source alternatives to the official and proprietary Pregel system, such as Apache Hama~\cite{hama}, Apache Giraph~\cite{giraph}, Catch the Wind~\cite{catchw}, GPS~\cite{gps}, GraphLab~\cite{graphlab}, PowerGraph~\cite{powergraph}, GraphX~\cite{graphx}, Mizan~\cite{mizan} and Pregel+\cite{pregelplus}.
 
 \section{Problem in Existing Pregel Frameworks}
 
@@ -988,30 +988,31 @@ The remaining problem is the system design to expose a reasonably simple interfa
 
 In this part, we describe the details of our system design and implementation of different types of the message channels.
 
-\subsection{System Design}
+\subsection{The Communication Layer}
 
 First of all, we use the term ``worker'' to represent a basic computing unit, which in general can be a machine or a thread/process in a machine, but in our system it just refers to a process.
 When launching a graph processing task, multiple instances of workers are created, and each of them holds a disjoint portion of the graph (a subset of vertices along with their attributes and edge lists).
-They corporate with each other to finish the task in a distributed manner.
+They corporate with each other to finish the graph computation in a distributed manner.
 
 Workers share no memory with each other, but can exchange messages with other workers in batch through the underlying communication layer, which is implemented using the Message Passing Interface (MPI).
 In particular, a worker maintains $M$ outgoing buffers (where $M$ is the number of workers), one for each worker in the cluster.
-When a worker sends some data to another worker, it simply appends the data in the buffer, and it is until the end of a superstep that all the contents (not just this piece of data) in the buffer are finally delivered to their designated workers.
+When a worker sends some data to another worker, it simply appends the data in the buffer, and it is until the end of a superstep that all the contents (not only this piece of data) in the buffer are finally delivered to their designated workers.
 We accomplish it by the buffer exchange, which is implemented by $M$ rounds of pairwise communication among workers, while in each round every worker carefully selects a partner and sends the contents in the corresponding buffer through MPI's message passing primitives.
-After the buffer exchange, the contents are further processed by the designated worker.
+After the buffer exchange, the contents are further processed by the designated workers.
 
 In the original Pregel system, the outgoing buffers can be seen as a single message channel which only stores the data that has the user-specified message type.
 To support multiple message channels with different message types, our outgoing buffers are just raw char buffers which store serialized data only, so that data with different types can be treated equally.
-Besides, the message channels buffer the messages first, and in the end if each superstep, they serialize and dump their buffers to the outgoing buffers in batch to avoid the overhead of tagging the individual messages with type information in serialization.
-After the buffer exchange, the contents in the buffer are deserialized by the message channels in exactly the same order as they are serialized, to correctly restore the data.
+Besides, the messages are buffered by the message channels first, and in the end of each superstep, they are serialized to the outgoing buffers in batch to avoid the overhead of tagging the individual messages with type information in serialization.
+After the buffer exchange, the contents in the buffer have to be deserialized by the message channels in exactly the same order as they are serialized, so that the data can be correctly restored.
 
 Next, we discuss the implementation of three types of message channels: direct message passing channel, aggregator channel, and request-respond channel.
 
 \subsection{Direct Message Passing \& Combiner}
 
-Direct message passing is a standard mechanism provided by all Pregel framework.
-In some Pregel frameworks, vertices can only send direct messages to their neighbors in the input graph, but allowing message passing between any pair of vertices is critical to make several graph algorithms~\cite{connectivity, effective} converge fast.
-In our framework, the interfaces of direct message passing are shown in \autoref{fig:api-msg}.
+Direct message passing is a standard mechanism provided by all Pregel frameworks.
+In general, message passing can happen between any pair of vertices, although in some Pregel frameworks (like GraphX~\cite{graphx} and PowerGraph~\cite{powergraph}) vertices can only send direct messages to their neighbors in the input graph.
+%However, allowing message passing between any pair of vertices is critical to make several graph algorithms~\cite{connectivity, effective} converge fast.
+In our framework, we support the most general message passing, and the interfaces of direct message passing are shown in \autoref{fig:api-msg}.
 
 \begin{figure}[ht]
 \centering
@@ -1147,10 +1148,10 @@ Finally, after the responses are exchanged, we collect the results using the \em
 Here we explain the implementation of request-respond message channel in detail.
 First, on each worker, we buffer all the requests, which can be seen as a list of $\langle dst,index\rangle$ where $index$ is the requester's index on this worker.
 In the \emph{request()} function, we sort all the requests and extract the distinct destinations from the requests, and furthermore, for each distinct destination vertex id, we record the index of its first occurrence in the request list, so we obtain the $\langle dst_{unique},index_{req}\rangle$ pairs.
-It is further split into $M$ sending lists depending on where the destination vertex locates (vertex $dst$ locates on worker $w$ where $w=hash(dst)$).
+It is further split into $M$ request lists depending on where the destination vertex locates (vertex $dst$ locates on worker $w$ where $w=hash(dst)$).
 The exchange of the requests and responses are straightforward.
-After the response values are received, we can get the tuples containing $\langle dst_{unique},index_{req},value\rangle$ by merging the responses with the sending lists.
-Finally, using $dst_{unique}$ and $index_{req}$, we can efficiently find all the requests in the sorted request buffer that has destination $dst_{unique}$, then using the index information, we efficiently feed the $value$ to all requesting vertices.
+After the response values are received, we can get the tuples containing $\langle dst_{unique},index_{req},value\rangle$ by merging the responses with the request lists.
+Finally, using $dst_{unique}$ and $index_{req}$, we can efficiently find all the requests in the sorted request buffer that have destination $dst_{unique}$, then using the index information, we efficiently feed the $value$ to all requesting vertices.
 
 \begin{comment}
 Our implementation slightly differs from the implementation of Pregel+ in two aspects.
@@ -1159,33 +1160,55 @@ The reason is that, Pregel+ assumes that the requesters always want to fetch a r
 Instead, in our system, the request phase and respond phase happen in individual supersteps, and the response value can be generated by any user-specified computation.
 \end{comment}
 
-\section{Example: The S-V Algorithm}
+\section{Programming Interface}
 
 Programs written for our customized Pregel are quite different from those written in Pregel.
 We summarize the differences as follows:
 \begin{itemize}\setlength\itemsep{0em}
 \item
- First, programmers can only define the computation on every vertex in Pregel.
- In contrast, our customized Pregel framework let programmers implement the computation (the \emph{compute()} function) on each worker, and by exposing the vertices stored on each worker to the programmers, they are actually programming in the vertex-centric paradigm.
+ First, in Pregel systems, programmers are supposed to implement the computation on the vertex.
+ In contrast, our customized Pregel framework requires the computation to be implemented on the worker.
+ However, it is just a choice of design and will not change the vertex-centric programming model.
+ By exposing the vertices stored on each worker to the programmers, programmers are actually programming in the same way as in any other Pregel systems.
 \item
- Second, in Pregel systems, message passing and aggregator are two hard-coded mechanisms, and more importantly, they are shared by the whole program, so that programmers need to find a proper message type for all the communications, or implement an aggregator that encodes all the global communications.
- However, in our customized Pregel system, message passing and aggregator are just two communication channels with different implementation, so programmers can define various instances of different types of communication channels, and specify them individually in the same program.
-\item
- Third, Pregel introduce the ``voting to halt'' mechanism for termination (and sometimes for program optimization), but we provide a completely different way for program termination which has a more clear semantics.
+ Second, Pregel introduces the ``voting to halt'' mechanism for terminating the computation (and in some cases for program optimization), but we provide a completely different way for termination which has a more clear semantics.
  In particular, the user-defined \emph{compute()} function returns a boolean value indicating the current worker's local decision of termination, and the whole computation terminates when all workers decide to stop.
+\item
+ Third, in our customized Pregel system, message passing, aggregator and request-respond paradigm are just three types of communication channels, so programmers can define various instances of communication channels, specify the message types (and combiners) individually, and explicitly manage them during the computation according to their APIs.
+ %message passing and aggregator are two hard-coded mechanisms, and more importantly, they are shared by the whole program, so that programmers need to find a proper message type for all the communications, or implement an aggregator that encodes all the global communications.
 \end{itemize}
 
-As a running example, let's see how the S-V algorithm~\cite{connectivity} is implemented in our customized Pregel system.
-The Palgol's high-level description is shown in \autoref{fig:svppa-code}, and according to the compilation algorithm presented in \autoref{sec:compilation}, the compilation result is shown in figure \autoref{fig:full}, which contains 4 supersteps.
+To better illustrate how our system works, we use the following pseudo code to describe the computation on each worker in \autoref{fig:semantics-worker}:
 
-\begin{figure}[th]
+\begin{figure}[ht]
+\centering
+\vspace{-2ex}
+\begin{lstlisting}[basicstyle=\small\ttfamily,numbers=none,xleftmargin=0.15\textwidth]
+do
+   bool ret = this.compute(); // defined by user
+   stop = all_stop(ret);      // aggregation
+   if (!stop)
+      exchange the messages;  // communication
+until (stop);
+\end{lstlisting}
+\vspace{-2ex}
+\caption{Pseudo code for describing the execution of each worker}
+\label{fig:semantics-worker}
+\end{figure}
+
+\section{Example: The S-V Algorithm}
+
+As a running example, let's see how the S-V algorithm~\cite{connectivity} is implemented in our customized Pregel system.
+The Palgol's high-level description is shown in \autoref{fig:svppa-code}, and according to the compilation algorithm presented in \autoref{sec:compilation}, the compilation result is shown in figure \autoref{fig:full}, which contains four supersteps.
+
+\begin{figure}[ht]
  \centering
  \includegraphics[width=0.8\textwidth]{figures/svppa.pdf}
  \caption{The compilation result of S-V algorithm}
  \label{fig:full}
 \end{figure}
 
-\subsection{Management of Message Channels}
+\subsection{Declaration of Message Channels}
 
 Let us first consider what kind of message channels are needed for implementing the S-V algorithm.
 From the compilation result of Palgol compiler, we can find three message channels, which are:
@@ -1237,8 +1260,8 @@ public:
 \subsection{Implementation of Individual Supersteps}
 
 Having declared the message channels, next is to consider how to implement each superstep in the worker's \emph{compute()} function.
-The \emph{compute()} function is a virtual member function of class \texttt{Worker}, and it executes different code in different superstep according to a local variable \texttt{step} to implement a multi-staged computation.
-The variable \texttt{step} is guaranteed to be the same on all workers by the programmers.
+The \emph{compute()} function is a virtual member function of class \texttt{Worker} that implemented by the programmers, and it executes different code in different superstep according to a global state to implement a multi-staged algorithm.
+Here we user a local variable \texttt{step} for representing the global state, which is guaranteed to be the same on all workers by the programmers.
 
 \begin{figure}[ht]
 \centering
@@ -1286,15 +1309,16 @@ Finally, in line 20, we return \texttt{false} indicating that the computation sh
 The way to implement the other supersteps are basically the same, by collecting the messages first, performing the vertex-centric computation next, and then delivering the messages, change the state, and return a proper return value.
 In this example, we can see that our customized Pregel framework can naturally implement complex Pregel algorithm that have multiple message channels, and in the next chapter, we will demonstrate the efficiency of our framework, which is achieved by optimizing each message channel individually.
 
-\begin{comment}
-\subsection{Input/Output and Preprocessing} % not important in paper!!
+%\subsection{Relationship with Palgol} % perhaps interesting
 
-Finally, we should pay a little bit more attention on the input/output and the preprocessing.
-There is one more difference between this program and a typical Pregel program: in our program, we expose the index of each vertex to programmers, so programmers can use arrays to store the attributes of the vertices, which makes the code more clean.
-\end{comment}
+%\subsection{Input/Output and Preprocessing} % not important in paper!!
+%Finally, we slightly pay a more attention on the input/output mechanism and the necessary preprocessing.
+%There is one more difference between this program and a typical Pregel program: in our program, we expose the index of each vertex to programmers, so programmers can use arrays to store the attributes of the vertices, which makes the code more clean.
 
-%\section{Related Work}
+%\section{Related Work} % discuss what?? programming interface??
 
+%In this section, we discuss the related work on Pregel frameworks and their programming interfaces.
+%Google's original Pregel system~\cite{pregel} proposes the original 
 
 
 \chapter{Experimental Evaluation}
@@ -1314,7 +1338,7 @@ For SCC, since the manually coded Pregel program does not completely implement t
 Consequently, the rest three algorithms are used in the evaluation, and the experiment is conducted in Pregel+'s ordinary mode.
 
 We use 4 real-world graph datasets in our performance evaluation, which are listed in Table~\ref{tab:datasets}:
-\begin{enumerate}
+\begin{enumerate}\setlength\itemsep{0em}
 \item LJ-UG\footnote{http://konect.uni-koblenz.de/networks/livejournal-groupmemberships}: a network of LiveJournal users and their group memberships;
 \item Facebook\footnote{http://konect.uni-koblenz.de/networks/facebook-sg}: a friendship network of the Facebook social network;
 \item LJ-DG\footnote{http://konect.uni-koblenz.de/networks/soc-LiveJournal1}: a friendship network of the LiveJournal blogging community;
@@ -1361,25 +1385,26 @@ Second, due to the simplicity of SSSP, the manually coded program can dispense w
 
 \begin{table*}[t]
  \centering
- \caption{Comparison of Execution Time between Palgol and Manual Implementation (in seconds)}
+ \caption{Comparison of Execution Time between Palgol and Manual Implementation}
  \label{tab:exec}
- \begin{tabular}{c|c||c|c||c|c||c|c||c|c||c}
+ \begin{tabular}{c|c||c|c||c|c||c}
   \hline
-  \multirow{2}{*}{\textbf{Algorithm}} & \multirow{2}{*}{\textbf{Dataset}} & \multicolumn{2}{c||}{4 cores} & \multicolumn{2}{c||}{8 cores} & \multicolumn{2}{c||}{12 cores} & \multicolumn{2}{c||}{16 cores} & Comparison \\
-  \cline{3-10}
-  & & Palgol & Manual & Palgol & Manual & Palgol & Manual & Palgol & Manual & (Palgol to Manual) \\
+  \multirow{2}{*}{\textbf{Algorithm}} & \multirow{2}{*}{\textbf{Dataset}} & \multicolumn{2}{c||}{8 cores} 
+  & \multicolumn{2}{c||}{16 cores} & Comparison \\
+  \cline{3-6}
+  & & Palgol & Manual & Palgol & Manual & (Palgol to Manual) \\
   \hline\hline
-  \multirow{2}{*}{S-V} & LJ-UD & 35.46 & 40.46 & 16.62 & 18.82 & 10.69 & 12.76 & 8.06 & 8.36 & $-16.2\%$ to $-3.6\%$ \\
-  \cline{2-11}
-  & Facebook & 146.80 & 172.33 & 84.72 & 105.50 & 65.67 & 85.70 & 56.78 & 76.61 & $-25.9\%$ to $-14.8\%$ \\
+  \multirow{2}{*}{S-V} & LJ-UD & 16.62 & 18.82 & 8.06 & 8.36 & $-16.2\%$ to $-3.6\%$ \\
+  \cline{2-7}
+  & Facebook & 84.72 & 105.50 & 56.78 & 76.61 & $-25.9\%$ to $-14.8\%$ \\
   \hline
-  \multirow{2}{*}{SSSP} & LJ-DG & 3.21 & 2.98 & 1.83 & 1.78 & 1.31 & 1.23 & 0.98 & 0.93 & $2.6\%$ to $7.6\%$ \\
-  \cline{2-11}
-  & Wikipedia & 10.02 & 7.57 & 5.20 & 4.19 & 3.61 & 2.97 & 2.74 & 2.30 & $19.4\%$ to $32.4\%$ \\
+  \multirow{2}{*}{SSSP} & LJ-DG & 1.83 & 1.23 & 0.98 & 0.93 & $2.6\%$ to $7.6\%$ \\
+  \cline{2-7}
+  & Wikipedia & 5.20 & 4.19 & 2.74 & 2.30 & $19.4\%$ to $32.4\%$ \\
   \hline
-  \multirow{2}{*}{PR} & LJ-DG & 76.70 & 76.54 & 42.31 & 42.83 & 29.83 & 30.20 & 23.95 & 24.10 & $-1.2\%$ to $0.2\%$ \\
-  \cline{2-11}
-  & Wikipedia & 151.26 & 151.26 & 80.67 & 81.05 & 57.30 & 57.75 & 45.44 & 46.24 & $-1.7\%$ to $0.0\%$ \\
+  \multirow{2}{*}{PR} & LJ-DG & 42.31 & 42.83 & 23.95 & 24.10 & $-1.2\%$ to $0.2\%$ \\
+  \cline{2-7}
+  & Wikipedia & 80.67 & 81.05 & 45.44 & 46.24 & $-1.7\%$ to $0.0\%$ \\
   \hline
  \end{tabular}
 \end{table*}
@@ -1421,6 +1446,21 @@ In other words, compact programs are usually harder to maintain for humans.
 
 \section{Evaluation of the Customized Pregel Framework}
 
+In this section, we implement a set of graph algorithms on both the Pregel+ and our customized Pregel systems, and compare the performance over large real-world graphs.
+Our customized Pregel system is implemented in C++ as a group of header files, and users simply include the necessary base classes and implement the application logic in their sub-classes.
+Our system communicate with HDFS through libhdfs, a JNI based C API for HDFS, and the communication layer is implemented using MPI communication primitives.
+While one may deploy the system with any version of Hadoop an MPI, we use Hadoop 2.7.3 and MPI 3.2.0 in our experiments.
+All programs are compiled using GCC with -O2 option enabled.
+
+All the system source code as well as the application code discussed in the thesis can be found in \url{https://bitbucket.org/zyz915/pregel}.
+
+%The environment and the graphs are basically the same as the experiments before.
+%The algorithms we choose are SSSP, S-V algorithm, MSFf, SCC.
+
+\section{Execution Time}
+
+\section{Message Size}
+
 \chapter{Conclusions}
 \label{sec:conclusions}
 
@@ -1428,14 +1468,17 @@ In other words, compact programs are usually harder to maintain for humans.
 
 This thesis proposes Palgol, a high-level domain-specific language for Pregel systems with flexible remote data access, which allows people to design and implement vertex-centric graph algorithms in a more natural way.
 In particular, we tackle the problem of translating remote data read to Pregel's message passing, and by recognizing and compiling two useful remote reading patterns, chain access and neighborhood communication, Palgol can express a wider range of practical Pregel algorithms than existing languages.
-Furthermore, we extend the existing Pregel system with a novel message channel interface, which
+Furthermore, we extend the existing Pregel system with a novel message channel interface, which provides more chances for message reduction and shows good extensibility for embedding more communication pattern.
 Experiment results show that graph algorithms written in Palgol can be compiled to efficient Pregel programs comparable to the human written ones.
+ and the evaluation result shows its effectiveness for reducing the message size and execution time for multi-staged graph algorithms.
 
 \section{Future Directions}
 
 As for future work, on the high-level, we are going to provide a more mature solution for vertex activation or inactivation, and support more remote access patterns in Palgol.
-On the aspect of system design.
 
+On the aspect of system design (TODO).
+
+Relationship between Palgol and our customized Pregel system (TODO).
 
 % =====================================================
 %  Back Matter
