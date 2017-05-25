@@ -1137,11 +1137,11 @@ public:
 \end{figure}
 
 The class \texttt{ReqResp} takes two type arguments: the vertex class (which includes the type of vertex identifier and a hash function), and the message type.
-In the request phase, programmers can add requests to buffer by invoking the function \emph{add\_request(index, dst)}, where \emph{index} is the index of the vertex that sending the request, and \emph{dst} is the destination vertex.
-Here, using the index of the requester (which is exposed to programmers) can significantly improve the performance, since we can feed the responses to corresponding vertices directly through the index, which avoids the costly table lookup in the response phase.
-Next, \emph{request()} should be invoked after all requests are added, to let the system deliver the buffered requests after the current superstep.
-The respond function \emph{respond(val)} is then invoked in the next superstep where \emph{val} stores the values to respond.
-Note that this mechanism is implemented in a passive way like in Pregel+: although every vertex need to prepare a value for responding the requests, the system will only access the values from the vertices that receive requests.
+In the request phase, programmers can add requests to buffer by invoking the function \emph{add\_request(index, dst)}, where \emph{index} is the unique index of the requesting vertex on current worker, and \emph{dst} is the destination vertex identifier.
+Here, using the index of the requester (which is exposed to programmers) can significantly improve the performance, since we can feed the responses to the requesters directly through the index, which avoids the costly table lookup in the response phase.
+Next, \emph{request()} should be invoked after all requests are added, to let the system preprocess the requests and deliver them after the current superstep.
+The respond function \emph{respond(val)} is then invoked in the next superstep on all workers, where \emph{val} stores the values to respond for each vertex.
+Note that this mechanism is implemented in a passive way: although every vertex need to prepare a value for responding the requests, the system will only access the values from the vertices that receive requests.
 Finally, after the responses are exchanged, we collect the results using the \emph{collect(val)} function, which returns an array containing the requested value for each vertex.
 
 Here we explain the implementation of request-respond message channel in detail.
@@ -1149,8 +1149,8 @@ First, on each worker, we buffer all the requests, which can be seen as a list o
 In the \emph{request()} function, we sort all the requests and extract the distinct destinations from the requests, and furthermore, for each distinct destination vertex id, we record the index of its first occurrence in the request list, so we obtain the $\langle dst_{unique},index_{req}\rangle$ pairs.
 It is further split into $M$ sending lists depending on where the destination vertex locates (vertex $dst$ locates on worker $w$ where $w=hash(dst)$).
 The exchange of the requests and responses are straightforward.
-After the response values are received after the response phase, we can get the tuples containing $\langle dst_{unique},index_{req},value\rangle$ by merging the responses with the sending lists.
-Finally, using $dst_{unique}$ and $index_{req}$, we can efficiently find all the requests in the request buffer that has destination $dst_{unique}$, then using the index information, we efficiently feed the $value$ to all requesting vertices.
+After the response values are received, we can get the tuples containing $\langle dst_{unique},index_{req},value\rangle$ by merging the responses with the sending lists.
+Finally, using $dst_{unique}$ and $index_{req}$, we can efficiently find all the requests in the sorted request buffer that has destination $dst_{unique}$, then using the index information, we efficiently feed the $value$ to all requesting vertices.
 
 \begin{comment}
 Our implementation slightly differs from the implementation of Pregel+ in two aspects.
@@ -1232,12 +1232,13 @@ public:
 \label{fig:sv-declaration}
 \end{figure}
 
-The interfaces of these message channels are already introduced, and in the next section, we will show how to use these message channels in the \emph{compute()} function for data communication.
+%In the next section, we will show how to use these message channels in the \emph{compute()} function for data communication.
 
 \subsection{Implementation of Individual Supersteps}
 
-Second, let us consider how to implement each superstep in the worker's compute function.
-The \emph{compute()} function is a member function of class \texttt{Worker}, and it executes different code in different superstep according to a local variable \texttt{step}, whose value is however guaranteed to be the same on all workers.
+Having declared the message channels, next is to consider how to implement each superstep in the worker's \emph{compute()} function.
+The \emph{compute()} function is a virtual member function of class \texttt{Worker}, and it executes different code in different superstep according to a local variable \texttt{step} to implement a multi-staged computation.
+The variable \texttt{step} is guaranteed to be the same on all workers by the programmers.
 
 \begin{figure}[ht]
 \centering
@@ -1276,11 +1277,14 @@ bool compute() {
 Before the vertex-centric computation, programmers should explicitly collect the messages form the previous superstep.
 So in lines 4--7, we collect the messages from the neighbors in $msgs$ (which stores each vertex's message list) and collect the ids of grandparents in $D2$ (a list storing each vertex's grandparent).
 After the messages are collected, we enter the vertex-centric computation by writing the for loop in line 9--17, in which $numv()$ is the number of vertices on the worker, $D$ is an array storing the parent vertex identifier for each vertex on this worker, and we just use the raw index to access the attributes of the vertices.
-Then, since $D2$ stores the grandparent's id and $D$ stores the parent's id, the if expression in line 10 checks whether a vertex's parent is a root value.
-If it is the case, we calculate the minimum parent id of neighbors' as $t$, and modify $u$'s parent's pointer with $t$, which is achieved by adding a message $t$ to the remote updating channel $remote$.
-We can observe in line 18 that the messages buffered by the \emph{remote} channel are delivered, so that the messages are expected to reach the destinations in step 4, according to the state transition in line 19.
-If $u$'s parent is not a root node, then current vertex $u$ change its pointer $D$ to $u$'s grandparent $D2[u]$.
-Finally, in line 20, we return \texttt{false} indicating that the whole program should continue after current superstep ends.
+Then, since $D2$ stores the grandparent's id and $D$ stores the parent's id, the expression \texttt{D2[u] == D[u]} in line 10 checks whether a vertex's parent is a root.
+If it is the case, we calculate the minimum of neighbors' parent id as $t$, and modify $u$'s parent's pointer with $t$, which is achieved by adding a message $t$ to \texttt{D[u]} by the remote updating channel $remote$.
+As written in line 18, the messages buffered by the \emph{remote} channel are delivered by the function \emph{send()}, so that the messages are expected to reach the destinations in step 4, according to the state transition in line 19.
+If $u$'s parent is not a root node, then current vertex $u$ modifies its pointer $D$ to $u$'s grandparent $D2[u]$ by an assignment in line 16.
+Finally, in line 20, we return \texttt{false} indicating that the computation should continue after current superstep ends.
+
+The way to implement the other supersteps are basically the same, by collecting the messages first, performing the vertex-centric computation next, and then delivering the messages, change the state, and return a proper return value.
+In this example, we can see that our customized Pregel framework can naturally implement complex Pregel algorithm that have multiple message channels, and in the next chapter, we will demonstrate the efficiency of our framework, which is achieved by optimizing each message channel individually.
 
 \begin{comment}
 \subsection{Input/Output and Preprocessing} % not important in paper!!
