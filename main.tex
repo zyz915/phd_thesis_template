@@ -964,11 +964,11 @@ Let us consider the scenario shown in \autoref{fig:multi-msg-example}.
  \caption{combiner optimization is not always applicable when different messages exist}
  \label{fig:comb-err}
 \end{subfigure}
-\caption{Two major problems when different messages are used in the same superstep}
+\caption{Two major problems when different messages exist in the same superstep}
 \label{fig:multi-msg-example}
 \end{figure}
 
-There are two types of messages send in the same superstep, as shown in \autoref{fig:multi-msg}.
+Suppose there are two types of messages used in the same superstep, as shown in \autoref{fig:multi-msg}.
 One is int type indicated by the solid arrow, and the other is a pair of int and double indicated by the dashed arrow.
 In the original Pregel system, the single message type should be carefully chosen to be able to carry all types of messages used in the program.
 Then, in this case, it must be at least a pair of int and double to envelope the largest possible message, which however causes a double word wasted for the messages using only int.
@@ -977,26 +977,27 @@ As mentioned in \autoref{sec:combiner}, the combiner is applicable when the mess
 but when having different messages in a superstep, it is usually the case that only the messages for the same purpose can be combined.
 In other words, the Pregel's combiner interface always combines \emph{all} the messages sent to the same destination vertex, but what we want is to combine a portion of the messages having the same tag, while leaving the other messages unchanged or optimized by other combiners.
 
-The idea to solve these problem is to think communication as different channels, instead of a unified message passing interface, so that the message type or the combiner for each communication channel can be individually specified.
+The idea to solve these problem is to separate the communications into dedicated channels, instead of encoding messages on a unified message passing channel in current Pregel, so that the message type or the combiner for each communication channel can be specified individually.
 Furthermore, with the separation of message channels, more communication patterns in graph algorithms can be easily integrated into our system, and specialized optimization can further improve the efficiency.
 %Furthermore, by separating the messages for different purposes and studying the communication patterns individually, more efficient implementation of communication patterns can be easily integrated into our system.
-To illustrate this, we show that the aggregator and the request-respond paradigm \cite{effective} can be regarded as special classes of message channels, and the S-V algorithm can thus benefit from such design, and be implemented concisely and efficiently in our framework.
+To illustrate this, we show that the aggregator and the request-respond paradigm~\cite{effective} can be regarded as special classes of message channels, and the S-V algorithm can thus benefit from such design, and be implemented concisely and efficiently in our framework.
 
 The remaining problem is the system design to expose a reasonably simple interface for programmers to specify and use the message channels, which will be discussed in the next section.
 
 \section{System Design \& Implementation}
 
-In this part, we describe the details of our system design and implementation of different types of the message channels.
+In this part, we describe the details of our system design and implementation of different types of the message channels, including the direct message channel with combiner, aggregator channel, and request-respond channel.
 
 \subsection{The Communication Layer}
 
-First of all, we use the term ``worker'' to represent a basic computing unit, which in general can be a machine or a thread/process in a machine, but in our system it just refers to a process.
+First of all, we present the design of the communication layer in our framework.
+We use the term ``worker'' to represent a basic computing unit, which in general can be a machine or a thread/process in a machine, but in our system it just refers to a process.
 When launching a graph processing task, multiple instances of workers are created, and each of them holds a disjoint portion of the graph (a subset of vertices along with their attributes and edge lists).
 They corporate with each other to finish the graph computation in a distributed manner.
 
 Workers share no memory with each other, but can exchange messages with other workers in batch through the underlying communication layer, which is implemented using the Message Passing Interface (MPI).
 In particular, a worker maintains $M$ outgoing buffers (where $M$ is the number of workers), one for each worker in the cluster.
-When a worker sends some data to another worker, it simply appends the data in the buffer, and it is until the end of a superstep that all the contents (not only this piece of data) in the buffer are finally delivered to their designated workers.
+When a worker needs to send some data to another worker, it simply appends the data in the corresponding outgoing buffer, and it is until the end of a superstep that all the contents (not only this piece of data) in the outgoing buffers are finally delivered to their designated workers.
 We accomplish it by the buffer exchange, which is implemented by $M$ rounds of pairwise communication among workers, while in each round every worker carefully selects a partner and sends the contents in the corresponding buffer through MPI's message passing primitives.
 After the buffer exchange, the contents are further processed by the designated workers.
 
@@ -1005,14 +1006,14 @@ To support multiple message channels with different message types, our outgoing 
 Besides, the messages are buffered by the message channels first, and in the end of each superstep, they are serialized to the outgoing buffers in batch to avoid the overhead of tagging the individual messages with type information in serialization.
 After the buffer exchange, the contents in the buffer have to be deserialized by the message channels in exactly the same order as they are serialized, so that the data can be correctly restored.
 
-Next, we discuss the implementation of three types of message channels: direct message passing channel, aggregator channel, and request-respond channel.
+%Next, we discuss the implementation of three types of message channels: direct message passing channel, aggregator channel, and request-respond channel.
 
 \subsection{Direct Message Passing \& Combiner}
 
 Direct message passing is a standard mechanism provided by all Pregel frameworks.
 In general, message passing can happen between any pair of vertices, although in some Pregel frameworks (like GraphX~\cite{graphx} and PowerGraph~\cite{powergraph}) vertices can only send direct messages to their neighbors in the input graph.
-%However, allowing message passing between any pair of vertices is critical to make several graph algorithms~\cite{connectivity, effective} converge fast.
-In our framework, we support the most general message passing, and the interfaces of direct message passing are shown in \autoref{fig:api-msg}.
+Allowing message passing between any pair of vertices is critical to make several graph algorithms~\cite{connectivity, effective} converge fast,
+so in our framework, we support the most general message passing, and the interfaces of direct message passing are shown in \autoref{fig:api-msg}.
 
 \begin{figure}[ht]
 \centering
@@ -1037,23 +1038,24 @@ public:
 };
 \end{lstlisting}
 \vspace{-2ex}
-\caption{The message passing APIs}
+\caption{APIs for message passing channel}
 \label{fig:api-msg}
 \end{figure}
 
 The class \texttt{V2V} represents the vertex-to-vertex communication, and it takes two type arguments: the vertex class (which includes the type of vertex identifier and a hash function), and the message type.
 The constructor of class \texttt{V2V} further takes a worker, a string (for printing runtime information) and an optional combiner as arguments.
-Programmers can add messages to the buffer, deliver the message after a superstep, check whether message buffer is empty, reset the class, and collect the messages sent in the previous superstep.
+Programmers can add messages to the buffer, deliver the message after a superstep, check whether the message buffer is empty, reset the channel, and collect the messages sent in the previous superstep.
 
 The implementation of the direct message passing is straightforward.
 Messages are tagged with the destination vertex identifier, and added to the buffer.
-If the combiner is specified, the combiner optimization is performed before serialization, by sorting and grouping the messages by the destination, and combining the messages for the same destination by a binary function.
+If the combiner is specified, the combiner optimization is performed before serialization, by sorting and grouping the messages by the destination, and combining the messages for the same destination vertex by a user-specified binary function; otherwise the messages are sent directly.
+After the buffer exchange, the message channels deserialize the messages and dispatch them to the receiving vertices on the current worker.
 
 \subsection{Aggregator}
 
 Aggregator is also a standard mechanism for all Pregel-like frameworks, although its interface slightly differs in different frameworks.
-Aggregator is to represent global communications with a specified commutative and associative operator: it collects value from every active vertex, and the combine them with the operator to a final value.
-Such communication pattern is especially important for making a consensus or maintaining a same global state.
+Aggregator is to represent global communications with a specified commutative and associative operator: it collects value from every active vertex, and then combine them with the operator to a final value.
+Such communication pattern is especially important for making a consensus or maintaining a same global state during the computation.
 The aggregator APIs are present in \autoref{fig:api-aggregator}.
 
 \begin{figure}[ht]
@@ -1082,36 +1084,38 @@ private:
 };
 \end{lstlisting}
 \vspace{-2ex}
-\caption{The aggregator APIs}
+\caption{APIs for aggregator channel}
 \label{fig:api-aggregator}
 \end{figure}
 
 The class \texttt{Aggregator} takes three type arguments: the type of input value, the type of the partial value stored on each worker, and the type of the final result.
 Two combiners need to be specified by user: one local combiner is to update the local value with an input value, and a global combiner is to update the final value by the partial values from other workers.
-Meanwhile, programmers should also tell the aggregator how to initialize the local partial value and the final result before aggregation.
+Meanwhile, programmers should also tell the aggregator how to initialize the local partial value and the final result before the aggregation.
 Programmers can feed values, perform aggregation after a superstep, and read the result of the aggregator.
 The last thing to mention is that, unlike some Pregel frameworks where the aggregator automatically collects the value from all active vertices, in our system, programmers need to explicitly feed the values to the aggregator, making aggregator an independent mechanism to the vertex inactivation mechanism.
 
 The implementation of the aggregator is also straightforward.
-On each worker, a local partial value is generated from the initial value, and updated by every input value using the local combiner.
+On each worker, a local partial value is generated by using the local combiner, the initial partial value, and those input values passed to the aggregator.
 Then, each worker just sends its partial value to all other workers using the outgoing buffer interface, so that after the buffer exchange, every worker will receive the partial values from all other workers.
-Then, every worker uses the global combiner to reduce them to a final value, and the order of reduction is guaranteed to be the same on all workers.
+Finally, every worker uses the global combiner to reduce them to a final value.
+In our implementation, the order to reduce the partial values is guaranteed to be the same on all workers, so that programmers can get the consistent result with any global combiner.
 
 \subsection{Request-Respond Paradigm}
 
-Request-Respond Paradigm \cite{effective} is a two-phase communication pattern that represents the communication pattern of fetching a remote vertex's attributes.
-Since Pregel is a system build on ``message pushing'', such communication pattern has to be decomposed to a request and response phase:
-in the request phase, each vertex sends a request to a remote vertex, then in the consequent response phase, vertices will receive the requests from other vertices, and they implicitly respond a value to them.
+Request-Respond Paradigm \cite{effective} is a two-phase communication pattern which optimizes the scenario where every vertex fetches a remote vertex's some attribute.
+Since Pregel is a system build on ``message pushing'' that the receiver should be specified by the sender in message passing, such communication pattern has to be decomposed to a request and response phase:
+in the request phase, each vertex sends a request to a remote vertex, then in the consequent response phase, vertices may receive the requests from other vertices, and they respond a value to them.
 In this communication pattern, the number of vertices that receive requests is usually much less than the number of active vertices in the graph, which gives a chance for reducing the messages.
-The solution is to let the worker merge the requests to the same destination in the sending phase, and send only 1 merged request to any destination.
-Consequently, any vertex will receive at most 1 request from each worker, so that it just respond to the workers instead of to individual vertices.
+The idea is to let the worker merge the requests for the same destination vertex in the sending phase, so that any vertex will receive at most one request from each worker.
+Then, a vertex just responds to each requesting worker with a value, instead of responding to individual vertices.
 Finally, when the workers receive the responses (tagged with the responser's id), they dispatch the values to the requesting vertices.
 
-Due to the extra information kept on the sending worker, this optimization cannot be implement by the direct message passing with combiner, thus is regarded as a special communication pattern and implemented as a set of extended interfaces in Pregel+~\cite{pregelplus}.
-Similar to the message passing and aggregator interface, Pregel+'s request-respond interface is shared by the whole program and the type of response value is provided by the programmer at the beginning, therefore when multiple request-respond communications are required in the program, programmers should carefully arrange them in different supersteps, and encode them to a same type.
-In contrast, in our customized Pregel framework, we just implement it as another type of message channels, so programmers can specify the request-respond channels individually, which makes the implementation very easy.
+Due to the extra information kept on the sending worker (for dispatching the responses), this optimization cannot be implement by the direct message passing with combiner, thus is regarded as a special communication pattern and implemented as a set of extended interfaces in Pregel+~\cite{pregelplus}.
+There integration is however not convenient for program to use:
+similar to the message passing and aggregator interface, Pregel+'s request-respond interface is shared by the whole program and the type of response value is provided by the programmer at the beginning, therefore when multiple request-respond communications are required in the program, programmers should carefully arrange them in different supersteps (since in each superstep, a vertex can respond only one value), and encode them to a same type.
+In contrast, in our customized Pregel framework, we just implement it as a special type of message channels, so programmers can specify each request-respond channel individually, making the implementation logic of graph algorithms extremely easy.
 %Another remarkable difference is that, Pregel+ uses an additional communication channel for request-respond paradigm, while our system implement the request-respond channel on top of the raw char buffer, which potentially reduce the number of message exchanges among workers.
-The APIs of request-respond channel are presented in \autoref{fig:api-reqresp}.
+The APIs for request-respond channel are presented in \autoref{fig:api-reqresp}.
 
 \begin{figure}[ht]
 \centering
@@ -1133,7 +1137,7 @@ public:
 };
 \end{lstlisting}
 \vspace{-2ex}
-\caption{The request-respond APIs}
+\caption{APIs for request-respond channel}
 \label{fig:api-reqresp}
 \end{figure}
 
@@ -1147,8 +1151,8 @@ Finally, after the responses are exchanged, we collect the results using the \em
 
 Here we explain the implementation of request-respond message channel in detail.
 First, on each worker, we buffer all the requests, which can be seen as a list of $\langle dst,index\rangle$ where $index$ is the requester's index on this worker.
-In the \emph{request()} function, we sort all the requests and extract the distinct destinations from the requests, and furthermore, for each distinct destination vertex id, we record the index of its first occurrence in the request list, so we obtain the $\langle dst_{unique},index_{req}\rangle$ pairs.
-It is further split into $M$ request lists depending on where the destination vertex locates (vertex $dst$ locates on worker $w$ where $w=hash(dst)$).
+In the \emph{request()} function, we sort all the requests and extract the distinct destinations from the requests, and furthermore, for each distinct destination vertex id, we keep the index of its first occurrence in the request list, so we obtain the $\langle dst_{unique},index_{req}\rangle$ pairs.
+This list is further split into $M$ request lists depending on where the destination vertex locates (vertex $dst$ locates on worker $w$ where $w=hash(dst)$).
 The exchange of the requests and responses are straightforward.
 After the response values are received, we can get the tuples containing $\langle dst_{unique},index_{req},value\rangle$ by merging the responses with the request lists.
 Finally, using $dst_{unique}$ and $index_{req}$, we can efficiently find all the requests in the sorted request buffer that have destination $dst_{unique}$, then using the index information, we efficiently feed the $value$ to all requesting vertices.
@@ -1166,16 +1170,14 @@ Programs written for our customized Pregel are quite different from those writte
 We summarize the differences as follows:
 \begin{itemize}\setlength\itemsep{0em}
 \item
- First, in Pregel systems, programmers are supposed to implement the computation on the vertex.
- In contrast, our customized Pregel framework requires the computation to be implemented on the worker.
+ First, in Pregel systems, programmers are supposed to implement the computation on each vertex, but our customized Pregel framework requires the computation to be implemented on the worker.
  However, it is just a choice of design and will not change the vertex-centric programming model.
- By exposing the vertices stored on each worker to the programmers, programmers are actually programming in the same way as in any other Pregel systems.
+ By exposing the vertices stored on each worker to the programmers, programmers are actually programming in a very similar way as in any other Pregel systems.
 \item
- Second, Pregel introduces the ``voting to halt'' mechanism for terminating the computation (and in some cases for program optimization), but we provide a completely different way for termination which has a more clear semantics.
+ Second, Pregel introduces the ``voting to halt'' mechanism for terminating the computation (and in some cases for program optimization), but we provide a completely different but much simpler way for termination.
  In particular, the user-defined \emph{compute()} function returns a boolean value indicating the current worker's local decision of termination, and the whole computation terminates when all workers decide to stop.
 \item
  Third, in our customized Pregel system, message passing, aggregator and request-respond paradigm are just three types of communication channels, so programmers can define various instances of communication channels, specify the message types (and combiners) individually, and explicitly manage them during the computation according to their APIs.
- %message passing and aggregator are two hard-coded mechanisms, and more importantly, they are shared by the whole program, so that programmers need to find a proper message type for all the communications, or implement an aggregator that encodes all the global communications.
 \end{itemize}
 
 To better illustrate how our system works, we use the following pseudo code to describe the computation on each worker in \autoref{fig:semantics-worker}:
@@ -1183,10 +1185,10 @@ To better illustrate how our system works, we use the following pseudo code to d
 \begin{figure}[ht]
 \centering
 \vspace{-2ex}
-\begin{lstlisting}[basicstyle=\small\ttfamily,numbers=none,xleftmargin=0.15\textwidth]
+\begin{lstlisting}[basicstyle=\small\ttfamily,numbers=none,xleftmargin=0.1\textwidth]
 do
    bool ret = this.compute(); // defined by user
-   stop = all_stop(ret);      // aggregation
+   stop = all_stop(ret);      // reach a consensus
    if (!stop)
       exchange the messages;  // communication
 until (stop);
@@ -1223,10 +1225,10 @@ From the compilation result of Palgol compiler, we can find three message channe
  Note that, this message passing channel can be optimized by a combiner that calculating the minimum of the messages, since each vertex only cares about the minimum of neighbors' parent id.
 \item
  The direct message passing channel to implement the remote writes in line 10 of the Palgol program shown in \autoref{fig:svppa-code}, which happens between step 3 and step 4.
- The message type is the same as the type of vertex identifier, and it can be optimized by a combiner as well, since the vertex receiving the remote writes just cares about the minimum value of the messages.
+ The message type is the same as the type of vertex identifier, and it can be optimized by a combiner as well, since the vertex receiving the remote writes only cares about the minimum value of the messages.
 \end{itemize}
 
-In the program, we use the variable \textit{grandpa} to represent the pointer jumping channel for calculating the grandparent (parent's parent) of every vertex, and use the variables \textit{neighbor} and \textit{remote} to represent the direct message channels for collecting all neighbors' pointer and remote writes.
+In the program, we use the variable \textit{grandparent} to represent the pointer jumping channel for calculating the grandparent (parent's parent) of every vertex, and use the variables \textit{neighbor} and \textit{remote} to represent the direct message channels for collecting all neighbors' pointer and remote writes.
 The code shown in \autoref{fig:sv-declaration} defines the class \texttt{SVWorker} for implementing the S-V algorithm, declares the message channels in this class, and initializes them in the constructor.
 There are three message channels defined here: two direct message channels with messages of integer message type, and one request-respond channel with integer response value.
 
@@ -1240,10 +1242,10 @@ class SVWorker : public Worker<VertexT> {
 private:
    // declaration of message channels
    V2V<VertexT, int> neighbor, remote;
-   ReqRes<VertexT, int> grandpa;
+   ReqRes<VertexT, int> grandparent;
 public:
    SVWorker():  // initialization
-      grandpa(this, "Pointer Jumping"),
+      grandparent(this, "Pointer Jumping"),
       neighbor(this, "Neighborhood", c_min),
       remote(this, "Remote Write", c_min) {}
    // the user-specified compute function
@@ -1260,8 +1262,9 @@ public:
 \subsection{Implementation of Individual Supersteps}
 
 Having declared the message channels, next is to consider how to implement each superstep in the worker's \emph{compute()} function.
-The \emph{compute()} function is a virtual member function of class \texttt{Worker} that implemented by the programmers, and it executes different code in different superstep according to a global state to implement a multi-staged algorithm.
-Here we user a local variable \texttt{step} for representing the global state, which is guaranteed to be the same on all workers by the programmers.
+%The \emph{compute()} function is a virtual member function of class \texttt{Worker} that should be implemented by the programmers.
+It is a well-know technique that we can implement a multi-staged algorithm (like S-V algorithm) in a single \emph{compute} function, by referring to a global state and executing different code accordingly.
+Here we user a local variable \texttt{step} for representing the global state, but is guaranteed to be consistent on all workers by our proper implementation.
 
 \begin{figure}[ht]
 \centering
@@ -1273,7 +1276,7 @@ bool compute() {
       // collect messages from previous superstep
       auto &msgs = neighbor.collect();
       // collect responses from parent vertices
-      grandpa.collect(D2);
+      grandparent.collect(D2);
       // enter vertex-centric computation
       for (int u = 0; u < numv(); u++) {
          if (D2[u] == D[u]) {
@@ -1297,17 +1300,20 @@ bool compute() {
 \end{figure}
 
 \autoref{fig:sv-step3} shows the implementation of the main step (step 3) for the S-V algorithm.
-Before the vertex-centric computation, programmers should explicitly collect the messages form the previous superstep.
+Before entering the vertex-centric computation, programmers should explicitly collect the messages form the previous superstep.
 So in lines 4--7, we collect the messages from the neighbors in $msgs$ (which stores each vertex's message list) and collect the ids of grandparents in $D2$ (a list storing each vertex's grandparent).
-After the messages are collected, we enter the vertex-centric computation by writing the for loop in line 9--17, in which $numv()$ is the number of vertices on the worker, $D$ is an array storing the parent vertex identifier for each vertex on this worker, and we just use the raw index to access the attributes of the vertices.
+After all the necessary messages are collected, we enter the vertex-centric computation by writing the for loop in line 9--17, in which $numv()$ is the number of vertices on the worker.
+Then, $D$ is an array storing the current parent's id for each vertex on this worker (which is calculated in previous supersteps), and we just use the raw index $u$ to access the attributes of the vertices.
 Then, since $D2$ stores the grandparent's id and $D$ stores the parent's id, the expression \texttt{D2[u] == D[u]} in line 10 checks whether a vertex's parent is a root.
-If it is the case, we calculate the minimum of neighbors' parent id as $t$, and modify $u$'s parent's pointer with $t$, which is achieved by adding a message $t$ to \texttt{D[u]} by the remote updating channel $remote$.
-As written in line 18, the messages buffered by the \emph{remote} channel are delivered by the function \emph{send()}, so that the messages are expected to reach the destinations in step 4, according to the state transition in line 19.
-If $u$'s parent is not a root node, then current vertex $u$ modifies its pointer $D$ to $u$'s grandparent $D2[u]$ by an assignment in line 16.
+If it is the case, we calculate the minimum of neighbors' parent id as $t$, and modify $u$'s parent's pointer with $t$, which is achieved by adding a message $t$ to \texttt{D[u]} by the remote updating channel $remote$;
+the messages buffered by the \emph{remote} channel are eventually delivered by the \emph{send()} function on line 19, so that the messages are expected to reach the destinations in step 4, according to the state transition in line 19.
+If $u$'s parent is not a root vertex, then current vertex $u$ modifies its pointer $D$ to $u$'s grandparent $D2[u]$ by an assignment in line 16.
 Finally, in line 20, we return \texttt{false} indicating that the computation should continue after current superstep ends.
 
-The way to implement the other supersteps are basically the same, by collecting the messages first, performing the vertex-centric computation next, and then delivering the messages, change the state, and return a proper return value.
-In this example, we can see that our customized Pregel framework can naturally implement complex Pregel algorithm that have multiple message channels, and in the next chapter, we will demonstrate the efficiency of our framework, which is achieved by optimizing each message channel individually.
+The way to implement the other supersteps are basically the same, by collecting the messages first, performing the vertex-centric computation next, and then delivering the necessary messages for the next superstep, changing the global state, and returning a proper value indicating whether the computation stops.
+In this example, we can see that our customized Pregel framework can intuitively implement complex Pregel algorithms with multiple communications.
+Furthermore, we make the \emph{neighbor} channel and \emph{remote} channel to be optimized by the minimum combiner, which is natural in our system but impossible to achieve in other Pregel frameworks.
+In the next chapter, we will demonstrate the efficiency of our message channel interface.
 
 %\subsection{Relationship with Palgol} % perhaps interesting
 
@@ -1447,9 +1453,9 @@ In other words, compact programs are usually harder to maintain for humans.
 \section{Evaluation of the Customized Pregel Framework}
 
 In this section, we implement a set of graph algorithms on both the Pregel+ and our customized Pregel systems, and compare the performance over large real-world graphs.
-Our customized Pregel system is implemented in C++ as a group of header files, and users simply include the necessary base classes and implement the application logic in their sub-classes.
-Our system communicate with HDFS through libhdfs, a JNI based C API for HDFS, and the communication layer is implemented using MPI communication primitives.
-While one may deploy the system with any version of Hadoop an MPI, we use Hadoop 2.7.3 and MPI 3.2.0 in our experiments.
+Our customized Pregel system is implemented in C++ as a group of header files, and programmers simply include the necessary base classes and implement the application logic in their sub-classes.
+Our system communicates with HDFS through libhdfs, a JNI based C API for HDFS, and the communication layer is implemented using MPI communication primitives.
+While one may deploy the system with any version of Hadoop an MPI, we use Hadoop 2.7.3 and MPI 3.2.0 in our experiments, for both Pregel+ and our system.
 All programs are compiled using GCC with -O2 option enabled.
 
 All the system source code as well as the application code discussed in the thesis can be found in \url{https://bitbucket.org/zyz915/pregel}.
@@ -1468,13 +1474,14 @@ All the system source code as well as the application code discussed in the thes
 
 This thesis proposes Palgol, a high-level domain-specific language for Pregel systems with flexible remote data access, which allows people to design and implement vertex-centric graph algorithms in a more natural way.
 In particular, we tackle the problem of translating remote data read to Pregel's message passing, and by recognizing and compiling two useful remote reading patterns, chain access and neighborhood communication, Palgol can express a wider range of practical Pregel algorithms than existing languages.
-Furthermore, we extend the existing Pregel system with a novel message channel interface, which provides more chances for message reduction and shows good extensibility for embedding more communication pattern.
-Experiment results show that graph algorithms written in Palgol can be compiled to efficient Pregel programs comparable to the human written ones.
- and the evaluation result shows its effectiveness for reducing the message size and execution time for multi-staged graph algorithms.
+Furthermore, we extend the existing Pregel system with a novel message channel interface, which discloses more chances for message reduction and shows good extensibility for embedding new communication pattern with more sophisticated implementation.
+Experiment results show that graph algorithms written in Palgol can be compiled to efficient Pregel programs comparable to the human written ones, and our customized Pregel system is effective for reducing the message size and execution time for multi-staged graph algorithms.
 
 \section{Future Directions}
 
-As for future work, on the high-level, we are going to provide a more mature solution for vertex activation or inactivation, and support more remote access patterns in Palgol.
+As for future work, we will study
+
+%As for future work, on the high-level, we are going to provide a more mature mechanism for vertex activation or inactivation, and support more remote access patterns in Palgol.
 
 On the aspect of system design (TODO).
 
