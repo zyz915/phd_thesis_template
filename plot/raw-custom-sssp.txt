@@ -1,0 +1,1824 @@
+$ sssp LJ-DG 4 0
+Load time 4.182267 seconds
+Superstep 1 done. Time elapsed: 0.002076 seconds
+message: 376 Bytes (376 Bytes)
+Superstep 2 done. Time elapsed: 0.026873 seconds
+message: 14472 Bytes (14.47 KB)
+Superstep 3 done. Time elapsed: 0.028340 seconds
+message: 814384 Bytes (814.38 KB)
+Superstep 4 done. Time elapsed: 0.231989 seconds
+message: 14704776 Bytes (14.70 MB)
+Superstep 5 done. Time elapsed: 1.402570 seconds
+message: 49073448 Bytes (49.07 MB)
+Superstep 6 done. Time elapsed: 1.247840 seconds
+message: 45068704 Bytes (45.07 MB)
+Superstep 7 done. Time elapsed: 0.566894 seconds
+message: 10685536 Bytes (10.69 MB)
+Superstep 8 done. Time elapsed: 0.206672 seconds
+message: 1554920 Bytes (1.55 MB)
+Superstep 9 done. Time elapsed: 0.061318 seconds
+message: 279040 Bytes (279.04 KB)
+Superstep 10 done. Time elapsed: 0.019596 seconds
+message: 58744 Bytes (58.74 KB)
+Superstep 11 done. Time elapsed: 0.013454 seconds
+message: 15048 Bytes (15.05 KB)
+Superstep 12 done. Time elapsed: 0.012067 seconds
+message: 3328 Bytes (3.33 KB)
+Superstep 13 done. Time elapsed: 0.011714 seconds
+message: 848 Bytes (848 Bytes)
+Superstep 14 done. Time elapsed: 0.011638 seconds
+message: 520 Bytes (520 Bytes)
+Superstep 15 done. Time elapsed: 0.011597 seconds
+message: 232 Bytes (232 Bytes)
+Superstep 16 done. Time elapsed: 0.011363 seconds
+message: 0 Bytes (0 Bytes)
+Communication Time: 2.188632 second
+- Serialization Time: 2.008036 second
+- Transfer Time: 0.180596 second
+Worker Time: 1.388559 second
+Waiting Time: 0.320026 second
+------------------------------
+Total Running Time: 3.891992 second
+Total Message Size: 122274376 Bytes (122.27 MB)
+Dump time 0.658062 second
+$ sssp LJ-DG 8 0
+Load time 2.765559 seconds
+Superstep 1 done. Time elapsed: 0.002874 seconds
+message: 776 Bytes (776 Bytes)
+Superstep 2 done. Time elapsed: 0.008941 seconds
+message: 17864 Bytes (17.86 KB)
+Superstep 3 done. Time elapsed: 0.009616 seconds
+message: 1033296 Bytes (1.03 MB)
+Superstep 4 done. Time elapsed: 0.114041 seconds
+message: 22209960 Bytes (22.21 MB)
+Superstep 5 done. Time elapsed: 0.687551 seconds
+message: 83389760 Bytes (83.39 MB)
+Superstep 6 done. Time elapsed: 0.647583 seconds
+message: 73007184 Bytes (73.01 MB)
+Superstep 7 done. Time elapsed: 0.296894 seconds
+message: 14892320 Bytes (14.89 MB)
+Superstep 8 done. Time elapsed: 0.083799 seconds
+message: 2176504 Bytes (2.18 MB)
+Superstep 9 done. Time elapsed: 0.021020 seconds
+message: 394872 Bytes (394.87 KB)
+Superstep 10 done. Time elapsed: 0.007890 seconds
+message: 84528 Bytes (84.53 KB)
+Superstep 11 done. Time elapsed: 0.006126 seconds
+message: 23728 Bytes (23.73 KB)
+Superstep 12 done. Time elapsed: 0.005594 seconds
+message: 5336 Bytes (5.34 KB)
+Superstep 13 done. Time elapsed: 0.005681 seconds
+message: 1808 Bytes (1.81 KB)
+Superstep 14 done. Time elapsed: 0.005217 seconds
+message: 992 Bytes (992 Bytes)
+Superstep 15 done. Time elapsed: 0.005015 seconds
+message: 600 Bytes (600 Bytes)
+Superstep 16 done. Time elapsed: 0.004319 seconds
+message: 0 Bytes (0 Bytes)
+Communication Time: 1.084261 second
+- Serialization Time: 0.950807 second
+- Transfer Time: 0.133454 second
+Worker Time: 0.716399 second
+Waiting Time: 0.127001 second
+------------------------------
+Total Running Time: 1.923962 second
+Total Message Size: 197239528 Bytes (197.24 MB)
+Dump time 0.460021 second
+$ sssp LJ-DG 12 0
+Load time 2.464530 seconds
+Superstep 1 done. Time elapsed: 0.008388 seconds
+message: 1400 Bytes (1.40 KB)
+Superstep 2 done. Time elapsed: 0.004877 seconds
+message: 19464 Bytes (19.46 KB)
+Superstep 3 done. Time elapsed: 0.006550 seconds
+message: 1117856 Bytes (1.12 MB)
+Superstep 4 done. Time elapsed: 0.076686 seconds
+message: 26454200 Bytes (26.45 MB)
+Superstep 5 done. Time elapsed: 0.452953 seconds
+message: 105856392 Bytes (105.86 MB)
+Superstep 6 done. Time elapsed: 0.446231 seconds
+message: 89478744 Bytes (89.48 MB)
+Superstep 7 done. Time elapsed: 0.208538 seconds
+message: 17115488 Bytes (17.12 MB)
+Superstep 8 done. Time elapsed: 0.061452 seconds
+message: 2510360 Bytes (2.51 MB)
+Superstep 9 done. Time elapsed: 0.014917 seconds
+message: 450768 Bytes (450.77 KB)
+Superstep 10 done. Time elapsed: 0.006339 seconds
+message: 100616 Bytes (100.62 KB)
+Superstep 11 done. Time elapsed: 0.004936 seconds
+message: 29248 Bytes (29.25 KB)
+Superstep 12 done. Time elapsed: 0.004446 seconds
+message: 7240 Bytes (7.24 KB)
+Superstep 13 done. Time elapsed: 0.004139 seconds
+message: 2632 Bytes (2.63 KB)
+Superstep 14 done. Time elapsed: 0.004279 seconds
+message: 1624 Bytes (1.62 KB)
+Superstep 15 done. Time elapsed: 0.004164 seconds
+message: 1256 Bytes (1.26 KB)
+Superstep 16 done. Time elapsed: 0.002993 seconds
+message: 0 Bytes (0 Bytes)
+Communication Time: 0.725860 second
+- Serialization Time: 0.609898 second
+- Transfer Time: 0.115963 second
+Worker Time: 0.515291 second
+Waiting Time: 0.091658 second
+------------------------------
+Total Running Time: 1.329785 second
+Total Message Size: 243147288 Bytes (243.15 MB)
+Dump time 0.323006 second
+$ sssp LJ-DG 16 0
+Load time 2.250453 seconds
+Superstep 1 done. Time elapsed: 0.002391 seconds
+message: 2272 Bytes (2.27 KB)
+Superstep 2 done. Time elapsed: 0.004445 seconds
+message: 20904 Bytes (20.90 KB)
+Superstep 3 done. Time elapsed: 0.005721 seconds
+message: 1167480 Bytes (1.17 MB)
+Superstep 4 done. Time elapsed: 0.056799 seconds
+message: 29342824 Bytes (29.34 MB)
+Superstep 5 done. Time elapsed: 0.344466 seconds
+message: 122341192 Bytes (122.34 MB)
+Superstep 6 done. Time elapsed: 0.339118 seconds
+message: 100778672 Bytes (100.78 MB)
+Superstep 7 done. Time elapsed: 0.153286 seconds
+message: 18584936 Bytes (18.58 MB)
+Superstep 8 done. Time elapsed: 0.038543 seconds
+message: 2714336 Bytes (2.71 MB)
+Superstep 9 done. Time elapsed: 0.010568 seconds
+message: 485400 Bytes (485.40 KB)
+Superstep 10 done. Time elapsed: 0.005457 seconds
+message: 111216 Bytes (111.22 KB)
+Superstep 11 done. Time elapsed: 0.004332 seconds
+message: 33520 Bytes (33.52 KB)
+Superstep 12 done. Time elapsed: 0.004047 seconds
+message: 8432 Bytes (8.43 KB)
+Superstep 13 done. Time elapsed: 0.003827 seconds
+message: 3656 Bytes (3.66 KB)
+Superstep 14 done. Time elapsed: 0.004175 seconds
+message: 2512 Bytes (2.51 KB)
+Superstep 15 done. Time elapsed: 0.004028 seconds
+message: 2096 Bytes (2.10 KB)
+Superstep 16 done. Time elapsed: 0.002110 seconds
+message: 0 Bytes (0 Bytes)
+Communication Time: 0.548539 second
+- Serialization Time: 0.441778 second
+- Transfer Time: 0.106760 second
+Worker Time: 0.402171 second
+Waiting Time: 0.054652 second
+------------------------------
+Total Running Time: 0.999107 second
+Total Message Size: 275599448 Bytes (275.60 MB)
+Dump time 0.390949 second
+$ sssp wiki 4 0
+Load time 8.901057 seconds
+Superstep 1 done. Time elapsed: 0.069972 seconds
+message: 104 Bytes (104 Bytes)
+Superstep 2 done. Time elapsed: 0.055789 seconds
+message: 664 Bytes (664 Bytes)
+Superstep 3 done. Time elapsed: 0.078594 seconds
+message: 49848 Bytes (49.85 KB)
+Superstep 4 done. Time elapsed: 0.102807 seconds
+message: 2076424 Bytes (2.08 MB)
+Superstep 5 done. Time elapsed: 0.525441 seconds
+message: 26471152 Bytes (26.47 MB)
+Superstep 6 done. Time elapsed: 2.368003 seconds
+message: 80652696 Bytes (80.65 MB)
+Superstep 7 done. Time elapsed: 2.276434 seconds
+message: 66814392 Bytes (66.81 MB)
+Superstep 8 done. Time elapsed: 1.108961 seconds
+message: 17073656 Bytes (17.07 MB)
+Superstep 9 done. Time elapsed: 0.457978 seconds
+message: 3087552 Bytes (3.09 MB)
+Superstep 10 done. Time elapsed: 0.159420 seconds
+message: 644800 Bytes (644.80 KB)
+Superstep 11 done. Time elapsed: 0.086692 seconds
+message: 208368 Bytes (208.37 KB)
+Superstep 12 done. Time elapsed: 0.064553 seconds
+message: 143104 Bytes (143.10 KB)
+Superstep 13 done. Time elapsed: 0.059731 seconds
+message: 53056 Bytes (53.06 KB)
+Superstep 14 done. Time elapsed: 0.058491 seconds
+message: 38792 Bytes (38.79 KB)
+Superstep 15 done. Time elapsed: 0.057278 seconds
+message: 36568 Bytes (36.57 KB)
+Superstep 16 done. Time elapsed: 0.057082 seconds
+message: 35152 Bytes (35.15 KB)
+Superstep 17 done. Time elapsed: 0.056804 seconds
+message: 15832 Bytes (15.83 KB)
+Superstep 18 done. Time elapsed: 0.056468 seconds
+message: 13648 Bytes (13.65 KB)
+Superstep 19 done. Time elapsed: 0.056085 seconds
+message: 12368 Bytes (12.37 KB)
+Superstep 20 done. Time elapsed: 0.056186 seconds
+message: 12976 Bytes (12.98 KB)
+Superstep 21 done. Time elapsed: 0.056272 seconds
+message: 13264 Bytes (13.26 KB)
+Superstep 22 done. Time elapsed: 0.056267 seconds
+message: 11824 Bytes (11.82 KB)
+Superstep 23 done. Time elapsed: 0.056227 seconds
+message: 9880 Bytes (9.88 KB)
+Superstep 24 done. Time elapsed: 0.056381 seconds
+message: 9432 Bytes (9.43 KB)
+Superstep 25 done. Time elapsed: 0.056275 seconds
+message: 7456 Bytes (7.46 KB)
+Superstep 26 done. Time elapsed: 0.056454 seconds
+message: 5096 Bytes (5.10 KB)
+Superstep 27 done. Time elapsed: 0.055999 seconds
+message: 4504 Bytes (4.50 KB)
+Superstep 28 done. Time elapsed: 0.055985 seconds
+message: 2600 Bytes (2.60 KB)
+Superstep 29 done. Time elapsed: 0.055832 seconds
+message: 1936 Bytes (1.94 KB)
+Superstep 30 done. Time elapsed: 0.055816 seconds
+message: 1312 Bytes (1.31 KB)
+Superstep 31 done. Time elapsed: 0.056009 seconds
+message: 1128 Bytes (1.13 KB)
+Superstep 32 done. Time elapsed: 0.055895 seconds
+message: 1080 Bytes (1.08 KB)
+Superstep 33 done. Time elapsed: 0.055867 seconds
+message: 1136 Bytes (1.14 KB)
+Superstep 34 done. Time elapsed: 0.055850 seconds
+message: 576 Bytes (576 Bytes)
+Superstep 35 done. Time elapsed: 0.055860 seconds
+message: 392 Bytes (392 Bytes)
+Superstep 36 done. Time elapsed: 0.055659 seconds
+message: 440 Bytes (440 Bytes)
+Superstep 37 done. Time elapsed: 0.055769 seconds
+message: 432 Bytes (432 Bytes)
+Superstep 38 done. Time elapsed: 0.055703 seconds
+message: 528 Bytes (528 Bytes)
+Superstep 39 done. Time elapsed: 0.055836 seconds
+message: 640 Bytes (640 Bytes)
+Superstep 40 done. Time elapsed: 0.055805 seconds
+message: 584 Bytes (584 Bytes)
+Superstep 41 done. Time elapsed: 0.055869 seconds
+message: 320 Bytes (320 Bytes)
+Superstep 42 done. Time elapsed: 0.055896 seconds
+message: 328 Bytes (328 Bytes)
+Superstep 43 done. Time elapsed: 0.055864 seconds
+message: 288 Bytes (288 Bytes)
+Superstep 44 done. Time elapsed: 0.055926 seconds
+message: 272 Bytes (272 Bytes)
+Superstep 45 done. Time elapsed: 0.055836 seconds
+message: 208 Bytes (208 Bytes)
+Superstep 46 done. Time elapsed: 0.056583 seconds
+message: 176 Bytes (176 Bytes)
+Superstep 47 done. Time elapsed: 0.056061 seconds
+message: 168 Bytes (168 Bytes)
+Superstep 48 done. Time elapsed: 0.056059 seconds
+message: 152 Bytes (152 Bytes)
+Superstep 49 done. Time elapsed: 0.055778 seconds
+message: 0 Bytes (0 Bytes)
+Communication Time: 3.844924 second
+- Serialization Time: 3.578647 second
+- Transfer Time: 0.266278 second
+Worker Time: 4.935004 second
+Waiting Time: 0.774249 second
+------------------------------
+Total Running Time: 9.544920 second
+Total Message Size: 197517304 Bytes (197.52 MB)
+Dump time 1.633300 second
+$ sssp wiki 8 0
+Load time 4.802895 seconds
+Superstep 1 done. Time elapsed: 0.010691 seconds
+message: 456 Bytes (456 Bytes)
+Superstep 2 done. Time elapsed: 0.031751 seconds
+message: 1136 Bytes (1.14 KB)
+Superstep 3 done. Time elapsed: 0.037864 seconds
+message: 62352 Bytes (62.35 KB)
+Superstep 4 done. Time elapsed: 0.036278 seconds
+message: 2830768 Bytes (2.83 MB)
+Superstep 5 done. Time elapsed: 0.258060 seconds
+message: 38641064 Bytes (38.64 MB)
+Superstep 6 done. Time elapsed: 1.154734 seconds
+message: 123226856 Bytes (123.23 MB)
+Superstep 7 done. Time elapsed: 1.130006 seconds
+message: 98712448 Bytes (98.71 MB)
+Superstep 8 done. Time elapsed: 0.548919 seconds
+message: 23032752 Bytes (23.03 MB)
+Superstep 9 done. Time elapsed: 0.204301 seconds
+message: 4016768 Bytes (4.02 MB)
+Superstep 10 done. Time elapsed: 0.072966 seconds
+message: 809992 Bytes (809.99 KB)
+Superstep 11 done. Time elapsed: 0.040296 seconds
+message: 254376 Bytes (254.38 KB)
+Superstep 12 done. Time elapsed: 0.032220 seconds
+message: 170976 Bytes (170.98 KB)
+Superstep 13 done. Time elapsed: 0.030534 seconds
+message: 63976 Bytes (63.98 KB)
+Superstep 14 done. Time elapsed: 0.030041 seconds
+message: 47224 Bytes (47.22 KB)
+Superstep 15 done. Time elapsed: 0.029855 seconds
+message: 46616 Bytes (46.62 KB)
+Superstep 16 done. Time elapsed: 0.029321 seconds
+message: 42736 Bytes (42.74 KB)
+Superstep 17 done. Time elapsed: 0.029389 seconds
+message: 20400 Bytes (20.40 KB)
+Superstep 18 done. Time elapsed: 0.029303 seconds
+message: 17464 Bytes (17.46 KB)
+Superstep 19 done. Time elapsed: 0.029441 seconds
+message: 15640 Bytes (15.64 KB)
+Superstep 20 done. Time elapsed: 0.029382 seconds
+message: 16872 Bytes (16.87 KB)
+Superstep 21 done. Time elapsed: 0.029013 seconds
+message: 16720 Bytes (16.72 KB)
+Superstep 22 done. Time elapsed: 0.029324 seconds
+message: 14680 Bytes (14.68 KB)
+Superstep 23 done. Time elapsed: 0.029074 seconds
+message: 12376 Bytes (12.38 KB)
+Superstep 24 done. Time elapsed: 0.029080 seconds
+message: 12152 Bytes (12.15 KB)
+Superstep 25 done. Time elapsed: 0.029151 seconds
+message: 9768 Bytes (9.77 KB)
+Superstep 26 done. Time elapsed: 0.029164 seconds
+message: 6352 Bytes (6.35 KB)
+Superstep 27 done. Time elapsed: 0.029100 seconds
+message: 5712 Bytes (5.71 KB)
+Superstep 28 done. Time elapsed: 0.028980 seconds
+message: 3392 Bytes (3.39 KB)
+Superstep 29 done. Time elapsed: 0.028624 seconds
+message: 2600 Bytes (2.60 KB)
+Superstep 30 done. Time elapsed: 0.028755 seconds
+message: 1864 Bytes (1.86 KB)
+Superstep 31 done. Time elapsed: 0.028775 seconds
+message: 1648 Bytes (1.65 KB)
+Superstep 32 done. Time elapsed: 0.029228 seconds
+message: 1616 Bytes (1.62 KB)
+Superstep 33 done. Time elapsed: 0.028905 seconds
+message: 1680 Bytes (1.68 KB)
+Superstep 34 done. Time elapsed: 0.028868 seconds
+message: 1016 Bytes (1.02 KB)
+Superstep 35 done. Time elapsed: 0.028891 seconds
+message: 840 Bytes (840 Bytes)
+Superstep 36 done. Time elapsed: 0.029093 seconds
+message: 864 Bytes (864 Bytes)
+Superstep 37 done. Time elapsed: 0.028866 seconds
+message: 872 Bytes (872 Bytes)
+Superstep 38 done. Time elapsed: 0.029342 seconds
+message: 952 Bytes (952 Bytes)
+Superstep 39 done. Time elapsed: 0.029550 seconds
+message: 1168 Bytes (1.17 KB)
+Superstep 40 done. Time elapsed: 0.029031 seconds
+message: 1040 Bytes (1.04 KB)
+Superstep 41 done. Time elapsed: 0.029243 seconds
+message: 696 Bytes (696 Bytes)
+Superstep 42 done. Time elapsed: 0.029410 seconds
+message: 720 Bytes (720 Bytes)
+Superstep 43 done. Time elapsed: 0.029244 seconds
+message: 688 Bytes (688 Bytes)
+Superstep 44 done. Time elapsed: 0.029373 seconds
+message: 664 Bytes (664 Bytes)
+Superstep 45 done. Time elapsed: 0.029425 seconds
+message: 568 Bytes (568 Bytes)
+Superstep 46 done. Time elapsed: 0.029175 seconds
+message: 528 Bytes (528 Bytes)
+Superstep 47 done. Time elapsed: 0.028930 seconds
+message: 528 Bytes (528 Bytes)
+Superstep 48 done. Time elapsed: 0.028970 seconds
+message: 512 Bytes (512 Bytes)
+Superstep 49 done. Time elapsed: 0.028283 seconds
+message: 0 Bytes (0 Bytes)
+Communication Time: 1.905008 second
+- Serialization Time: 1.680158 second
+- Transfer Time: 0.224849 second
+Worker Time: 2.390232 second
+Waiting Time: 0.394849 second
+------------------------------
+Total Running Time: 4.677449 second
+Total Message Size: 292133088 Bytes (292.13 MB)
+Dump time 1.150467 second
+$ sssp wiki 12 0
+Load time 3.838401 seconds
+Superstep 1 done. Time elapsed: 0.006377 seconds
+message: 1064 Bytes (1.06 KB)
+Superstep 2 done. Time elapsed: 0.020437 seconds
+message: 1776 Bytes (1.78 KB)
+Superstep 3 done. Time elapsed: 0.018920 seconds
+message: 67624 Bytes (67.62 KB)
+Superstep 4 done. Time elapsed: 0.025771 seconds
+message: 3202336 Bytes (3.20 MB)
+Superstep 5 done. Time elapsed: 0.174370 seconds
+message: 45535280 Bytes (45.54 MB)
+Superstep 6 done. Time elapsed: 0.772606 seconds
+message: 148925048 Bytes (148.93 MB)
+Superstep 7 done. Time elapsed: 0.737632 seconds
+message: 116913320 Bytes (116.91 MB)
+Superstep 8 done. Time elapsed: 0.340722 seconds
+message: 26048648 Bytes (26.05 MB)
+Superstep 9 done. Time elapsed: 0.121755 seconds
+message: 4478872 Bytes (4.48 MB)
+Superstep 10 done. Time elapsed: 0.045247 seconds
+message: 880712 Bytes (880.71 KB)
+Superstep 11 done. Time elapsed: 0.027280 seconds
+message: 272400 Bytes (272.40 KB)
+Superstep 12 done. Time elapsed: 0.022763 seconds
+message: 181944 Bytes (181.94 KB)
+Superstep 13 done. Time elapsed: 0.021158 seconds
+message: 69480 Bytes (69.48 KB)
+Superstep 14 done. Time elapsed: 0.020819 seconds
+message: 50784 Bytes (50.78 KB)
+Superstep 15 done. Time elapsed: 0.020732 seconds
+message: 52160 Bytes (52.16 KB)
+Superstep 16 done. Time elapsed: 0.020495 seconds
+message: 46824 Bytes (46.82 KB)
+Superstep 17 done. Time elapsed: 0.020383 seconds
+message: 23104 Bytes (23.10 KB)
+Superstep 18 done. Time elapsed: 0.020335 seconds
+message: 18560 Bytes (18.56 KB)
+Superstep 19 done. Time elapsed: 0.020040 seconds
+message: 17048 Bytes (17.05 KB)
+Superstep 20 done. Time elapsed: 0.019693 seconds
+message: 18600 Bytes (18.60 KB)
+Superstep 21 done. Time elapsed: 0.020128 seconds
+message: 19136 Bytes (19.14 KB)
+Superstep 22 done. Time elapsed: 0.019905 seconds
+message: 17712 Bytes (17.71 KB)
+Superstep 23 done. Time elapsed: 0.019783 seconds
+message: 13944 Bytes (13.94 KB)
+Superstep 24 done. Time elapsed: 0.019897 seconds
+message: 13664 Bytes (13.66 KB)
+Superstep 25 done. Time elapsed: 0.019612 seconds
+message: 11072 Bytes (11.07 KB)
+Superstep 26 done. Time elapsed: 0.019751 seconds
+message: 7472 Bytes (7.47 KB)
+Superstep 27 done. Time elapsed: 0.019656 seconds
+message: 6536 Bytes (6.54 KB)
+Superstep 28 done. Time elapsed: 0.019587 seconds
+message: 4152 Bytes (4.15 KB)
+Superstep 29 done. Time elapsed: 0.019526 seconds
+message: 3400 Bytes (3.40 KB)
+Superstep 30 done. Time elapsed: 0.019844 seconds
+message: 2592 Bytes (2.59 KB)
+Superstep 31 done. Time elapsed: 0.019964 seconds
+message: 2328 Bytes (2.33 KB)
+Superstep 32 done. Time elapsed: 0.019616 seconds
+message: 2280 Bytes (2.28 KB)
+Superstep 33 done. Time elapsed: 0.019651 seconds
+message: 2296 Bytes (2.30 KB)
+Superstep 34 done. Time elapsed: 0.019713 seconds
+message: 1624 Bytes (1.62 KB)
+Superstep 35 done. Time elapsed: 0.019930 seconds
+message: 1448 Bytes (1.45 KB)
+Superstep 36 done. Time elapsed: 0.019585 seconds
+message: 1496 Bytes (1.50 KB)
+Superstep 37 done. Time elapsed: 0.019623 seconds
+message: 1520 Bytes (1.52 KB)
+Superstep 38 done. Time elapsed: 0.019626 seconds
+message: 1584 Bytes (1.58 KB)
+Superstep 39 done. Time elapsed: 0.019858 seconds
+message: 1784 Bytes (1.78 KB)
+Superstep 40 done. Time elapsed: 0.020239 seconds
+message: 1632 Bytes (1.63 KB)
+Superstep 41 done. Time elapsed: 0.020368 seconds
+message: 1296 Bytes (1.30 KB)
+Superstep 42 done. Time elapsed: 0.019967 seconds
+message: 1304 Bytes (1.30 KB)
+Superstep 43 done. Time elapsed: 0.019970 seconds
+message: 1304 Bytes (1.30 KB)
+Superstep 44 done. Time elapsed: 0.019911 seconds
+message: 1304 Bytes (1.30 KB)
+Superstep 45 done. Time elapsed: 0.019660 seconds
+message: 1184 Bytes (1.18 KB)
+Superstep 46 done. Time elapsed: 0.019696 seconds
+message: 1136 Bytes (1.14 KB)
+Superstep 47 done. Time elapsed: 0.019780 seconds
+message: 1136 Bytes (1.14 KB)
+Superstep 48 done. Time elapsed: 0.020252 seconds
+message: 1120 Bytes (1.12 KB)
+Superstep 49 done. Time elapsed: 0.018470 seconds
+message: 0 Bytes (0 Bytes)
+Communication Time: 1.298042 second
+- Serialization Time: 1.093275 second
+- Transfer Time: 0.204767 second
+Worker Time: 1.575267 second
+Waiting Time: 0.218044 second
+------------------------------
+Total Running Time: 3.078839 second
+Total Message Size: 346933040 Bytes (346.93 MB)
+Dump time 0.920543 second
+$ sssp wiki 16 0
+Load time 3.100938 seconds
+Superstep 1 done. Time elapsed: 0.033093 seconds
+message: 1928 Bytes (1.93 KB)
+Superstep 2 done. Time elapsed: 0.012297 seconds
+message: 2656 Bytes (2.66 KB)
+Superstep 3 done. Time elapsed: 0.013621 seconds
+message: 70536 Bytes (70.54 KB)
+Superstep 4 done. Time elapsed: 0.018794 seconds
+message: 3439504 Bytes (3.44 MB)
+Superstep 5 done. Time elapsed: 0.128147 seconds
+message: 50316360 Bytes (50.32 MB)
+Superstep 6 done. Time elapsed: 0.566041 seconds
+message: 167380896 Bytes (167.38 MB)
+Superstep 7 done. Time elapsed: 0.552603 seconds
+message: 129568240 Bytes (129.57 MB)
+Superstep 8 done. Time elapsed: 0.254796 seconds
+message: 28006288 Bytes (28.01 MB)
+Superstep 9 done. Time elapsed: 0.082399 seconds
+message: 4781120 Bytes (4.78 MB)
+Superstep 10 done. Time elapsed: 0.028528 seconds
+message: 921224 Bytes (921.22 KB)
+Superstep 11 done. Time elapsed: 0.018691 seconds
+message: 281952 Bytes (281.95 KB)
+Superstep 12 done. Time elapsed: 0.016475 seconds
+message: 188184 Bytes (188.18 KB)
+Superstep 13 done. Time elapsed: 0.015813 seconds
+message: 74448 Bytes (74.45 KB)
+Superstep 14 done. Time elapsed: 0.015600 seconds
+message: 53312 Bytes (53.31 KB)
+Superstep 15 done. Time elapsed: 0.015644 seconds
+message: 54528 Bytes (54.53 KB)
+Superstep 16 done. Time elapsed: 0.015498 seconds
+message: 48520 Bytes (48.52 KB)
+Superstep 17 done. Time elapsed: 0.025769 seconds
+message: 24384 Bytes (24.38 KB)
+Superstep 18 done. Time elapsed: 0.016072 seconds
+message: 20600 Bytes (20.60 KB)
+Superstep 19 done. Time elapsed: 0.018310 seconds
+message: 18720 Bytes (18.72 KB)
+Superstep 20 done. Time elapsed: 0.016405 seconds
+message: 20560 Bytes (20.56 KB)
+Superstep 21 done. Time elapsed: 0.016372 seconds
+message: 20616 Bytes (20.62 KB)
+Superstep 22 done. Time elapsed: 0.016108 seconds
+message: 18344 Bytes (18.34 KB)
+Superstep 23 done. Time elapsed: 0.015962 seconds
+message: 14848 Bytes (14.85 KB)
+Superstep 24 done. Time elapsed: 0.016198 seconds
+message: 15096 Bytes (15.10 KB)
+Superstep 25 done. Time elapsed: 0.016261 seconds
+message: 12440 Bytes (12.44 KB)
+Superstep 26 done. Time elapsed: 0.016742 seconds
+message: 8312 Bytes (8.31 KB)
+Superstep 27 done. Time elapsed: 0.015201 seconds
+message: 7528 Bytes (7.53 KB)
+Superstep 28 done. Time elapsed: 0.015240 seconds
+message: 5072 Bytes (5.07 KB)
+Superstep 29 done. Time elapsed: 0.014901 seconds
+message: 4272 Bytes (4.27 KB)
+Superstep 30 done. Time elapsed: 0.015346 seconds
+message: 3512 Bytes (3.51 KB)
+Superstep 31 done. Time elapsed: 0.014608 seconds
+message: 3192 Bytes (3.19 KB)
+Superstep 32 done. Time elapsed: 0.015245 seconds
+message: 3168 Bytes (3.17 KB)
+Superstep 33 done. Time elapsed: 0.015514 seconds
+message: 3264 Bytes (3.26 KB)
+Superstep 34 done. Time elapsed: 0.015443 seconds
+message: 2544 Bytes (2.54 KB)
+Superstep 35 done. Time elapsed: 0.015445 seconds
+message: 2352 Bytes (2.35 KB)
+Superstep 36 done. Time elapsed: 0.015629 seconds
+message: 2368 Bytes (2.37 KB)
+Superstep 37 done. Time elapsed: 0.015206 seconds
+message: 2376 Bytes (2.38 KB)
+Superstep 38 done. Time elapsed: 0.015108 seconds
+message: 2472 Bytes (2.47 KB)
+Superstep 39 done. Time elapsed: 0.015089 seconds
+message: 2688 Bytes (2.69 KB)
+Superstep 40 done. Time elapsed: 0.015200 seconds
+message: 2544 Bytes (2.54 KB)
+Superstep 41 done. Time elapsed: 0.015062 seconds
+message: 2184 Bytes (2.18 KB)
+Superstep 42 done. Time elapsed: 0.015222 seconds
+message: 2200 Bytes (2.20 KB)
+Superstep 43 done. Time elapsed: 0.015419 seconds
+message: 2176 Bytes (2.18 KB)
+Superstep 44 done. Time elapsed: 0.015672 seconds
+message: 2160 Bytes (2.16 KB)
+Superstep 45 done. Time elapsed: 0.016346 seconds
+message: 2048 Bytes (2.05 KB)
+Superstep 46 done. Time elapsed: 0.016301 seconds
+message: 2000 Bytes (2.00 KB)
+Superstep 47 done. Time elapsed: 0.016313 seconds
+message: 2000 Bytes (2.00 KB)
+Superstep 48 done. Time elapsed: 0.016197 seconds
+message: 1992 Bytes (1.99 KB)
+Superstep 49 done. Time elapsed: 0.014250 seconds
+message: 0 Bytes (0 Bytes)
+Communication Time: 0.991695 second
+- Serialization Time: 0.781191 second
+- Transfer Time: 0.210504 second
+Worker Time: 1.145237 second
+Waiting Time: 0.215471 second
+------------------------------
+Total Running Time: 2.337214 second
+Total Message Size: 385427728 Bytes (385.43 MB)
+Dump time 0.756096 second
+$ sssp LJ-DG 4 1
+Load time 4.021299 seconds
+Superstep 1 done. Time elapsed: 0.002152 seconds
+message: 376 Bytes (376 Bytes)
+Superstep 2 done. Time elapsed: 0.026052 seconds
+message: 14472 Bytes (14.47 KB)
+Superstep 3 done. Time elapsed: 0.026567 seconds
+message: 814384 Bytes (814.38 KB)
+Superstep 4 done. Time elapsed: 0.230678 seconds
+message: 14704776 Bytes (14.70 MB)
+Superstep 5 done. Time elapsed: 1.401492 seconds
+message: 49073448 Bytes (49.07 MB)
+Superstep 6 done. Time elapsed: 1.249615 seconds
+message: 45068704 Bytes (45.07 MB)
+Superstep 7 done. Time elapsed: 0.571568 seconds
+message: 10685536 Bytes (10.69 MB)
+Superstep 8 done. Time elapsed: 0.197394 seconds
+message: 1554920 Bytes (1.55 MB)
+Superstep 9 done. Time elapsed: 0.059018 seconds
+message: 279040 Bytes (279.04 KB)
+Superstep 10 done. Time elapsed: 0.019023 seconds
+message: 58744 Bytes (58.74 KB)
+Superstep 11 done. Time elapsed: 0.014241 seconds
+message: 15048 Bytes (15.05 KB)
+Superstep 12 done. Time elapsed: 0.012415 seconds
+message: 3328 Bytes (3.33 KB)
+Superstep 13 done. Time elapsed: 0.012082 seconds
+message: 848 Bytes (848 Bytes)
+Superstep 14 done. Time elapsed: 0.011656 seconds
+message: 520 Bytes (520 Bytes)
+Superstep 15 done. Time elapsed: 0.011683 seconds
+message: 232 Bytes (232 Bytes)
+Superstep 16 done. Time elapsed: 0.011896 seconds
+message: 0 Bytes (0 Bytes)
+Communication Time: 2.185983 second
+- Serialization Time: 2.005550 second
+- Transfer Time: 0.180433 second
+Worker Time: 1.386796 second
+Waiting Time: 0.318162 second
+------------------------------
+Total Running Time: 3.884142 second
+Total Message Size: 122274376 Bytes (122.27 MB)
+Dump time 0.635130 second
+$ sssp LJ-DG 8 1
+Load time 2.763770 seconds
+Superstep 1 done. Time elapsed: 0.001731 seconds
+message: 776 Bytes (776 Bytes)
+Superstep 2 done. Time elapsed: 0.008915 seconds
+message: 17864 Bytes (17.86 KB)
+Superstep 3 done. Time elapsed: 0.009819 seconds
+message: 1033296 Bytes (1.03 MB)
+Superstep 4 done. Time elapsed: 0.113777 seconds
+message: 22209960 Bytes (22.21 MB)
+Superstep 5 done. Time elapsed: 0.686867 seconds
+message: 83389760 Bytes (83.39 MB)
+Superstep 6 done. Time elapsed: 0.648494 seconds
+message: 73007184 Bytes (73.01 MB)
+Superstep 7 done. Time elapsed: 0.294654 seconds
+message: 14892320 Bytes (14.89 MB)
+Superstep 8 done. Time elapsed: 0.086613 seconds
+message: 2176504 Bytes (2.18 MB)
+Superstep 9 done. Time elapsed: 0.020393 seconds
+message: 394872 Bytes (394.87 KB)
+Superstep 10 done. Time elapsed: 0.008258 seconds
+message: 84528 Bytes (84.53 KB)
+Superstep 11 done. Time elapsed: 0.006458 seconds
+message: 23728 Bytes (23.73 KB)
+Superstep 12 done. Time elapsed: 0.005622 seconds
+message: 5336 Bytes (5.34 KB)
+Superstep 13 done. Time elapsed: 0.005142 seconds
+message: 1808 Bytes (1.81 KB)
+Superstep 14 done. Time elapsed: 0.005214 seconds
+message: 992 Bytes (992 Bytes)
+Superstep 15 done. Time elapsed: 0.005370 seconds
+message: 600 Bytes (600 Bytes)
+Superstep 16 done. Time elapsed: 0.004352 seconds
+message: 0 Bytes (0 Bytes)
+Communication Time: 1.088373 second
+- Serialization Time: 0.952987 second
+- Transfer Time: 0.135386 second
+Worker Time: 0.714063 second
+Waiting Time: 0.125115 second
+------------------------------
+Total Running Time: 1.923495 second
+Total Message Size: 197239528 Bytes (197.24 MB)
+Dump time 0.512852 second
+$ sssp LJ-DG 12 1
+Load time 2.401589 seconds
+Superstep 1 done. Time elapsed: 0.005033 seconds
+message: 1400 Bytes (1.40 KB)
+Superstep 2 done. Time elapsed: 0.004658 seconds
+message: 19464 Bytes (19.46 KB)
+Superstep 3 done. Time elapsed: 0.006422 seconds
+message: 1117856 Bytes (1.12 MB)
+Superstep 4 done. Time elapsed: 0.077446 seconds
+message: 26454200 Bytes (26.45 MB)
+Superstep 5 done. Time elapsed: 0.455181 seconds
+message: 105856392 Bytes (105.86 MB)
+Superstep 6 done. Time elapsed: 0.451972 seconds
+message: 89478744 Bytes (89.48 MB)
+Superstep 7 done. Time elapsed: 0.208972 seconds
+message: 17115488 Bytes (17.12 MB)
+Superstep 8 done. Time elapsed: 0.061138 seconds
+message: 2510360 Bytes (2.51 MB)
+Superstep 9 done. Time elapsed: 0.016514 seconds
+message: 450768 Bytes (450.77 KB)
+Superstep 10 done. Time elapsed: 0.007154 seconds
+message: 100616 Bytes (100.62 KB)
+Superstep 11 done. Time elapsed: 0.005014 seconds
+message: 29248 Bytes (29.25 KB)
+Superstep 12 done. Time elapsed: 0.004501 seconds
+message: 7240 Bytes (7.24 KB)
+Superstep 13 done. Time elapsed: 0.004249 seconds
+message: 2632 Bytes (2.63 KB)
+Superstep 14 done. Time elapsed: 0.004200 seconds
+message: 1624 Bytes (1.62 KB)
+Superstep 15 done. Time elapsed: 0.004342 seconds
+message: 1256 Bytes (1.26 KB)
+Superstep 16 done. Time elapsed: 0.003253 seconds
+message: 0 Bytes (0 Bytes)
+Communication Time: 0.729765 second
+- Serialization Time: 0.610192 second
+- Transfer Time: 0.119574 second
+Worker Time: 0.515819 second
+Waiting Time: 0.098784 second
+------------------------------
+Total Running Time: 1.339232 second
+Total Message Size: 243147288 Bytes (243.15 MB)
+Dump time 0.314793 second
+$ sssp LJ-DG 16 1
+Load time 2.213394 seconds
+Superstep 1 done. Time elapsed: 0.005735 seconds
+message: 2272 Bytes (2.27 KB)
+Superstep 2 done. Time elapsed: 0.004169 seconds
+message: 20904 Bytes (20.90 KB)
+Superstep 3 done. Time elapsed: 0.005706 seconds
+message: 1167480 Bytes (1.17 MB)
+Superstep 4 done. Time elapsed: 0.055463 seconds
+message: 29342824 Bytes (29.34 MB)
+Superstep 5 done. Time elapsed: 0.340798 seconds
+message: 122341192 Bytes (122.34 MB)
+Superstep 6 done. Time elapsed: 0.339584 seconds
+message: 100778672 Bytes (100.78 MB)
+Superstep 7 done. Time elapsed: 0.152224 seconds
+message: 18584936 Bytes (18.58 MB)
+Superstep 8 done. Time elapsed: 0.039592 seconds
+message: 2714336 Bytes (2.71 MB)
+Superstep 9 done. Time elapsed: 0.010837 seconds
+message: 485400 Bytes (485.40 KB)
+Superstep 10 done. Time elapsed: 0.005561 seconds
+message: 111216 Bytes (111.22 KB)
+Superstep 11 done. Time elapsed: 0.004497 seconds
+message: 33520 Bytes (33.52 KB)
+Superstep 12 done. Time elapsed: 0.004195 seconds
+message: 8432 Bytes (8.43 KB)
+Superstep 13 done. Time elapsed: 0.003970 seconds
+message: 3656 Bytes (3.66 KB)
+Superstep 14 done. Time elapsed: 0.003930 seconds
+message: 2512 Bytes (2.51 KB)
+Superstep 15 done. Time elapsed: 0.003925 seconds
+message: 2096 Bytes (2.10 KB)
+Superstep 16 done. Time elapsed: 0.002445 seconds
+message: 0 Bytes (0 Bytes)
+Communication Time: 0.547588 second
+- Serialization Time: 0.440398 second
+- Transfer Time: 0.107190 second
+Worker Time: 0.402269 second
+Waiting Time: 0.049719 second
+------------------------------
+Total Running Time: 0.994016 second
+Total Message Size: 275599448 Bytes (275.60 MB)
+Dump time 0.361588 second
+$ sssp wiki 4 1
+Load time 8.740698 seconds
+Superstep 1 done. Time elapsed: 0.070859 seconds
+message: 104 Bytes (104 Bytes)
+Superstep 2 done. Time elapsed: 0.056047 seconds
+message: 664 Bytes (664 Bytes)
+Superstep 3 done. Time elapsed: 0.078351 seconds
+message: 49848 Bytes (49.85 KB)
+Superstep 4 done. Time elapsed: 0.098770 seconds
+message: 2076424 Bytes (2.08 MB)
+Superstep 5 done. Time elapsed: 0.521458 seconds
+message: 26471152 Bytes (26.47 MB)
+Superstep 6 done. Time elapsed: 2.359008 seconds
+message: 80652696 Bytes (80.65 MB)
+Superstep 7 done. Time elapsed: 2.236287 seconds
+message: 66814392 Bytes (66.81 MB)
+Superstep 8 done. Time elapsed: 1.074725 seconds
+message: 17073656 Bytes (17.07 MB)
+Superstep 9 done. Time elapsed: 0.438978 seconds
+message: 3087552 Bytes (3.09 MB)
+Superstep 10 done. Time elapsed: 0.162703 seconds
+message: 644800 Bytes (644.80 KB)
+Superstep 11 done. Time elapsed: 0.085534 seconds
+message: 208368 Bytes (208.37 KB)
+Superstep 12 done. Time elapsed: 0.064131 seconds
+message: 143104 Bytes (143.10 KB)
+Superstep 13 done. Time elapsed: 0.059477 seconds
+message: 53056 Bytes (53.06 KB)
+Superstep 14 done. Time elapsed: 0.058125 seconds
+message: 38792 Bytes (38.79 KB)
+Superstep 15 done. Time elapsed: 0.057126 seconds
+message: 36568 Bytes (36.57 KB)
+Superstep 16 done. Time elapsed: 0.056715 seconds
+message: 35152 Bytes (35.15 KB)
+Superstep 17 done. Time elapsed: 0.056538 seconds
+message: 15832 Bytes (15.83 KB)
+Superstep 18 done. Time elapsed: 0.056392 seconds
+message: 13648 Bytes (13.65 KB)
+Superstep 19 done. Time elapsed: 0.056072 seconds
+message: 12368 Bytes (12.37 KB)
+Superstep 20 done. Time elapsed: 0.056168 seconds
+message: 12976 Bytes (12.98 KB)
+Superstep 21 done. Time elapsed: 0.057590 seconds
+message: 13264 Bytes (13.26 KB)
+Superstep 22 done. Time elapsed: 0.056246 seconds
+message: 11824 Bytes (11.82 KB)
+Superstep 23 done. Time elapsed: 0.056041 seconds
+message: 9880 Bytes (9.88 KB)
+Superstep 24 done. Time elapsed: 0.056040 seconds
+message: 9432 Bytes (9.43 KB)
+Superstep 25 done. Time elapsed: 0.056253 seconds
+message: 7456 Bytes (7.46 KB)
+Superstep 26 done. Time elapsed: 0.056157 seconds
+message: 5096 Bytes (5.10 KB)
+Superstep 27 done. Time elapsed: 0.055865 seconds
+message: 4504 Bytes (4.50 KB)
+Superstep 28 done. Time elapsed: 0.055923 seconds
+message: 2600 Bytes (2.60 KB)
+Superstep 29 done. Time elapsed: 0.055856 seconds
+message: 1936 Bytes (1.94 KB)
+Superstep 30 done. Time elapsed: 0.056648 seconds
+message: 1312 Bytes (1.31 KB)
+Superstep 31 done. Time elapsed: 0.055882 seconds
+message: 1128 Bytes (1.13 KB)
+Superstep 32 done. Time elapsed: 0.057805 seconds
+message: 1080 Bytes (1.08 KB)
+Superstep 33 done. Time elapsed: 0.055794 seconds
+message: 1136 Bytes (1.14 KB)
+Superstep 34 done. Time elapsed: 0.055688 seconds
+message: 576 Bytes (576 Bytes)
+Superstep 35 done. Time elapsed: 0.055837 seconds
+message: 392 Bytes (392 Bytes)
+Superstep 36 done. Time elapsed: 0.055811 seconds
+message: 440 Bytes (440 Bytes)
+Superstep 37 done. Time elapsed: 0.056098 seconds
+message: 432 Bytes (432 Bytes)
+Superstep 38 done. Time elapsed: 0.055787 seconds
+message: 528 Bytes (528 Bytes)
+Superstep 39 done. Time elapsed: 0.055719 seconds
+message: 640 Bytes (640 Bytes)
+Superstep 40 done. Time elapsed: 0.055689 seconds
+message: 584 Bytes (584 Bytes)
+Superstep 41 done. Time elapsed: 0.055813 seconds
+message: 320 Bytes (320 Bytes)
+Superstep 42 done. Time elapsed: 0.056124 seconds
+message: 328 Bytes (328 Bytes)
+Superstep 43 done. Time elapsed: 0.057211 seconds
+message: 288 Bytes (288 Bytes)
+Superstep 44 done. Time elapsed: 0.055750 seconds
+message: 272 Bytes (272 Bytes)
+Superstep 45 done. Time elapsed: 0.055621 seconds
+message: 208 Bytes (208 Bytes)
+Superstep 46 done. Time elapsed: 0.055868 seconds
+message: 176 Bytes (176 Bytes)
+Superstep 47 done. Time elapsed: 0.055971 seconds
+message: 168 Bytes (168 Bytes)
+Superstep 48 done. Time elapsed: 0.055702 seconds
+message: 152 Bytes (152 Bytes)
+Superstep 49 done. Time elapsed: 0.055546 seconds
+message: 0 Bytes (0 Bytes)
+Communication Time: 3.846508 second
+- Serialization Time: 3.571946 second
+- Transfer Time: 0.274562 second
+Worker Time: 4.905923 second
+Waiting Time: 0.697355 second
+------------------------------
+Total Running Time: 9.438163 second
+Total Message Size: 197517304 Bytes (197.52 MB)
+Dump time 1.550805 second
+$ sssp wiki 8 1
+Load time 4.843754 seconds
+Superstep 1 done. Time elapsed: 0.010125 seconds
+message: 456 Bytes (456 Bytes)
+Superstep 2 done. Time elapsed: 0.031589 seconds
+message: 1136 Bytes (1.14 KB)
+Superstep 3 done. Time elapsed: 0.037506 seconds
+message: 62352 Bytes (62.35 KB)
+Superstep 4 done. Time elapsed: 0.036847 seconds
+message: 2830768 Bytes (2.83 MB)
+Superstep 5 done. Time elapsed: 0.256796 seconds
+message: 38641064 Bytes (38.64 MB)
+Superstep 6 done. Time elapsed: 1.159503 seconds
+message: 123226856 Bytes (123.23 MB)
+Superstep 7 done. Time elapsed: 1.133035 seconds
+message: 98712448 Bytes (98.71 MB)
+Superstep 8 done. Time elapsed: 0.555591 seconds
+message: 23032752 Bytes (23.03 MB)
+Superstep 9 done. Time elapsed: 0.197374 seconds
+message: 4016768 Bytes (4.02 MB)
+Superstep 10 done. Time elapsed: 0.072196 seconds
+message: 809992 Bytes (809.99 KB)
+Superstep 11 done. Time elapsed: 0.039952 seconds
+message: 254376 Bytes (254.38 KB)
+Superstep 12 done. Time elapsed: 0.032585 seconds
+message: 170976 Bytes (170.98 KB)
+Superstep 13 done. Time elapsed: 0.031492 seconds
+message: 63976 Bytes (63.98 KB)
+Superstep 14 done. Time elapsed: 0.030933 seconds
+message: 47224 Bytes (47.22 KB)
+Superstep 15 done. Time elapsed: 0.030760 seconds
+message: 46616 Bytes (46.62 KB)
+Superstep 16 done. Time elapsed: 0.030637 seconds
+message: 42736 Bytes (42.74 KB)
+Superstep 17 done. Time elapsed: 0.030394 seconds
+message: 20400 Bytes (20.40 KB)
+Superstep 18 done. Time elapsed: 0.029927 seconds
+message: 17464 Bytes (17.46 KB)
+Superstep 19 done. Time elapsed: 0.030197 seconds
+message: 15640 Bytes (15.64 KB)
+Superstep 20 done. Time elapsed: 0.030345 seconds
+message: 16872 Bytes (16.87 KB)
+Superstep 21 done. Time elapsed: 0.030217 seconds
+message: 16720 Bytes (16.72 KB)
+Superstep 22 done. Time elapsed: 0.030322 seconds
+message: 14680 Bytes (14.68 KB)
+Superstep 23 done. Time elapsed: 0.030564 seconds
+message: 12376 Bytes (12.38 KB)
+Superstep 24 done. Time elapsed: 0.030351 seconds
+message: 12152 Bytes (12.15 KB)
+Superstep 25 done. Time elapsed: 0.030131 seconds
+message: 9768 Bytes (9.77 KB)
+Superstep 26 done. Time elapsed: 0.030501 seconds
+message: 6352 Bytes (6.35 KB)
+Superstep 27 done. Time elapsed: 0.030702 seconds
+message: 5712 Bytes (5.71 KB)
+Superstep 28 done. Time elapsed: 0.030304 seconds
+message: 3392 Bytes (3.39 KB)
+Superstep 29 done. Time elapsed: 0.030742 seconds
+message: 2600 Bytes (2.60 KB)
+Superstep 30 done. Time elapsed: 0.030554 seconds
+message: 1864 Bytes (1.86 KB)
+Superstep 31 done. Time elapsed: 0.030536 seconds
+message: 1648 Bytes (1.65 KB)
+Superstep 32 done. Time elapsed: 0.030685 seconds
+message: 1616 Bytes (1.62 KB)
+Superstep 33 done. Time elapsed: 0.030513 seconds
+message: 1680 Bytes (1.68 KB)
+Superstep 34 done. Time elapsed: 0.030261 seconds
+message: 1016 Bytes (1.02 KB)
+Superstep 35 done. Time elapsed: 0.030243 seconds
+message: 840 Bytes (840 Bytes)
+Superstep 36 done. Time elapsed: 0.030155 seconds
+message: 864 Bytes (864 Bytes)
+Superstep 37 done. Time elapsed: 0.030383 seconds
+message: 872 Bytes (872 Bytes)
+Superstep 38 done. Time elapsed: 0.030299 seconds
+message: 952 Bytes (952 Bytes)
+Superstep 39 done. Time elapsed: 0.030302 seconds
+message: 1168 Bytes (1.17 KB)
+Superstep 40 done. Time elapsed: 0.030514 seconds
+message: 1040 Bytes (1.04 KB)
+Superstep 41 done. Time elapsed: 0.030603 seconds
+message: 696 Bytes (696 Bytes)
+Superstep 42 done. Time elapsed: 0.030856 seconds
+message: 720 Bytes (720 Bytes)
+Superstep 43 done. Time elapsed: 0.030605 seconds
+message: 688 Bytes (688 Bytes)
+Superstep 44 done. Time elapsed: 0.030520 seconds
+message: 664 Bytes (664 Bytes)
+Superstep 45 done. Time elapsed: 0.030257 seconds
+message: 568 Bytes (568 Bytes)
+Superstep 46 done. Time elapsed: 0.030498 seconds
+message: 528 Bytes (528 Bytes)
+Superstep 47 done. Time elapsed: 0.030533 seconds
+message: 528 Bytes (528 Bytes)
+Superstep 48 done. Time elapsed: 0.030286 seconds
+message: 512 Bytes (512 Bytes)
+Superstep 49 done. Time elapsed: 0.029289 seconds
+message: 0 Bytes (0 Bytes)
+Communication Time: 1.904344 second
+- Serialization Time: 1.679056 second
+- Transfer Time: 0.225287 second
+Worker Time: 2.399738 second
+Waiting Time: 0.434532 second
+------------------------------
+Total Running Time: 4.728819 second
+Total Message Size: 292133088 Bytes (292.13 MB)
+Dump time 0.968538 second
+$ sssp wiki 12 1
+Load time 3.776427 seconds
+Superstep 1 done. Time elapsed: 0.009298 seconds
+message: 1064 Bytes (1.06 KB)
+Superstep 2 done. Time elapsed: 0.015482 seconds
+message: 1776 Bytes (1.78 KB)
+Superstep 3 done. Time elapsed: 0.018871 seconds
+message: 67624 Bytes (67.62 KB)
+Superstep 4 done. Time elapsed: 0.025439 seconds
+message: 3202336 Bytes (3.20 MB)
+Superstep 5 done. Time elapsed: 0.175402 seconds
+message: 45535280 Bytes (45.54 MB)
+Superstep 6 done. Time elapsed: 0.777315 seconds
+message: 148925048 Bytes (148.93 MB)
+Superstep 7 done. Time elapsed: 0.744167 seconds
+message: 116913320 Bytes (116.91 MB)
+Superstep 8 done. Time elapsed: 0.346713 seconds
+message: 26048648 Bytes (26.05 MB)
+Superstep 9 done. Time elapsed: 0.131025 seconds
+message: 4478872 Bytes (4.48 MB)
+Superstep 10 done. Time elapsed: 0.047964 seconds
+message: 880712 Bytes (880.71 KB)
+Superstep 11 done. Time elapsed: 0.027535 seconds
+message: 272400 Bytes (272.40 KB)
+Superstep 12 done. Time elapsed: 0.022814 seconds
+message: 181944 Bytes (181.94 KB)
+Superstep 13 done. Time elapsed: 0.021723 seconds
+message: 69480 Bytes (69.48 KB)
+Superstep 14 done. Time elapsed: 0.021295 seconds
+message: 50784 Bytes (50.78 KB)
+Superstep 15 done. Time elapsed: 0.020999 seconds
+message: 52160 Bytes (52.16 KB)
+Superstep 16 done. Time elapsed: 0.020837 seconds
+message: 46824 Bytes (46.82 KB)
+Superstep 17 done. Time elapsed: 0.021128 seconds
+message: 23104 Bytes (23.10 KB)
+Superstep 18 done. Time elapsed: 0.021220 seconds
+message: 18560 Bytes (18.56 KB)
+Superstep 19 done. Time elapsed: 0.021429 seconds
+message: 17048 Bytes (17.05 KB)
+Superstep 20 done. Time elapsed: 0.021363 seconds
+message: 18600 Bytes (18.60 KB)
+Superstep 21 done. Time elapsed: 0.021147 seconds
+message: 19136 Bytes (19.14 KB)
+Superstep 22 done. Time elapsed: 0.021660 seconds
+message: 17712 Bytes (17.71 KB)
+Superstep 23 done. Time elapsed: 0.023536 seconds
+message: 13944 Bytes (13.94 KB)
+Superstep 24 done. Time elapsed: 0.022111 seconds
+message: 13664 Bytes (13.66 KB)
+Superstep 25 done. Time elapsed: 0.021715 seconds
+message: 11072 Bytes (11.07 KB)
+Superstep 26 done. Time elapsed: 0.022095 seconds
+message: 7472 Bytes (7.47 KB)
+Superstep 27 done. Time elapsed: 0.021741 seconds
+message: 6536 Bytes (6.54 KB)
+Superstep 28 done. Time elapsed: 0.021784 seconds
+message: 4152 Bytes (4.15 KB)
+Superstep 29 done. Time elapsed: 0.021690 seconds
+message: 3400 Bytes (3.40 KB)
+Superstep 30 done. Time elapsed: 0.021871 seconds
+message: 2592 Bytes (2.59 KB)
+Superstep 31 done. Time elapsed: 0.021826 seconds
+message: 2328 Bytes (2.33 KB)
+Superstep 32 done. Time elapsed: 0.021831 seconds
+message: 2280 Bytes (2.28 KB)
+Superstep 33 done. Time elapsed: 0.021866 seconds
+message: 2296 Bytes (2.30 KB)
+Superstep 34 done. Time elapsed: 0.021367 seconds
+message: 1624 Bytes (1.62 KB)
+Superstep 35 done. Time elapsed: 0.020760 seconds
+message: 1448 Bytes (1.45 KB)
+Superstep 36 done. Time elapsed: 0.020941 seconds
+message: 1496 Bytes (1.50 KB)
+Superstep 37 done. Time elapsed: 0.020646 seconds
+message: 1520 Bytes (1.52 KB)
+Superstep 38 done. Time elapsed: 0.020862 seconds
+message: 1584 Bytes (1.58 KB)
+Superstep 39 done. Time elapsed: 0.020907 seconds
+message: 1784 Bytes (1.78 KB)
+Superstep 40 done. Time elapsed: 0.020869 seconds
+message: 1632 Bytes (1.63 KB)
+Superstep 41 done. Time elapsed: 0.021164 seconds
+message: 1296 Bytes (1.30 KB)
+Superstep 42 done. Time elapsed: 0.020806 seconds
+message: 1304 Bytes (1.30 KB)
+Superstep 43 done. Time elapsed: 0.020202 seconds
+message: 1304 Bytes (1.30 KB)
+Superstep 44 done. Time elapsed: 0.020252 seconds
+message: 1304 Bytes (1.30 KB)
+Superstep 45 done. Time elapsed: 0.020384 seconds
+message: 1184 Bytes (1.18 KB)
+Superstep 46 done. Time elapsed: 0.020603 seconds
+message: 1136 Bytes (1.14 KB)
+Superstep 47 done. Time elapsed: 0.020506 seconds
+message: 1136 Bytes (1.14 KB)
+Superstep 48 done. Time elapsed: 0.020299 seconds
+message: 1120 Bytes (1.12 KB)
+Superstep 49 done. Time elapsed: 0.019369 seconds
+message: 0 Bytes (0 Bytes)
+Communication Time: 1.301679 second
+- Serialization Time: 1.090275 second
+- Transfer Time: 0.211404 second
+Worker Time: 1.582704 second
+Waiting Time: 0.284325 second
+------------------------------
+Total Running Time: 3.154717 second
+Total Message Size: 346933040 Bytes (346.93 MB)
+Dump time 0.741776 second
+$ sssp wiki 16 1
+Load time 3.089241 seconds
+Superstep 1 done. Time elapsed: 0.028711 seconds
+message: 1928 Bytes (1.93 KB)
+Superstep 2 done. Time elapsed: 0.011654 seconds
+message: 2656 Bytes (2.66 KB)
+Superstep 3 done. Time elapsed: 0.013597 seconds
+message: 70536 Bytes (70.54 KB)
+Superstep 4 done. Time elapsed: 0.017930 seconds
+message: 3439504 Bytes (3.44 MB)
+Superstep 5 done. Time elapsed: 0.129339 seconds
+message: 50316360 Bytes (50.32 MB)
+Superstep 6 done. Time elapsed: 0.569513 seconds
+message: 167380896 Bytes (167.38 MB)
+Superstep 7 done. Time elapsed: 0.555245 seconds
+message: 129568240 Bytes (129.57 MB)
+Superstep 8 done. Time elapsed: 0.256154 seconds
+message: 28006288 Bytes (28.01 MB)
+Superstep 9 done. Time elapsed: 0.088410 seconds
+message: 4781120 Bytes (4.78 MB)
+Superstep 10 done. Time elapsed: 0.031367 seconds
+message: 921224 Bytes (921.22 KB)
+Superstep 11 done. Time elapsed: 0.018329 seconds
+message: 281952 Bytes (281.95 KB)
+Superstep 12 done. Time elapsed: 0.015903 seconds
+message: 188184 Bytes (188.18 KB)
+Superstep 13 done. Time elapsed: 0.015144 seconds
+message: 74448 Bytes (74.45 KB)
+Superstep 14 done. Time elapsed: 0.015111 seconds
+message: 53312 Bytes (53.31 KB)
+Superstep 15 done. Time elapsed: 0.014726 seconds
+message: 54528 Bytes (54.53 KB)
+Superstep 16 done. Time elapsed: 0.015046 seconds
+message: 48520 Bytes (48.52 KB)
+Superstep 17 done. Time elapsed: 0.014786 seconds
+message: 24384 Bytes (24.38 KB)
+Superstep 18 done. Time elapsed: 0.014983 seconds
+message: 20600 Bytes (20.60 KB)
+Superstep 19 done. Time elapsed: 0.014851 seconds
+message: 18720 Bytes (18.72 KB)
+Superstep 20 done. Time elapsed: 0.014971 seconds
+message: 20560 Bytes (20.56 KB)
+Superstep 21 done. Time elapsed: 0.014962 seconds
+message: 20616 Bytes (20.62 KB)
+Superstep 22 done. Time elapsed: 0.015091 seconds
+message: 18344 Bytes (18.34 KB)
+Superstep 23 done. Time elapsed: 0.014880 seconds
+message: 14848 Bytes (14.85 KB)
+Superstep 24 done. Time elapsed: 0.015281 seconds
+message: 15096 Bytes (15.10 KB)
+Superstep 25 done. Time elapsed: 0.015170 seconds
+message: 12440 Bytes (12.44 KB)
+Superstep 26 done. Time elapsed: 0.015896 seconds
+message: 8312 Bytes (8.31 KB)
+Superstep 27 done. Time elapsed: 0.015365 seconds
+message: 7528 Bytes (7.53 KB)
+Superstep 28 done. Time elapsed: 0.014922 seconds
+message: 5072 Bytes (5.07 KB)
+Superstep 29 done. Time elapsed: 0.015436 seconds
+message: 4272 Bytes (4.27 KB)
+Superstep 30 done. Time elapsed: 0.015009 seconds
+message: 3512 Bytes (3.51 KB)
+Superstep 31 done. Time elapsed: 0.015069 seconds
+message: 3192 Bytes (3.19 KB)
+Superstep 32 done. Time elapsed: 0.014792 seconds
+message: 3168 Bytes (3.17 KB)
+Superstep 33 done. Time elapsed: 0.015172 seconds
+message: 3264 Bytes (3.26 KB)
+Superstep 34 done. Time elapsed: 0.014596 seconds
+message: 2544 Bytes (2.54 KB)
+Superstep 35 done. Time elapsed: 0.014968 seconds
+message: 2352 Bytes (2.35 KB)
+Superstep 36 done. Time elapsed: 0.015174 seconds
+message: 2368 Bytes (2.37 KB)
+Superstep 37 done. Time elapsed: 0.015462 seconds
+message: 2376 Bytes (2.38 KB)
+Superstep 38 done. Time elapsed: 0.015026 seconds
+message: 2472 Bytes (2.47 KB)
+Superstep 39 done. Time elapsed: 0.015141 seconds
+message: 2688 Bytes (2.69 KB)
+Superstep 40 done. Time elapsed: 0.014903 seconds
+message: 2544 Bytes (2.54 KB)
+Superstep 41 done. Time elapsed: 0.014661 seconds
+message: 2184 Bytes (2.18 KB)
+Superstep 42 done. Time elapsed: 0.015560 seconds
+message: 2200 Bytes (2.20 KB)
+Superstep 43 done. Time elapsed: 0.014777 seconds
+message: 2176 Bytes (2.18 KB)
+Superstep 44 done. Time elapsed: 0.014796 seconds
+message: 2160 Bytes (2.16 KB)
+Superstep 45 done. Time elapsed: 0.014426 seconds
+message: 2048 Bytes (2.05 KB)
+Superstep 46 done. Time elapsed: 0.014615 seconds
+message: 2000 Bytes (2.00 KB)
+Superstep 47 done. Time elapsed: 0.014860 seconds
+message: 2000 Bytes (2.00 KB)
+Superstep 48 done. Time elapsed: 0.014762 seconds
+message: 1992 Bytes (1.99 KB)
+Superstep 49 done. Time elapsed: 0.013157 seconds
+message: 0 Bytes (0 Bytes)
+Communication Time: 0.996261 second
+- Serialization Time: 0.785099 second
+- Transfer Time: 0.211162 second
+Worker Time: 1.141953 second
+Waiting Time: 0.192125 second
+------------------------------
+Total Running Time: 2.311489 second
+Total Message Size: 385427728 Bytes (385.43 MB)
+Dump time 0.654885 second
+$ sssp LJ-DG 4 2
+Load time 4.086320 seconds
+Superstep 1 done. Time elapsed: 0.003480 seconds
+message: 376 Bytes (376 Bytes)
+Superstep 2 done. Time elapsed: 0.026822 seconds
+message: 14472 Bytes (14.47 KB)
+Superstep 3 done. Time elapsed: 0.026701 seconds
+message: 814384 Bytes (814.38 KB)
+Superstep 4 done. Time elapsed: 0.232734 seconds
+message: 14704776 Bytes (14.70 MB)
+Superstep 5 done. Time elapsed: 1.398762 seconds
+message: 49073448 Bytes (49.07 MB)
+Superstep 6 done. Time elapsed: 1.245098 seconds
+message: 45068704 Bytes (45.07 MB)
+Superstep 7 done. Time elapsed: 0.564941 seconds
+message: 10685536 Bytes (10.69 MB)
+Superstep 8 done. Time elapsed: 0.198240 seconds
+message: 1554920 Bytes (1.55 MB)
+Superstep 9 done. Time elapsed: 0.059239 seconds
+message: 279040 Bytes (279.04 KB)
+Superstep 10 done. Time elapsed: 0.018057 seconds
+message: 58744 Bytes (58.74 KB)
+Superstep 11 done. Time elapsed: 0.011827 seconds
+message: 15048 Bytes (15.05 KB)
+Superstep 12 done. Time elapsed: 0.010394 seconds
+message: 3328 Bytes (3.33 KB)
+Superstep 13 done. Time elapsed: 0.010461 seconds
+message: 848 Bytes (848 Bytes)
+Superstep 14 done. Time elapsed: 0.011157 seconds
+message: 520 Bytes (520 Bytes)
+Superstep 15 done. Time elapsed: 0.011109 seconds
+message: 232 Bytes (232 Bytes)
+Superstep 16 done. Time elapsed: 0.010400 seconds
+message: 0 Bytes (0 Bytes)
+Communication Time: 2.188393 second
+- Serialization Time: 2.008004 second
+- Transfer Time: 0.180388 second
+Worker Time: 1.382610 second
+Waiting Time: 0.298458 second
+------------------------------
+Total Running Time: 3.863986 second
+Total Message Size: 122274376 Bytes (122.27 MB)
+Dump time 0.641948 second
+$ sssp LJ-DG 8 2
+Load time 2.687722 seconds
+Superstep 1 done. Time elapsed: 0.003019 seconds
+message: 776 Bytes (776 Bytes)
+Superstep 2 done. Time elapsed: 0.008852 seconds
+message: 17864 Bytes (17.86 KB)
+Superstep 3 done. Time elapsed: 0.009611 seconds
+message: 1033296 Bytes (1.03 MB)
+Superstep 4 done. Time elapsed: 0.114178 seconds
+message: 22209960 Bytes (22.21 MB)
+Superstep 5 done. Time elapsed: 0.683230 seconds
+message: 83389760 Bytes (83.39 MB)
+Superstep 6 done. Time elapsed: 0.646641 seconds
+message: 73007184 Bytes (73.01 MB)
+Superstep 7 done. Time elapsed: 0.292488 seconds
+message: 14892320 Bytes (14.89 MB)
+Superstep 8 done. Time elapsed: 0.088063 seconds
+message: 2176504 Bytes (2.18 MB)
+Superstep 9 done. Time elapsed: 0.020980 seconds
+message: 394872 Bytes (394.87 KB)
+Superstep 10 done. Time elapsed: 0.007916 seconds
+message: 84528 Bytes (84.53 KB)
+Superstep 11 done. Time elapsed: 0.005874 seconds
+message: 23728 Bytes (23.73 KB)
+Superstep 12 done. Time elapsed: 0.005432 seconds
+message: 5336 Bytes (5.34 KB)
+Superstep 13 done. Time elapsed: 0.005333 seconds
+message: 1808 Bytes (1.81 KB)
+Superstep 14 done. Time elapsed: 0.005528 seconds
+message: 992 Bytes (992 Bytes)
+Superstep 15 done. Time elapsed: 0.005325 seconds
+message: 600 Bytes (600 Bytes)
+Superstep 16 done. Time elapsed: 0.004446 seconds
+message: 0 Bytes (0 Bytes)
+Communication Time: 1.088473 second
+- Serialization Time: 0.949870 second
+- Transfer Time: 0.138602 second
+Worker Time: 0.713268 second
+Waiting Time: 0.122451 second
+------------------------------
+Total Running Time: 1.917388 second
+Total Message Size: 197239528 Bytes (197.24 MB)
+Dump time 0.526320 second
+$ sssp LJ-DG 12 2
+Load time 2.390679 seconds
+Superstep 1 done. Time elapsed: 0.002297 seconds
+message: 1400 Bytes (1.40 KB)
+Superstep 2 done. Time elapsed: 0.007267 seconds
+message: 19464 Bytes (19.46 KB)
+Superstep 3 done. Time elapsed: 0.006406 seconds
+message: 1117856 Bytes (1.12 MB)
+Superstep 4 done. Time elapsed: 0.076774 seconds
+message: 26454200 Bytes (26.45 MB)
+Superstep 5 done. Time elapsed: 0.449632 seconds
+message: 105856392 Bytes (105.86 MB)
+Superstep 6 done. Time elapsed: 0.446611 seconds
+message: 89478744 Bytes (89.48 MB)
+Superstep 7 done. Time elapsed: 0.210173 seconds
+message: 17115488 Bytes (17.12 MB)
+Superstep 8 done. Time elapsed: 0.063900 seconds
+message: 2510360 Bytes (2.51 MB)
+Superstep 9 done. Time elapsed: 0.015582 seconds
+message: 450768 Bytes (450.77 KB)
+Superstep 10 done. Time elapsed: 0.006753 seconds
+message: 100616 Bytes (100.62 KB)
+Superstep 11 done. Time elapsed: 0.005193 seconds
+message: 29248 Bytes (29.25 KB)
+Superstep 12 done. Time elapsed: 0.004450 seconds
+message: 7240 Bytes (7.24 KB)
+Superstep 13 done. Time elapsed: 0.004250 seconds
+message: 2632 Bytes (2.63 KB)
+Superstep 14 done. Time elapsed: 0.004141 seconds
+message: 1624 Bytes (1.62 KB)
+Superstep 15 done. Time elapsed: 0.004215 seconds
+message: 1256 Bytes (1.26 KB)
+Superstep 16 done. Time elapsed: 0.002840 seconds
+message: 0 Bytes (0 Bytes)
+Communication Time: 0.727184 second
+- Serialization Time: 0.607833 second
+- Transfer Time: 0.119351 second
+Worker Time: 0.514113 second
+Waiting Time: 0.095878 second
+------------------------------
+Total Running Time: 1.333841 second
+Total Message Size: 243147288 Bytes (243.15 MB)
+Dump time 0.283044 second
+$ sssp LJ-DG 16 2
+Load time 2.178717 seconds
+Superstep 1 done. Time elapsed: 0.004380 seconds
+message: 2272 Bytes (2.27 KB)
+Superstep 2 done. Time elapsed: 0.005214 seconds
+message: 20904 Bytes (20.90 KB)
+Superstep 3 done. Time elapsed: 0.005836 seconds
+message: 1167480 Bytes (1.17 MB)
+Superstep 4 done. Time elapsed: 0.056052 seconds
+message: 29342824 Bytes (29.34 MB)
+Superstep 5 done. Time elapsed: 0.338877 seconds
+message: 122341192 Bytes (122.34 MB)
+Superstep 6 done. Time elapsed: 0.337985 seconds
+message: 100778672 Bytes (100.78 MB)
+Superstep 7 done. Time elapsed: 0.150753 seconds
+message: 18584936 Bytes (18.58 MB)
+Superstep 8 done. Time elapsed: 0.038491 seconds
+message: 2714336 Bytes (2.71 MB)
+Superstep 9 done. Time elapsed: 0.010907 seconds
+message: 485400 Bytes (485.40 KB)
+Superstep 10 done. Time elapsed: 0.005478 seconds
+message: 111216 Bytes (111.22 KB)
+Superstep 11 done. Time elapsed: 0.004572 seconds
+message: 33520 Bytes (33.52 KB)
+Superstep 12 done. Time elapsed: 0.004235 seconds
+message: 8432 Bytes (8.43 KB)
+Superstep 13 done. Time elapsed: 0.004125 seconds
+message: 3656 Bytes (3.66 KB)
+Superstep 14 done. Time elapsed: 0.004173 seconds
+message: 2512 Bytes (2.51 KB)
+Superstep 15 done. Time elapsed: 0.004181 seconds
+message: 2096 Bytes (2.10 KB)
+Superstep 16 done. Time elapsed: 0.002107 seconds
+message: 0 Bytes (0 Bytes)
+Communication Time: 0.547381 second
+- Serialization Time: 0.440824 second
+- Transfer Time: 0.106558 second
+Worker Time: 0.403301 second
+Waiting Time: 0.043609 second
+------------------------------
+Total Running Time: 0.989736 second
+Total Message Size: 275599448 Bytes (275.60 MB)
+Dump time 0.249066 second
+$ sssp wiki 4 2
+Load time 8.728025 seconds
+Superstep 1 done. Time elapsed: 0.068905 seconds
+message: 104 Bytes (104 Bytes)
+Superstep 2 done. Time elapsed: 0.056212 seconds
+message: 664 Bytes (664 Bytes)
+Superstep 3 done. Time elapsed: 0.078411 seconds
+message: 49848 Bytes (49.85 KB)
+Superstep 4 done. Time elapsed: 0.098801 seconds
+message: 2076424 Bytes (2.08 MB)
+Superstep 5 done. Time elapsed: 0.520164 seconds
+message: 26471152 Bytes (26.47 MB)
+Superstep 6 done. Time elapsed: 2.361881 seconds
+message: 80652696 Bytes (80.65 MB)
+Superstep 7 done. Time elapsed: 2.261281 seconds
+message: 66814392 Bytes (66.81 MB)
+Superstep 8 done. Time elapsed: 1.078809 seconds
+message: 17073656 Bytes (17.07 MB)
+Superstep 9 done. Time elapsed: 0.445197 seconds
+message: 3087552 Bytes (3.09 MB)
+Superstep 10 done. Time elapsed: 0.158279 seconds
+message: 644800 Bytes (644.80 KB)
+Superstep 11 done. Time elapsed: 0.085119 seconds
+message: 208368 Bytes (208.37 KB)
+Superstep 12 done. Time elapsed: 0.064385 seconds
+message: 143104 Bytes (143.10 KB)
+Superstep 13 done. Time elapsed: 0.062847 seconds
+message: 53056 Bytes (53.06 KB)
+Superstep 14 done. Time elapsed: 0.058109 seconds
+message: 38792 Bytes (38.79 KB)
+Superstep 15 done. Time elapsed: 0.057232 seconds
+message: 36568 Bytes (36.57 KB)
+Superstep 16 done. Time elapsed: 0.057108 seconds
+message: 35152 Bytes (35.15 KB)
+Superstep 17 done. Time elapsed: 0.056815 seconds
+message: 15832 Bytes (15.83 KB)
+Superstep 18 done. Time elapsed: 0.056636 seconds
+message: 13648 Bytes (13.65 KB)
+Superstep 19 done. Time elapsed: 0.056248 seconds
+message: 12368 Bytes (12.37 KB)
+Superstep 20 done. Time elapsed: 0.056323 seconds
+message: 12976 Bytes (12.98 KB)
+Superstep 21 done. Time elapsed: 0.056371 seconds
+message: 13264 Bytes (13.26 KB)
+Superstep 22 done. Time elapsed: 0.056450 seconds
+message: 11824 Bytes (11.82 KB)
+Superstep 23 done. Time elapsed: 0.056328 seconds
+message: 9880 Bytes (9.88 KB)
+Superstep 24 done. Time elapsed: 0.056229 seconds
+message: 9432 Bytes (9.43 KB)
+Superstep 25 done. Time elapsed: 0.056276 seconds
+message: 7456 Bytes (7.46 KB)
+Superstep 26 done. Time elapsed: 0.056136 seconds
+message: 5096 Bytes (5.10 KB)
+Superstep 27 done. Time elapsed: 0.056150 seconds
+message: 4504 Bytes (4.50 KB)
+Superstep 28 done. Time elapsed: 0.056317 seconds
+message: 2600 Bytes (2.60 KB)
+Superstep 29 done. Time elapsed: 0.055935 seconds
+message: 1936 Bytes (1.94 KB)
+Superstep 30 done. Time elapsed: 0.055934 seconds
+message: 1312 Bytes (1.31 KB)
+Superstep 31 done. Time elapsed: 0.055815 seconds
+message: 1128 Bytes (1.13 KB)
+Superstep 32 done. Time elapsed: 0.056112 seconds
+message: 1080 Bytes (1.08 KB)
+Superstep 33 done. Time elapsed: 0.055897 seconds
+message: 1136 Bytes (1.14 KB)
+Superstep 34 done. Time elapsed: 0.055888 seconds
+message: 576 Bytes (576 Bytes)
+Superstep 35 done. Time elapsed: 0.056163 seconds
+message: 392 Bytes (392 Bytes)
+Superstep 36 done. Time elapsed: 0.056153 seconds
+message: 440 Bytes (440 Bytes)
+Superstep 37 done. Time elapsed: 0.055988 seconds
+message: 432 Bytes (432 Bytes)
+Superstep 38 done. Time elapsed: 0.056119 seconds
+message: 528 Bytes (528 Bytes)
+Superstep 39 done. Time elapsed: 0.055938 seconds
+message: 640 Bytes (640 Bytes)
+Superstep 40 done. Time elapsed: 0.056209 seconds
+message: 584 Bytes (584 Bytes)
+Superstep 41 done. Time elapsed: 0.055827 seconds
+message: 320 Bytes (320 Bytes)
+Superstep 42 done. Time elapsed: 0.055967 seconds
+message: 328 Bytes (328 Bytes)
+Superstep 43 done. Time elapsed: 0.055977 seconds
+message: 288 Bytes (288 Bytes)
+Superstep 44 done. Time elapsed: 0.055849 seconds
+message: 272 Bytes (272 Bytes)
+Superstep 45 done. Time elapsed: 0.055837 seconds
+message: 208 Bytes (208 Bytes)
+Superstep 46 done. Time elapsed: 0.055796 seconds
+message: 176 Bytes (176 Bytes)
+Superstep 47 done. Time elapsed: 0.055910 seconds
+message: 168 Bytes (168 Bytes)
+Superstep 48 done. Time elapsed: 0.055809 seconds
+message: 152 Bytes (152 Bytes)
+Superstep 49 done. Time elapsed: 0.055595 seconds
+message: 0 Bytes (0 Bytes)
+Communication Time: 3.840991 second
+- Serialization Time: 3.574235 second
+- Transfer Time: 0.266755 second
+Worker Time: 4.916061 second
+Waiting Time: 0.721590 second
+------------------------------
+Total Running Time: 9.470548 second
+Total Message Size: 197517304 Bytes (197.52 MB)
+Dump time 1.546711 second
+$ sssp wiki 8 2
+Load time 4.852910 seconds
+Superstep 1 done. Time elapsed: 0.006883 seconds
+message: 456 Bytes (456 Bytes)
+Superstep 2 done. Time elapsed: 0.031327 seconds
+message: 1136 Bytes (1.14 KB)
+Superstep 3 done. Time elapsed: 0.037416 seconds
+message: 62352 Bytes (62.35 KB)
+Superstep 4 done. Time elapsed: 0.037140 seconds
+message: 2830768 Bytes (2.83 MB)
+Superstep 5 done. Time elapsed: 0.256624 seconds
+message: 38641064 Bytes (38.64 MB)
+Superstep 6 done. Time elapsed: 1.157984 seconds
+message: 123226856 Bytes (123.23 MB)
+Superstep 7 done. Time elapsed: 1.125163 seconds
+message: 98712448 Bytes (98.71 MB)
+Superstep 8 done. Time elapsed: 0.551627 seconds
+message: 23032752 Bytes (23.03 MB)
+Superstep 9 done. Time elapsed: 0.200664 seconds
+message: 4016768 Bytes (4.02 MB)
+Superstep 10 done. Time elapsed: 0.071961 seconds
+message: 809992 Bytes (809.99 KB)
+Superstep 11 done. Time elapsed: 0.040135 seconds
+message: 254376 Bytes (254.38 KB)
+Superstep 12 done. Time elapsed: 0.032477 seconds
+message: 170976 Bytes (170.98 KB)
+Superstep 13 done. Time elapsed: 0.031807 seconds
+message: 63976 Bytes (63.98 KB)
+Superstep 14 done. Time elapsed: 0.031156 seconds
+message: 47224 Bytes (47.22 KB)
+Superstep 15 done. Time elapsed: 0.030927 seconds
+message: 46616 Bytes (46.62 KB)
+Superstep 16 done. Time elapsed: 0.030985 seconds
+message: 42736 Bytes (42.74 KB)
+Superstep 17 done. Time elapsed: 0.030890 seconds
+message: 20400 Bytes (20.40 KB)
+Superstep 18 done. Time elapsed: 0.030536 seconds
+message: 17464 Bytes (17.46 KB)
+Superstep 19 done. Time elapsed: 0.030599 seconds
+message: 15640 Bytes (15.64 KB)
+Superstep 20 done. Time elapsed: 0.030601 seconds
+message: 16872 Bytes (16.87 KB)
+Superstep 21 done. Time elapsed: 0.030648 seconds
+message: 16720 Bytes (16.72 KB)
+Superstep 22 done. Time elapsed: 0.030459 seconds
+message: 14680 Bytes (14.68 KB)
+Superstep 23 done. Time elapsed: 0.030619 seconds
+message: 12376 Bytes (12.38 KB)
+Superstep 24 done. Time elapsed: 0.030396 seconds
+message: 12152 Bytes (12.15 KB)
+Superstep 25 done. Time elapsed: 0.030546 seconds
+message: 9768 Bytes (9.77 KB)
+Superstep 26 done. Time elapsed: 0.030166 seconds
+message: 6352 Bytes (6.35 KB)
+Superstep 27 done. Time elapsed: 0.029866 seconds
+message: 5712 Bytes (5.71 KB)
+Superstep 28 done. Time elapsed: 0.030243 seconds
+message: 3392 Bytes (3.39 KB)
+Superstep 29 done. Time elapsed: 0.030616 seconds
+message: 2600 Bytes (2.60 KB)
+Superstep 30 done. Time elapsed: 0.030853 seconds
+message: 1864 Bytes (1.86 KB)
+Superstep 31 done. Time elapsed: 0.029874 seconds
+message: 1648 Bytes (1.65 KB)
+Superstep 32 done. Time elapsed: 0.030198 seconds
+message: 1616 Bytes (1.62 KB)
+Superstep 33 done. Time elapsed: 0.030808 seconds
+message: 1680 Bytes (1.68 KB)
+Superstep 34 done. Time elapsed: 0.029872 seconds
+message: 1016 Bytes (1.02 KB)
+Superstep 35 done. Time elapsed: 0.029551 seconds
+message: 840 Bytes (840 Bytes)
+Superstep 36 done. Time elapsed: 0.029730 seconds
+message: 864 Bytes (864 Bytes)
+Superstep 37 done. Time elapsed: 0.030440 seconds
+message: 872 Bytes (872 Bytes)
+Superstep 38 done. Time elapsed: 0.030121 seconds
+message: 952 Bytes (952 Bytes)
+Superstep 39 done. Time elapsed: 0.030239 seconds
+message: 1168 Bytes (1.17 KB)
+Superstep 40 done. Time elapsed: 0.030533 seconds
+message: 1040 Bytes (1.04 KB)
+Superstep 41 done. Time elapsed: 0.030443 seconds
+message: 696 Bytes (696 Bytes)
+Superstep 42 done. Time elapsed: 0.030703 seconds
+message: 720 Bytes (720 Bytes)
+Superstep 43 done. Time elapsed: 0.031027 seconds
+message: 688 Bytes (688 Bytes)
+Superstep 44 done. Time elapsed: 0.031227 seconds
+message: 664 Bytes (664 Bytes)
+Superstep 45 done. Time elapsed: 0.031077 seconds
+message: 568 Bytes (568 Bytes)
+Superstep 46 done. Time elapsed: 0.030643 seconds
+message: 528 Bytes (528 Bytes)
+Superstep 47 done. Time elapsed: 0.030654 seconds
+message: 528 Bytes (528 Bytes)
+Superstep 48 done. Time elapsed: 0.030886 seconds
+message: 512 Bytes (512 Bytes)
+Superstep 49 done. Time elapsed: 0.029921 seconds
+message: 0 Bytes (0 Bytes)
+Communication Time: 1.911562 second
+- Serialization Time: 1.682275 second
+- Transfer Time: 0.229287 second
+Worker Time: 2.412957 second
+Waiting Time: 0.409383 second
+------------------------------
+Total Running Time: 4.723303 second
+Total Message Size: 292133088 Bytes (292.13 MB)
+Dump time 1.008750 second
+$ sssp wiki 12 2
+Load time 3.635422 seconds
+Superstep 1 done. Time elapsed: 0.005794 seconds
+message: 1064 Bytes (1.06 KB)
+Superstep 2 done. Time elapsed: 0.022486 seconds
+message: 1776 Bytes (1.78 KB)
+Superstep 3 done. Time elapsed: 0.017635 seconds
+message: 67624 Bytes (67.62 KB)
+Superstep 4 done. Time elapsed: 0.024136 seconds
+message: 3202336 Bytes (3.20 MB)
+Superstep 5 done. Time elapsed: 0.173585 seconds
+message: 45535280 Bytes (45.54 MB)
+Superstep 6 done. Time elapsed: 0.768965 seconds
+message: 148925048 Bytes (148.93 MB)
+Superstep 7 done. Time elapsed: 0.737891 seconds
+message: 116913320 Bytes (116.91 MB)
+Superstep 8 done. Time elapsed: 0.338341 seconds
+message: 26048648 Bytes (26.05 MB)
+Superstep 9 done. Time elapsed: 0.120551 seconds
+message: 4478872 Bytes (4.48 MB)
+Superstep 10 done. Time elapsed: 0.044546 seconds
+message: 880712 Bytes (880.71 KB)
+Superstep 11 done. Time elapsed: 0.026146 seconds
+message: 272400 Bytes (272.40 KB)
+Superstep 12 done. Time elapsed: 0.021603 seconds
+message: 181944 Bytes (181.94 KB)
+Superstep 13 done. Time elapsed: 0.020604 seconds
+message: 69480 Bytes (69.48 KB)
+Superstep 14 done. Time elapsed: 0.020363 seconds
+message: 50784 Bytes (50.78 KB)
+Superstep 15 done. Time elapsed: 0.020018 seconds
+message: 52160 Bytes (52.16 KB)
+Superstep 16 done. Time elapsed: 0.020361 seconds
+message: 46824 Bytes (46.82 KB)
+Superstep 17 done. Time elapsed: 0.020015 seconds
+message: 23104 Bytes (23.10 KB)
+Superstep 18 done. Time elapsed: 0.019966 seconds
+message: 18560 Bytes (18.56 KB)
+Superstep 19 done. Time elapsed: 0.019642 seconds
+message: 17048 Bytes (17.05 KB)
+Superstep 20 done. Time elapsed: 0.020047 seconds
+message: 18600 Bytes (18.60 KB)
+Superstep 21 done. Time elapsed: 0.019869 seconds
+message: 19136 Bytes (19.14 KB)
+Superstep 22 done. Time elapsed: 0.019725 seconds
+message: 17712 Bytes (17.71 KB)
+Superstep 23 done. Time elapsed: 0.020010 seconds
+message: 13944 Bytes (13.94 KB)
+Superstep 24 done. Time elapsed: 0.020065 seconds
+message: 13664 Bytes (13.66 KB)
+Superstep 25 done. Time elapsed: 0.020031 seconds
+message: 11072 Bytes (11.07 KB)
+Superstep 26 done. Time elapsed: 0.019799 seconds
+message: 7472 Bytes (7.47 KB)
+Superstep 27 done. Time elapsed: 0.019554 seconds
+message: 6536 Bytes (6.54 KB)
+Superstep 28 done. Time elapsed: 0.020648 seconds
+message: 4152 Bytes (4.15 KB)
+Superstep 29 done. Time elapsed: 0.020770 seconds
+message: 3400 Bytes (3.40 KB)
+Superstep 30 done. Time elapsed: 0.019877 seconds
+message: 2592 Bytes (2.59 KB)
+Superstep 31 done. Time elapsed: 0.020192 seconds
+message: 2328 Bytes (2.33 KB)
+Superstep 32 done. Time elapsed: 0.020036 seconds
+message: 2280 Bytes (2.28 KB)
+Superstep 33 done. Time elapsed: 0.020115 seconds
+message: 2296 Bytes (2.30 KB)
+Superstep 34 done. Time elapsed: 0.019588 seconds
+message: 1624 Bytes (1.62 KB)
+Superstep 35 done. Time elapsed: 0.019632 seconds
+message: 1448 Bytes (1.45 KB)
+Superstep 36 done. Time elapsed: 0.020010 seconds
+message: 1496 Bytes (1.50 KB)
+Superstep 37 done. Time elapsed: 0.019833 seconds
+message: 1520 Bytes (1.52 KB)
+Superstep 38 done. Time elapsed: 0.019734 seconds
+message: 1584 Bytes (1.58 KB)
+Superstep 39 done. Time elapsed: 0.020239 seconds
+message: 1784 Bytes (1.78 KB)
+Superstep 40 done. Time elapsed: 0.020173 seconds
+message: 1632 Bytes (1.63 KB)
+Superstep 41 done. Time elapsed: 0.019783 seconds
+message: 1296 Bytes (1.30 KB)
+Superstep 42 done. Time elapsed: 0.019678 seconds
+message: 1304 Bytes (1.30 KB)
+Superstep 43 done. Time elapsed: 0.019912 seconds
+message: 1304 Bytes (1.30 KB)
+Superstep 44 done. Time elapsed: 0.019811 seconds
+message: 1304 Bytes (1.30 KB)
+Superstep 45 done. Time elapsed: 0.019671 seconds
+message: 1184 Bytes (1.18 KB)
+Superstep 46 done. Time elapsed: 0.019607 seconds
+message: 1136 Bytes (1.14 KB)
+Superstep 47 done. Time elapsed: 0.020010 seconds
+message: 1136 Bytes (1.14 KB)
+Superstep 48 done. Time elapsed: 0.019837 seconds
+message: 1120 Bytes (1.12 KB)
+Superstep 49 done. Time elapsed: 0.018490 seconds
+message: 0 Bytes (0 Bytes)
+Communication Time: 1.294466 second
+- Serialization Time: 1.091163 second
+- Transfer Time: 0.203303 second
+Worker Time: 1.558094 second
+Waiting Time: 0.228551 second
+------------------------------
+Total Running Time: 3.067831 second
+Total Message Size: 346933040 Bytes (346.93 MB)
+Dump time 0.792431 second
+$ sssp wiki 16 2
+Load time 3.039663 seconds
+Superstep 1 done. Time elapsed: 0.031385 seconds
+message: 1928 Bytes (1.93 KB)
+Superstep 2 done. Time elapsed: 0.012432 seconds
+message: 2656 Bytes (2.66 KB)
+Superstep 3 done. Time elapsed: 0.013401 seconds
+message: 70536 Bytes (70.54 KB)
+Superstep 4 done. Time elapsed: 0.017831 seconds
+message: 3439504 Bytes (3.44 MB)
+Superstep 5 done. Time elapsed: 0.128590 seconds
+message: 50316360 Bytes (50.32 MB)
+Superstep 6 done. Time elapsed: 0.567934 seconds
+message: 167380896 Bytes (167.38 MB)
+Superstep 7 done. Time elapsed: 0.553375 seconds
+message: 129568240 Bytes (129.57 MB)
+Superstep 8 done. Time elapsed: 0.258843 seconds
+message: 28006288 Bytes (28.01 MB)
+Superstep 9 done. Time elapsed: 0.085694 seconds
+message: 4781120 Bytes (4.78 MB)
+Superstep 10 done. Time elapsed: 0.030984 seconds
+message: 921224 Bytes (921.22 KB)
+Superstep 11 done. Time elapsed: 0.018115 seconds
+message: 281952 Bytes (281.95 KB)
+Superstep 12 done. Time elapsed: 0.016142 seconds
+message: 188184 Bytes (188.18 KB)
+Superstep 13 done. Time elapsed: 0.015526 seconds
+message: 74448 Bytes (74.45 KB)
+Superstep 14 done. Time elapsed: 0.015459 seconds
+message: 53312 Bytes (53.31 KB)
+Superstep 15 done. Time elapsed: 0.016333 seconds
+message: 54528 Bytes (54.53 KB)
+Superstep 16 done. Time elapsed: 0.015866 seconds
+message: 48520 Bytes (48.52 KB)
+Superstep 17 done. Time elapsed: 0.015051 seconds
+message: 24384 Bytes (24.38 KB)
+Superstep 18 done. Time elapsed: 0.015595 seconds
+message: 20600 Bytes (20.60 KB)
+Superstep 19 done. Time elapsed: 0.015619 seconds
+message: 18720 Bytes (18.72 KB)
+Superstep 20 done. Time elapsed: 0.015155 seconds
+message: 20560 Bytes (20.56 KB)
+Superstep 21 done. Time elapsed: 0.015450 seconds
+message: 20616 Bytes (20.62 KB)
+Superstep 22 done. Time elapsed: 0.015160 seconds
+message: 18344 Bytes (18.34 KB)
+Superstep 23 done. Time elapsed: 0.015067 seconds
+message: 14848 Bytes (14.85 KB)
+Superstep 24 done. Time elapsed: 0.015671 seconds
+message: 15096 Bytes (15.10 KB)
+Superstep 25 done. Time elapsed: 0.015085 seconds
+message: 12440 Bytes (12.44 KB)
+Superstep 26 done. Time elapsed: 0.015139 seconds
+message: 8312 Bytes (8.31 KB)
+Superstep 27 done. Time elapsed: 0.015503 seconds
+message: 7528 Bytes (7.53 KB)
+Superstep 28 done. Time elapsed: 0.015666 seconds
+message: 5072 Bytes (5.07 KB)
+Superstep 29 done. Time elapsed: 0.015514 seconds
+message: 4272 Bytes (4.27 KB)
+Superstep 30 done. Time elapsed: 0.015397 seconds
+message: 3512 Bytes (3.51 KB)
+Superstep 31 done. Time elapsed: 0.015314 seconds
+message: 3192 Bytes (3.19 KB)
+Superstep 32 done. Time elapsed: 0.014980 seconds
+message: 3168 Bytes (3.17 KB)
+Superstep 33 done. Time elapsed: 0.015407 seconds
+message: 3264 Bytes (3.26 KB)
+Superstep 34 done. Time elapsed: 0.015150 seconds
+message: 2544 Bytes (2.54 KB)
+Superstep 35 done. Time elapsed: 0.015124 seconds
+message: 2352 Bytes (2.35 KB)
+Superstep 36 done. Time elapsed: 0.015712 seconds
+message: 2368 Bytes (2.37 KB)
+Superstep 37 done. Time elapsed: 0.015214 seconds
+message: 2376 Bytes (2.38 KB)
+Superstep 38 done. Time elapsed: 0.015259 seconds
+message: 2472 Bytes (2.47 KB)
+Superstep 39 done. Time elapsed: 0.015268 seconds
+message: 2688 Bytes (2.69 KB)
+Superstep 40 done. Time elapsed: 0.015295 seconds
+message: 2544 Bytes (2.54 KB)
+Superstep 41 done. Time elapsed: 0.015105 seconds
+message: 2184 Bytes (2.18 KB)
+Superstep 42 done. Time elapsed: 0.015167 seconds
+message: 2200 Bytes (2.20 KB)
+Superstep 43 done. Time elapsed: 0.015584 seconds
+message: 2176 Bytes (2.18 KB)
+Superstep 44 done. Time elapsed: 0.015010 seconds
+message: 2160 Bytes (2.16 KB)
+Superstep 45 done. Time elapsed: 0.015096 seconds
+message: 2048 Bytes (2.05 KB)
+Superstep 46 done. Time elapsed: 0.015129 seconds
+message: 2000 Bytes (2.00 KB)
+Superstep 47 done. Time elapsed: 0.015519 seconds
+message: 2000 Bytes (2.00 KB)
+Superstep 48 done. Time elapsed: 0.015166 seconds
+message: 1992 Bytes (1.99 KB)
+Superstep 49 done. Time elapsed: 0.013129 seconds
+message: 0 Bytes (0 Bytes)
+Communication Time: 0.994496 second
+- Serialization Time: 0.783240 second
+- Transfer Time: 0.211255 second
+Worker Time: 1.135057 second
+Waiting Time: 0.208377 second
+------------------------------
+Total Running Time: 2.321156 second
+Total Message Size: 385427728 Bytes (385.43 MB)
+Dump time 0.638982 second
