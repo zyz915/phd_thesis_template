@@ -309,7 +309,7 @@ Figure~\ref{fig:syntax-simplified} shows the essential part of the syntax of Pal
 As described by the syntactic category \textit{step}, an algorithmic superstep in Palgol is a code block
 enclosed by ``\textbf{for} \textit{var} \textbf{in} \textbf{V}'' and ``\textbf{end}'', where \textit{var} is a variable name that can be used in the code block for referring to the current vertex.
 Such steps can then be composed (by sequencing) or iterated until a termination condition is met (by enclosing them in ``\textbf{do}'' and ``\textbf{until} \ldots'').
-Palgol supports several kinds of termination conditions, but in this paper we focus on only one kind of termination condition called \textit{fixed point}, since it is extensively used in many algorithms.
+Palgol supports several kinds of termination conditions, but in this thesis we focus on only one kind of termination condition called \textit{fixed point}, since it is extensively used in many algorithms.
 The semantics of fixed-point iteration is iteratively running the program enclosed by \textbf{do} and \textbf{until}, until the specified fields stabilize.
 %\todo{perhaps mention there are others}
 
@@ -364,7 +364,7 @@ $\mathbf{Nbr}$, $\mathbf{In}$, $\mathbf{Out}$ are by default the edge lists, whe
 Essentially, these are normal fields of a predefined type for representing edges, and most importantly, the compiler assumes a form of symmetry on these fields (namely that every edge is stored consistently on both of its end vertices), and uses the symmetry to produce more efficient code.
 
 In Palgol, we introduce a special record syntax to represent a pair of a reference (a vertex id) and its corresponding value, which is a natural abstraction for an edge in the graph.
-We use the syntax $.\mathbf{ref}$ and $.\mathbf{val}$ to extract the reference and the value, which will be extensively used in this paper henceforth.
+We use the syntax $.\mathbf{ref}$ and $.\mathbf{val}$ to extract the reference and the value, which will be extensively used in this thesis henceforth.
 The main reason for introducing such special type for edges is that, it is easier to let the compiler to make some assumptions on the edges, so that it can produce more efficient code.
 The rest of the syntax for Palgol steps is in principle similar to an ordinary programming language.
 Some functional programming constructs are also used here, like let-binding and list comprehension.
@@ -569,7 +569,7 @@ The special Palgol step stops those vertices satisfying the condition specified 
 The semantics of stopping vertices is different from Pregel's voting to halt mechanism.
 In Pregel, an inactive vertex can be activated by receiving messages, but such semantics is unsuitable for Palgol, since we already hide message passing from programmers.
 Instead, a stopped vertex in Palgol will become immutable and never perform any subsequent local computation, but other vertices can still access its fields.
-This feature is still experimental and we do not further discuss it in this paper; it is, however, essential for achieving the performance reported in \autoref{sec:evaluation}.
+This feature is essential for achieving the performance reported in \autoref{sec:evaluation}.
 
 \section{Related Work}
 
@@ -1348,7 +1348,7 @@ The translation form Palgol to our customized Pregel system is even simpler.
 The skeleton of the algorithm is basically identical to the one described in \autoref{sec:compilation}, while the details are greatly simplified.
 Message channels are now separately specified and managed, so we no longer need to consider the message encoding or decoding when implementing remote access, and the verbose checking of the applicability of combiner optimization is no need.
 Attributes of the vertices can be defined as global arrays on the worker, which become more close to Palgol's global array syntax.
-Since we haven't implement the compiler yet, we manually implement all the algorithms introduced in this paper on our customized Pregel according to their high-level description in Palgol, which can be found in our repository\footnote{Our customized Pregel system with all implementation codes and examples is available at \url{https://bitbucket.org/zyz915/pregel}.}.
+Since we haven't implement the compiler yet, we manually implement all the algorithms introduced in this thesis on our customized Pregel according to their high-level description in Palgol, which can be found in our repository\footnote{Our customized Pregel system with all implementation codes and examples is available at \url{https://bitbucket.org/zyz915/pregel}.}.
 
 %\section{Related Work} % discuss what?? programming interface??
 
@@ -1504,7 +1504,7 @@ Furthermore, we extend the existing Pregel system with a novel message channel i
 Experiment results show that graph algorithms written in Palgol can be compiled to efficient Pregel programs comparable to the human written ones, and our customized Pregel framework has the potential to achieve even better performance.
 
 As for future work, we will finish the compilation from Palgol to our customized Pregel system, making these two pieces of works a comprehensive, intuitive and efficient solution for vertex-centric graph processing.
-Next, we are going to extend our customized Pregel system with more communication patterns and optimizations, and also study their high-level representation and integrate them in Palgol.
+Next, we are going to extend our customized Pregel system with more communication patterns and optimizations, and then study their high-level representation and try to integrate them in Palgol.
 
 % =====================================================
 %  Back Matter
