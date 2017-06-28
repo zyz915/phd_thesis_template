@@ -214,7 +214,7 @@
 {\Large \bfseries \@author}
 \par
 \vskip 3em
-{\Large \bfseries Dissertation}
+{\Large \bfseries Master Thesis}
 \end{spacing}
 
 \begin{spacing}{1.5}
