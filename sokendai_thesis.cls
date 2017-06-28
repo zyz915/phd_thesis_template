@@ -219,17 +219,17 @@
 
 \begin{spacing}{1.5}
 \centering
-\large
-submitted to the Department of Informatics
+\Large
+\bfseries Dissertation Progress Report
 \par
-in partial fulfillment of the requirements for the degree of
+ 
 \par
 \end{spacing}
 
 \vskip 2em
 
 \begin{center}
-{\Large \bfseries \textit{Master of Science}}
+{\Large \bfseries \textit{ }}
 \par
 \end{center}
 
