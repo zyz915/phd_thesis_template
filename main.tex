@@ -140,7 +140,7 @@ As a future work, we are going to compile Palgol to our new Pregel interface to 
 
 The rapid increase of graph data in real world calls for efficient analysis on massive graphs.
 However, graph computation is in general difficult to parallelize or scale, due to the inherent interdependencies in graph data.
-In this thesis, we focus on a particular type of graph processing system that adopts the "Think like a vertex" paradigm, and indentify the difficulties in programming and optimization.
+In this work, we focus on a particular type of graph processing system that adopts the "Think like a vertex" paradigm, and indentify the difficulties in programming and optimization.
 We therefore design a domain-specific language to provide a high-level abstraction and customize a graph processing system for message reduction, trying to give an intuitive and efficient solution for this problem.
 
 \section{Pregel: Graph Processing in Vertex-Centric Paradigm}
@@ -209,13 +209,13 @@ Furthermore, it is even harder to equip DSLs with remote writes in addition to r
 For example, Green-Marl detects read/write conflicts, which complicate its programming model; Fregel has a simpler functional model, which, however, cannot support remote writing without major extension.
 A more careful design is required to make remote reads and writes efficient and friendly to programmers.
 
-\section{Contribution of the Thesis}
+\section{Contribution of My Research}
 
-In this thesis, we propose a more powerful DSL called Palgol (for {\bf P}regel {\bf algo}rithmic {\bf l}anguage) that supports remote data access.
+In this work, we propose a more powerful DSL called Palgol (for {\bf P}regel {\bf algo}rithmic {\bf l}anguage) that supports remote data access.
 %In particular, programmers are allowed to use a more declarative syntax called
 %\emph{global field access}, to directly read data on remote vertices.
 By structuring supersteps in a high-level vertex-centric computation model and analyzing the logic patterns of global field access, we provide a novel algorithm for compiling Palgol programs to efficient Pregel code. 
-The main contributions of this thesis are as follows:
+The main contributions are as follows:
 \begin{itemize}\setlength\itemsep{0em}
  \item
   We propose a new high-level model for vertex-centric computation, where the concept of \emph{algorithmic supersteps} is introduced as the basic computation unit for constructing vertex-centric computation in such a way that remote reads and writes are ordered in a safe way.
@@ -238,11 +238,11 @@ The main contributions of this thesis are as follows:
 
 \end{itemize}
 
-\section{Thesis Outline}
+\section{Outline}
 
 We introduce the Palgol language in \autoref{sec:palgol-lang}, and in \autoref{sec:compilation}, we show how to compile Palgol programs to the state transition machine (STM) --- a typical intermediate representation of Palgol programs.
 \autoref{sec:custom} describes our custom Pregel framework as a new backend of Palgol, and \autoref{sec:evaluation} presents the evaluation results.
-\autoref{sec:conclusions} concludes this thesis.
+\autoref{sec:conclusions} concludes this dissertation progress report.
 
 \chapter{The Palgol Language}
 \label{sec:palgol-lang}
@@ -313,7 +313,7 @@ Figure~\ref{fig:syntax-simplified} shows the essential part of the syntax of Pal
 As described by the syntactic category \textit{step}, an algorithmic superstep in Palgol is a code block
 enclosed by ``\textbf{for} \textit{var} \textbf{in} \textbf{V}'' and ``\textbf{end}'', where \textit{var} is a variable name that can be used in the code block for referring to the current vertex.
 Such steps can then be composed (by sequencing) or iterated until a termination condition is met (by enclosing them in ``\textbf{do}'' and ``\textbf{until} \ldots'').
-Palgol supports several kinds of termination conditions, but in this thesis we focus on only one kind of termination condition called \textit{fixed point}, since it is extensively used in many algorithms.
+Palgol supports several kinds of termination conditions, but in this report we focus on only one kind of termination condition called \textit{fixed point}, since it is extensively used in many algorithms.
 The semantics of fixed-point iteration is iteratively running the program enclosed by \textbf{do} and \textbf{until}, until the specified fields stabilize.
 %\todo{perhaps mention there are others}
 
@@ -1425,7 +1425,7 @@ Compared with Fregel, the main strength of Palgol is in its remote access capabi
  \item a Palgol step consists of local computation and remote updating phases, whereas a Fregel step function can be thought of as only describing local computation, lacking the ability to modify other vertices' states;
  \item even when considering local computation only, Palgol has highly declarative \textit{field access expressions} to express remote reading of arbitrary vertices, whereas Fregel allows only neighboring access.
 \end{itemize}
-These two features are however essential for implementing the examples in \autoref{sec:core}, especially the S-V algorithm.
+These two features are however essential for implementing the examples in \autoref{sec:taste}, especially the S-V algorithm.
 Moreover, when implementing the same graph algorithm, the execution time of Fregel is around an order of magnitude slower than human written code.
 Palgol shows that Fregel's combinator-based design can benefit from Green-Marl's fusion optimizations~(\autoref{sec:trans-iter}) and achieve efficiency comparable to hand-written code.
 
@@ -1440,7 +1440,7 @@ Green-Marl supports remote writing, but according to our experience, it is quite
 \chapter{Conclusion}
 \label{sec:conclusions}
 
-This thesis has introduced Palgol, a high-level domain-specific language for Pregel systems with flexible remote data access, which makes it possible for programmers to express Pregel algorithms that communicate over dynamic internal data structures.
+This work introduced Palgol, a high-level domain-specific language for Pregel systems with flexible remote data access, which makes it possible for programmers to express Pregel algorithms that communicate over dynamic internal data structures.
 We have demonstrated the power of Palgol's remote access by giving two representative examples, the S-V algorithm and the list ranking algorithm, and presented the key algorithm for compiling remote access.
 Moreover, we have shown that Fregel's more structured approach to vertex-centric computing, our compilation algorithm for remote access and Green-Marl's optimization techniques can work together perfectly, and the experiment results show that graph algorithms written in Palgol can be compiled to efficient Pregel programs comparable to human written ones.
 

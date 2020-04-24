@@ -201,7 +201,7 @@
 \hypersetup{
   pdftitle={\@title},
   pdfauthor={\@author},
-  pdfsubject={Master Dissertation},
+  pdfsubject={},
   pdfkeywords={\@keywords}
 }
 
@@ -214,7 +214,7 @@
 {\Large \bfseries \@author}
 \par
 \vskip 3em
-{\Large \bfseries Master Thesis}
+{\Large }
 \end{spacing}
 
 \begin{spacing}{1.5}
