@@ -220,7 +220,7 @@
 \begin{spacing}{1.5}
 \centering
 \Large
-\bfseries Dissertation Progress Report
+\bfseries Ph.D. Thesis
 \par
  
 \par
@@ -242,7 +242,7 @@
 
 \begin{spacing}{2}
 \centering
-{\large SOKENDAI (The Graduate University for Advanced Studies)}
+{\large The Graduate University for Advanced Studies, SOKENDAI}
 \par
 {\large \@date}
 \par
