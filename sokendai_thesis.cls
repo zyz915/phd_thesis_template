@@ -220,16 +220,24 @@
 \begin{spacing}{1.5}
 \centering
 \Large
-\bfseries Ph.D. Thesis
+\bfseries Dissertation
 \par
  
 \par
 \end{spacing}
 
-\vskip 2em
+\vskip 3.5em
 
 \begin{center}
-{\Large \bfseries \textit{ }}
+{\large submitted to the Department of Informatics}
+{\large in partial fulfillment of the requirements for the degree of}
+\par
+\end{center}
+
+\vskip 1em
+
+\begin{center}
+{\Large \bfseries \textit{Doctor of Philosophy}}
 \par
 \end{center}
 
@@ -240,7 +248,7 @@
 \par
 \end{center}
 
-\begin{spacing}{2}
+\begin{spacing}{1}
 \centering
 {\large The Graduate University for Advanced Studies, SOKENDAI}
 \par
